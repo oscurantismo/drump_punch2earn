@@ -3,11 +3,11 @@ let punches = 0;
 let activeTab = "game";
 let storedUsername = "Anonymous";
 let userId = "";
-let loadeddrumpFrames = new Set(["1a-min.png"]);
+let loadeddrumpFrames = new Set(["drump-images/1a-min.png"]);
 let backwardInterval;
 let lastPunchTime = 0;
 const BACKWARD_DELAY = 2000; // 2 seconds before going backward
-const BACKWARD_SPEED = 150; // 300ms per frame
+const BACKWARD_SPEED = 50; // 300ms per frame
 
 window.onload = () => {
     createLoader();
@@ -316,7 +316,7 @@ function drawdrump(scene, textureKey) {
         drump.destroy();
     }
 
-    drump = scene.add.image(scene.scale.width / 2, scene.scale.height / 2.3, textureKey)
+    drump = scene.add.image(scene.scale.width / 1, scene.scale.height / 1, textureKey)
         .setScale(scale)
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
