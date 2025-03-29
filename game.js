@@ -299,6 +299,31 @@ function showTab(tab, scene = null) {
     }
 }
 
+function drawdrump(scene, textureKey) {
+    const image = scene.textures.get(textureKey).getSourceImage();
+
+    if (!image) {
+        console.error(`Failed to load image: ${textureKey}`);
+        return;
+    }
+
+    const imageWidth = image.width;
+    const imageHeight = image.height;
+    const maxWidth = window.innerWidth * 0.7; // 70vw
+    const scale = Math.min(maxWidth / imageWidth, 1);
+
+    if (drump) {
+        drump.destroy();
+    }
+
+    drump = scene.add.image(scene.scale.width / 2, scene.scale.height / 2.3, textureKey)
+        .setScale(scale)
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true });
+
+    drump.on("pointerdown", () => handlePunch());
+}
+
 function showGameUI(scene) {
     // Always start with the first image (1a-min.png) on app load
     const textureKey = `1a-min.png`;
