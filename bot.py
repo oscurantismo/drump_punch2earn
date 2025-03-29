@@ -42,7 +42,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # === Live leaderboard ===
 async def send_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id: str):
     try:
-        res = requests.get("https://drump-production.up.railway.app/leaderboard")
+        res = requests.get("https://drumpleaderboard-production.up.railway.app/leaderboard")
         scores = res.json()
     except Exception as e:
         await context.bot.send_message(chat_id, "❌ Failed to load leaderboard. Try again later.")
