@@ -372,6 +372,28 @@ function showGameUI(scene) {
         .setDepth(999);
 }
 
+function showPunchEffect() {
+    // Ensure punch effect is created and visible
+    const punchEffect = game.scene.scenes[0].add.image(
+        drump.x,
+        drump.y,
+        "punch"
+    )
+    .setScale(0.7)
+    .setDepth(9999) // Ensure it is above everything else
+    .setOrigin(0.5)
+    .setAlpha(1); // Make it instantly visible
+
+    console.log("Punch effect shown");
+
+    // Keep the punch effect visible for 2 seconds before removing it
+    setTimeout(() => {
+        punchEffect.destroy();
+        console.log("Punch effect removed");
+    }, 2000); // 2 seconds
+}
+
+
 function handlePunch() {
     punches++;
     lastPunchTime = Date.now();
@@ -386,10 +408,10 @@ function handlePunch() {
     if (!hitCooldown) {
         hitCooldown = true;
 
-        // Ensure frame progresses one by one, capping at 30
+        // Gradual progression from 1 to 30
         if (currentFrame < 30) {
             currentFrame++;
-            lastFrameBeforeBackwards = currentFrame;
+            lastFrameBeforeBackwards = currentFrame; // Save the current state
         }
 
         const key = `${currentFrame}a-min.png`;
@@ -405,31 +427,7 @@ function handlePunch() {
             drump.setTexture(key);
         }
 
-        // Display punch effect on top, in the center of Drump
-        const punchEffect = game.scene.scenes[0].add.image(
-            drump.x,
-            drump.y,
-            "punch"
-        )
-        .setScale(0.7)
-        .setDepth(9999) // Ensure it appears on top of everything
-        .setOrigin(0.5)
-        .setAlpha(0); // Start invisible
-
-        // Smooth fade-in and fade-out animation
-        game.scene.scenes[0].tweens.add({
-            targets: punchEffect,
-            alpha: 1,
-            duration: 75,
-            onComplete: () => {
-                game.scene.scenes[0].tweens.add({
-                    targets: punchEffect,
-                    alpha: 0,
-                    duration: 100,
-                    onComplete: () => punchEffect.destroy()
-                });
-            }
-        });
+        showPunchEffect(); // Display the punch effect
 
         const floatingText = drump.scene.add.text(drump.x, drump.y - 100, "+1", {
             font: "bold 24px Arial",
@@ -455,6 +453,7 @@ function handlePunch() {
         startBackwardAnimation();
     }
 }
+
 
 function startBackwardAnimation() {
     if (backwardInterval) clearInterval(backwardInterval);
