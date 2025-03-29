@@ -318,13 +318,17 @@ function drawdrump(scene, textureKey) {
         drump.destroy();
     }
 
-    drump = scene.add.image(scene.scale.width / 2, scene.scale.height / 2.3, textureKey)
+    // Calculate position with a 30% downward shift
+    const yPosition = scene.scale.height / 2.3 + (scene.scale.height * 0.3);
+
+    drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
         .setScale(scale)
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
 
     drump.on("pointerdown", () => handlePunch());
 }
+
 
 function showGameUI(scene) {
     // Add the background image and set it to cover the whole screen
@@ -333,12 +337,12 @@ function showGameUI(scene) {
         .setDisplaySize(scene.scale.width, scene.scale.height)
         .setDepth(-10); // Ensure it's behind everything else
 
+    // Always start with the first image (1a-min.png) when the app is launched
     const textureKey = `1a-min.png`;
-
+    console.log(`Setting initial image to: ${textureKey}`);
+    
     if (!loadeddrumpFrames.has(textureKey)) {
-        console.log(`Attempting to load image: ${textureKey}`);
         scene.load.image(textureKey, `drump-images/${textureKey}`);
-
         scene.load.once(`filecomplete-image-${textureKey}`, () => {
             console.log(`Successfully loaded: ${textureKey}`);
             loadeddrumpFrames.add(textureKey);
@@ -380,8 +384,11 @@ function handlePunch() {
 
     if (!hitCooldown) {
         hitCooldown = true;
-        const frameNum = Math.min(punches, 30);
+        
+        // Ensure the image progresses gradually from 1 to 30
+        const frameNum = Math.min(punches, 30); 
         const key = `${frameNum}a-min.png`;
+
         if (!loadeddrumpFrames.has(key)) {
             game.scene.scenes[0].load.image(key, `drump-images/${key}`);
             game.scene.scenes[0].load.once('complete', () => {
@@ -394,18 +401,25 @@ function handlePunch() {
         }
 
         // Punch effect animation
-        const punchEffect = game.scene.scenes[0].add.image(drump.x + (drump.displayWidth * 0.6), drump.y, "punch")
+        const punchEffect = game.scene.scenes[0].add.image(drump.x + (drump.displayWidth * 0.55), drump.y, "punch")
             .setScale(0.7)
             .setDepth(5)
-            .setOrigin(0.5);
+            .setOrigin(0.5)
+            .setAlpha(0); // Start invisible
 
-        // Animate the punch from right to left, slightly overlapping Drump
         game.scene.scenes[0].tweens.add({
             targets: punchEffect,
-            x: drump.x + (drump.displayWidth * 0.2), // Overlap by 20%
-            alpha: 0,
-            duration: 150, // Fast and smooth animation
-            onComplete: () => punchEffect.destroy() // Remove image after animation
+            x: drump.x + (drump.displayWidth * 0.2),
+            alpha: 1,
+            duration: 75, // Fade-in
+            onComplete: () => {
+                game.scene.scenes[0].tweens.add({
+                    targets: punchEffect,
+                    alpha: 0,
+                    duration: 100,
+                    onComplete: () => punchEffect.destroy()
+                });
+            }
         });
 
         const floatingText = drump.scene.add.text(drump.x, drump.y - 100, "+1", {
@@ -436,6 +450,8 @@ function handlePunch() {
 function startBackwardAnimation() {
     if (backwardInterval) clearInterval(backwardInterval);
 
+    const adjustedSpeed = BACKWARD_SPEED * 0.7; // 30% faster
+
     backwardInterval = setInterval(() => {
         const now = Date.now();
         if (now - lastPunchTime >= BACKWARD_DELAY) {
@@ -461,9 +477,8 @@ function startBackwardAnimation() {
                 drump.setTexture(key);
             }
         }
-    }, 50); // Faster animation (150ms per frame)
+    }, adjustedSpeed); // Faster animation (30% faster)
 }
-
 
 function update() {
     if (shoeCursor && game.input && game.input.activePointer) {
