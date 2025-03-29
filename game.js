@@ -71,6 +71,8 @@ function removeLoader() {
 
 function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
+    this.load.image("background", "drump-images/background.png"); // Make sure the file is available
+    this.load.image("punch", "drump-images/punch.png"); // Punch image
     this.load.image("shoe", "shoe.png");
     this.load.image("sound_on", "sound_on.svg");
     this.load.image("sound_off", "sound_off.svg");
@@ -316,7 +318,7 @@ function drawdrump(scene, textureKey) {
         drump.destroy();
     }
 
-    drump = scene.add.image(scene.scale.width / 1, scene.scale.height / 1, textureKey)
+    drump = scene.add.image(scene.scale.width / 2, scene.scale.height / 2.3, textureKey)
         .setScale(scale)
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
@@ -325,21 +327,24 @@ function drawdrump(scene, textureKey) {
 }
 
 function showGameUI(scene) {
-    // Always start with the first image (1a-min.png) on app load
+    // Add the background image and set it to cover the whole screen
+    const background = scene.add.image(scene.scale.width / 2, scene.scale.height / 2, "background")
+        .setOrigin(0.5)
+        .setDisplaySize(scene.scale.width, scene.scale.height)
+        .setDepth(-10); // Ensure it's behind everything else
+
     const textureKey = `1a-min.png`;
 
     if (!loadeddrumpFrames.has(textureKey)) {
         console.log(`Attempting to load image: ${textureKey}`);
         scene.load.image(textureKey, `drump-images/${textureKey}`);
 
-        // Log successful image load
         scene.load.once(`filecomplete-image-${textureKey}`, () => {
             console.log(`Successfully loaded: ${textureKey}`);
             loadeddrumpFrames.add(textureKey);
             drawdrump(scene, textureKey);
         });
 
-        // Log failed image load
         scene.load.once('loaderror', (file) => {
             if (file.key === textureKey) {
                 console.error(`Failed to load image: ${file.key}. Please check the file path.`);
@@ -387,6 +392,21 @@ function handlePunch() {
         } else {
             drump.setTexture(key);
         }
+
+        // Punch effect animation
+        const punchEffect = game.scene.scenes[0].add.image(drump.x + (drump.displayWidth * 0.6), drump.y, "punch")
+            .setScale(0.7)
+            .setDepth(5)
+            .setOrigin(0.5);
+
+        // Animate the punch from right to left, slightly overlapping Drump
+        game.scene.scenes[0].tweens.add({
+            targets: punchEffect,
+            x: drump.x + (drump.displayWidth * 0.2), // Overlap by 20%
+            alpha: 0,
+            duration: 150, // Fast and smooth animation
+            onComplete: () => punchEffect.destroy() // Remove image after animation
+        });
 
         const floatingText = drump.scene.add.text(drump.x, drump.y - 100, "+1", {
             font: "bold 24px Arial",
