@@ -75,8 +75,8 @@ function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
     this.load.image("background", "drump-images/Background.png"); // Make sure the file is available
     this.load.spritesheet("punch", "drump-images/punch-ezgif.com-gif-to-sprite-converter.png", {
-        frameWidth: 300, // Adjust to your actual frame width
-        frameHeight: 300, // Adjust to your actual frame height
+        frameWidth: 250, // Adjust to your actual frame width
+        frameHeight: 250, // Adjust to your actual frame height
         endFrame: 8 // Adjust to your actual frame count
         });
 
