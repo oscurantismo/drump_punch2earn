@@ -46,7 +46,7 @@ function createLoader() {
     loader.innerHTML = `
         <div class="spinner"></div>
         <p style="font-family: 'Arial', sans-serif; font-size: 14px; color: #000; margin-top: 20px;">
-            Made with ❤️ and contribution from 🇨🇦
+            Made with ❤️ and contribution from #1f1e8
         </p>
         <style>
         .spinner {
@@ -408,7 +408,7 @@ function handlePunch() {
     if (!hitCooldown) {
         hitCooldown = true;
 
-        // Ensure frame progresses gradually without jumping to 30
+        // Ensure the frame continues from the current state, without jumping to 30
         if (currentFrame < 30) {
             currentFrame++;
         }
@@ -468,11 +468,12 @@ function startBackwardAnimation() {
             // Ensure the backward animation stops at image 1
             if (frameNum <= 1) {
                 clearInterval(backwardInterval);
+                currentFrame = 1; // Reset to 1a-min.png
                 return;
             }
 
             const newFrameNum = frameNum - 1;
-            lastFrameBeforeBackwards = newFrameNum; // Update the last frame before backward animation
+            currentFrame = newFrameNum; // Update the current frame
             const key = `${newFrameNum}a-min.png`;
 
             if (!loadeddrumpFrames.has(key)) {
