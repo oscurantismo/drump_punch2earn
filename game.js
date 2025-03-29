@@ -303,14 +303,14 @@ function drawdrump(scene, textureKey) {
     const image = scene.textures.get(textureKey).getSourceImage();
 
     if (!image) {
-        console.error(`Failed to load image: ${textureKey}`);
+        console.error(`Failed to retrieve image: ${textureKey}`);
         return;
     }
 
     const imageWidth = image.width;
     const imageHeight = image.height;
-    const maxWidth = window.innerWidth * 0.7; // 70vw
-    const scale = Math.min(maxWidth / imageWidth, 1);
+    const maxWidth = window.innerWidth * 0.6; // 60vw
+    const scale = Math.min(maxWidth / imageWidth, window.innerHeight / imageHeight);
 
     if (drump) {
         drump.destroy();
@@ -329,9 +329,9 @@ function showGameUI(scene) {
     const textureKey = `1a-min.png`;
 
     if (!loadeddrumpFrames.has(textureKey)) {
-        console.log(`Loading image: ${textureKey}`);
+        console.log(`Attempting to load image: ${textureKey}`);
         scene.load.image(textureKey, `drump-images/${textureKey}`);
-        
+
         // Log successful image load
         scene.load.once(`filecomplete-image-${textureKey}`, () => {
             console.log(`Successfully loaded: ${textureKey}`);
@@ -342,7 +342,7 @@ function showGameUI(scene) {
         // Log failed image load
         scene.load.once('loaderror', (file) => {
             if (file.key === textureKey) {
-                console.error(`Failed to load image: ${file.key}`);
+                console.error(`Failed to load image: ${file.key}. Please check the file path.`);
             }
         });
 
@@ -361,8 +361,6 @@ function showGameUI(scene) {
         .setScale(0.5)
         .setDepth(999);
 }
-
-
 
 function handlePunch() {
     punches++;
@@ -443,7 +441,7 @@ function startBackwardAnimation() {
                 drump.setTexture(key);
             }
         }
-    }, 150); // Faster animation (150ms per frame)
+    }, 50); // Faster animation (150ms per frame)
 }
 
 
