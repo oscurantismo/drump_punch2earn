@@ -16,7 +16,7 @@ from telegram.ext import (
 
 # === Config ===
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-WEB_APP_URL = "https://oscurantismo.github.io/drumppunch2earn/"
+WEB_APP_URL = "https://oscurantismo.github.io/drump_punch2earn/"
 
 # === Logging ===
 logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
