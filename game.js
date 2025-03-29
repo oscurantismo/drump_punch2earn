@@ -36,6 +36,7 @@ function createLoader() {
     loader.style.width = "100%";
     loader.style.height = "100%";
     loader.style.display = "flex";
+    loader.style.flexDirection = "column";
     loader.style.alignItems = "center";
     loader.style.justifyContent = "center";
     loader.style.background = "#ffffff";
@@ -43,7 +44,7 @@ function createLoader() {
     loader.innerHTML = `
         <div class="spinner"></div>
         <p style="font-family: 'Arial', sans-serif; font-size: 14px; color: #000; margin-top: 20px;">
-            Made with ❤️ and contribution from :ca
+            Made with ❤️ and contribution from 🇨🇦
         </p>
         <style>
         .spinner {
@@ -298,10 +299,10 @@ function showTab(tab, scene = null) {
     }
 }
 
-
 function showGameUI(scene) {
-    const current = Math.min(punches, 30);
-    const textureKey = `${current}a-min.png`;
+    // Always start with the first image (1a-min.png) on app load
+    const textureKey = `1a-min.png`;
+
     if (!loadeddrumpFrames.has(textureKey)) {
         scene.load.image(textureKey, `drump-images/${textureKey}`);
         scene.load.once('complete', () => {
@@ -322,6 +323,7 @@ function showGameUI(scene) {
         .setScale(0.5)
         .setDepth(999);
 }
+
 
 function drawdrump(scene, textureKey) {
     const imageWidth = scene.textures.get(textureKey).getSourceImage().width;
@@ -387,27 +389,36 @@ function handlePunch() {
 }
 
 function startBackwardAnimation() {
+    if (backwardInterval) clearInterval(backwardInterval);
+
     backwardInterval = setInterval(() => {
         const now = Date.now();
         if (now - lastPunchTime >= BACKWARD_DELAY) {
             const frameNum = parseInt(drump.texture.key.replace('a-min.png', ''));
-            if (frameNum > 1) {
-                const newFrameNum = frameNum - 1;
-                const key = `${newFrameNum}a-min.png`;
-                if (!loadeddrumpFrames.has(key)) {
-                    game.scene.scenes[0].load.image(key, `drump-images/${key}`);
-                    game.scene.scenes[0].load.once('complete', () => {
-                        loadeddrumpFrames.add(key);
-                        drump.setTexture(key);
-                    });
-                    game.scene.scenes[0].load.start();
-                } else {
+            
+            // Ensure the backward animation stops at image 1
+            if (frameNum <= 1) {
+                clearInterval(backwardInterval);
+                return;
+            }
+
+            const newFrameNum = frameNum - 1;
+            const key = `${newFrameNum}a-min.png`;
+
+            if (!loadeddrumpFrames.has(key)) {
+                game.scene.scenes[0].load.image(key, `drump-images/${key}`);
+                game.scene.scenes[0].load.once('complete', () => {
+                    loadeddrumpFrames.add(key);
                     drump.setTexture(key);
-                }
+                });
+                game.scene.scenes[0].load.start();
+            } else {
+                drump.setTexture(key);
             }
         }
-    }, BACKWARD_SPEED);
+    }, 150); // Faster animation (150ms per frame)
 }
+
 
 function update() {
     if (shoeCursor && game.input && game.input.activePointer) {
