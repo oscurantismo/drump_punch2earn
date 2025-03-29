@@ -240,6 +240,61 @@ function renderShareButton() {
     document.body.appendChild(btn);
 }
 
+function showTab(tab, scene = null) {
+    ["game-container", "leaderboard-container", "info-container"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+    });
+
+    if (tab === "game" && scene) {
+        showGameUI(scene);
+    } else if (tab === "leaderboard") {
+        const container = document.createElement("div");
+        container.id = "leaderboard-container";
+        container.style.position = "fixed";
+        container.style.overflowY = "auto";
+        container.style.top = "100px"; // below punch bar
+        container.style.bottom = "48px"; // above nav tabs
+        container.style.left = "0";
+        container.style.width = "100%";
+        container.style.zIndex = "999";
+
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${userId}`;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.border = "none";
+
+        container.appendChild(iframe);
+        document.body.appendChild(container);
+    } else if (tab === "info") {
+        const info = document.createElement("div");
+        info.id = "info-container";
+        info.style.position = "fixed";
+        info.style.top = "100px";
+        info.style.bottom = "48px";
+        info.style.left = "0";
+        info.style.width = "100%";
+        info.style.padding = "20px";
+        info.style.background = "#ffffff";
+        info.style.fontFamily = "Arial";
+        info.style.overflowY = "auto";
+        info.style.overflowX = "hidden";
+        info.style.boxSizing = "border-box";
+        info.style.maxWidth = "100%";
+        info.style.zIndex = "999";
+        info.innerHTML = `
+            <h2>👟 Drump | Punch2Earn</h2>
+            <p>Punch drump with a shoe. Simple as that. From like-minded cryptonerds tired of unpredictability. 
+            <h3>What do I do?</h3>
+            <p>Punch to earn. Collect punches. Compete on the leaderboard.</p>
+            <p>🏗 <b>Upcoming:</b> Event drops, airdrops, collectibles. Stay tuned for more updates.</p>
+            <p>🤖 Powered by frustration.py</p>
+        `;
+        document.body.appendChild(info);
+    }
+}
+
 
 function showGameUI(scene) {
     const current = Math.min(punches, 30);
