@@ -7,7 +7,7 @@ let loadeddrumpFrames = new Set(["1a-min.png"]);
 let backwardInterval;
 let lastPunchTime = 0;
 const BACKWARD_DELAY = 2000; // 2 seconds before going backward
-const BACKWARD_SPEED = 300; // 300ms per frame
+const BACKWARD_SPEED = 150; // 300ms per frame
 
 window.onload = () => {
     createLoader();
@@ -304,13 +304,26 @@ function showGameUI(scene) {
     const textureKey = `1a-min.png`;
 
     if (!loadeddrumpFrames.has(textureKey)) {
+        console.log(`Loading image: ${textureKey}`);
         scene.load.image(textureKey, `drump-images/${textureKey}`);
-        scene.load.once('complete', () => {
+        
+        // Log successful image load
+        scene.load.once(`filecomplete-image-${textureKey}`, () => {
+            console.log(`Successfully loaded: ${textureKey}`);
             loadeddrumpFrames.add(textureKey);
             drawdrump(scene, textureKey);
         });
+
+        // Log failed image load
+        scene.load.once('loaderror', (file) => {
+            if (file.key === textureKey) {
+                console.error(`Failed to load image: ${file.key}`);
+            }
+        });
+
         scene.load.start();
     } else {
+        console.log(`Image already loaded: ${textureKey}`);
         drawdrump(scene, textureKey);
     }
 
@@ -324,30 +337,7 @@ function showGameUI(scene) {
         .setDepth(999);
 }
 
-function drawdrump(scene, textureKey) {
-    const image = scene.textures.get(textureKey).getSourceImage();
 
-    if (!image) {
-        console.error(`Failed to load image: ${textureKey}`);
-        return;
-    }
-
-    const imageWidth = image.width;
-    const imageHeight = image.height;
-    const maxWidth = window.innerWidth * 0.7; // 70vw
-    const scale = Math.min(maxWidth / imageWidth, 1);
-
-    if (drump) {
-        drump.destroy();
-    }
-
-    drump = scene.add.image(scene.scale.width / 2, scene.scale.height / 2.3, textureKey)
-        .setScale(scale)
-        .setOrigin(0.5)
-        .setInteractive({ useHandCursor: true });
-
-    drump.on("pointerdown", () => handlePunch());
-}
 
 function handlePunch() {
     punches++;
