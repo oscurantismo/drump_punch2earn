@@ -74,7 +74,12 @@ function removeLoader() {
 function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
     this.load.image("background", "drump-images/Background.png"); // Make sure the file is available
-    this.load.image("punch", "drump-images/punch.gif"); // Punch image
+    this.load.spritesheet("punch", "drump-images/punch-ezgif.com-gif-to-sprite-converter.png", {
+        frameWidth: 200, // Adjust to your actual frame width
+        frameHeight: 200, // Adjust to your actual frame height
+        endFrame: 8 // Adjust to your actual frame count
+        });
+
     this.load.image("shoe", "shoe.png");
     this.load.image("sound_on", "sound_on.svg");
     this.load.image("sound_off", "sound_off.svg");
@@ -95,6 +100,14 @@ function create() {
     if (cached !== null) {
         punches = parseInt(cached);
     }
+
+    game.scene.scenes[0].anims.create({
+        key: 'punchAnim',
+        frames: game.scene.scenes[0].anims.generateFrameNumbers('punch', { start: 0, end: 5 }),
+        frameRate: 10, // Adjust frame rate as needed
+        repeat: 0
+    });
+
 
     fetch("https://drumpleaderboard-production.up.railway.app/register", {
         method: "POST",
@@ -373,25 +386,27 @@ function showGameUI(scene) {
 }
 
 function showPunchEffect() {
-    // Ensure punch effect is created and visible
-    const punchEffect = game.scene.scenes[0].add.image(
+    const punchEffect = game.scene.scenes[0].add.sprite(
         drump.x,
         drump.y,
         "punch"
     )
     .setScale(0.7)
-    .setDepth(9999) // Ensure it is above everything else
+    .setDepth(9999) // Ensure it is above everything
     .setOrigin(0.5)
-    .setAlpha(1); // Make it instantly visible
+    .setAlpha(1);
 
     console.log("Punch effect shown");
 
-    // Keep the punch effect visible for 2 seconds before removing it
+    punchEffect.play('punchAnim');
+
+    // Remove punch effect after 2 seconds
     setTimeout(() => {
         punchEffect.destroy();
         console.log("Punch effect removed");
-    }, 2000); // 2 seconds
+    }, 2000);
 }
+
 
 
 function handlePunch() {
