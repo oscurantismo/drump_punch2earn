@@ -3,7 +3,7 @@ let punches = 0;
 let activeTab = "game";
 let storedUsername = "Anonymous";
 let userId = "";
-let loadedTrumpFrames = new Set(["trump1"]);
+let loadedDrumpFrames = new Set(["1a-min.png"]);
 
 window.onload = () => {
     createLoader();
@@ -19,7 +19,7 @@ window.onload = () => {
     game = new Phaser.Game(gameConfig);
 };
 
-let trump, shoeCursor, punchSounds = [], soundButton;
+let drump, shoeCursor, punchSounds = [], soundButton;
 let hitCooldown = false;
 let soundEnabled = true;
 
@@ -62,7 +62,7 @@ function removeLoader() {
 }
 
 function preload() {
-    this.load.image("trump1", "trump-images/trump%20(1).webp");
+    this.load.image("drump1", "drump-images/1a-min.png");
     this.load.image("shoe", "shoe.png");
     this.load.image("sound_on", "sound_on.svg");
     this.load.image("sound_off", "sound_off.svg");
@@ -84,12 +84,12 @@ function create() {
         punches = parseInt(cached);
     }
 
-    fetch("https://trumptossleaderboard-production.up.railway.app/register", {
+    fetch("https://drumptossleaderboard-production.up.railway.app/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: storedUsername, user_id: userId })
     })
-    .then(() => fetch("https://trumptossleaderboard-production.up.railway.app/leaderboard"))
+    .then(() => fetch("https://drumptossleaderboard-production.up.railway.app/leaderboard"))
     .then(res => res.json())
     .then(scores => {
         const entry = scores.find(u => u.user_id == userId);
@@ -208,8 +208,8 @@ function renderShareButton() {
     btn.style.zIndex = "1001";
 
     btn.onclick = () => {
-        const botLink = "https://t.me/TrumpToss_bot";
-        const message = `I punched ${punches} points in TrumpToss. Wanna punch to earn?`;
+        const botLink = "https://t.me/drumpToss_bot";
+        const message = `I punched ${punches} points in drumpToss. Wanna punch to earn?`;
 
         Telegram.WebApp.showPopup({
             title: "Share your score",
@@ -233,41 +233,6 @@ function renderShareButton() {
 
     document.body.appendChild(btn);
 }
-
-function renderResetButton() {
-    const btn = document.createElement("button");
-    btn.innerText = "🔁 Reset Score";
-    btn.style.position = "fixed";
-    btn.style.bottom = "110px";
-    btn.style.right = "20px";
-    btn.style.padding = "10px 14px";
-    btn.style.fontSize = "14px";
-    btn.style.background = "#dc3545";
-    btn.style.color = "#fff";
-    btn.style.border = "none";
-    btn.style.borderRadius = "8px";
-    btn.style.fontFamily = "'Arial Black', sans-serif";
-    btn.style.zIndex = "1001";
-
-    btn.onclick = () => {
-        punches = 0;
-        updatePunchDisplay();
-        localStorage.setItem(`score_${userId}`, punches);
-        trump.setTexture("trump27"); // stick with angry Trump
-        fetch("https://trumptossleaderboard-production.up.railway.app/submit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username: storedUsername, user_id: userId, score: punches })
-        });
-    };
-
-    document.body.appendChild(btn);
-}
-
-renderResetButton();
-
-
-
 function showTab(tab, scene = null) {
     ["game-container", "leaderboard-container", "info-container"].forEach(id => {
         const el = document.getElementById(id);
@@ -288,7 +253,7 @@ function showTab(tab, scene = null) {
         container.style.zIndex = "999";
 
         const iframe = document.createElement("iframe");
-        iframe.src = `https://trumptossleaderboard-production.up.railway.app/leaderboard-page?user_id=${userId}`;
+        iframe.src = `https://drumptossleaderboard-production.up.railway.app/leaderboard-page?user_id=${userId}`;
         iframe.style.width = "100%";
         iframe.style.height = "100%";
         iframe.style.border = "none";
@@ -312,8 +277,8 @@ function showTab(tab, scene = null) {
         info.style.maxWidth = "100%";
         info.style.zIndex = "999";
         info.innerHTML = `
-            <h2>👟 TrumpToss</h2>
-            <p>Punch Trump with a shoe. Simple as that. From like-minded cryptonerds tired of unpredictability. 
+            <h2>👟 drumpToss</h2>
+            <p>Punch drump with a shoe. Simple as that. From like-minded cryptonerds tired of unpredictability. 
             <h3>What do I do?</h3>
             <p>Punch to earn. Collect punches. Compete on the leaderboard.</p>
             <p>🏗 <b>Upcoming:</b> Event drops, airdrops, collectibles. Stay tuned for more updates.</p>
@@ -325,16 +290,16 @@ function showTab(tab, scene = null) {
 
 function showGameUI(scene) {
     const current = Math.min(punches, 27);
-    const textureKey = `trump${current}`;
-    if (!loadedTrumpFrames.has(textureKey)) {
-        scene.load.image(textureKey, `trump-images/trump%20(${current}).webp`);
+    const textureKey = `drump${current}`;
+    if (!loadeddrumpFrames.has(textureKey)) {
+        scene.load.image(textureKey, `drump-images/drump%20(${current}).webp`);
         scene.load.once('complete', () => {
-            loadedTrumpFrames.add(textureKey);
-            drawTrump(scene, textureKey);
+            loadeddrumpFrames.add(textureKey);
+            drawdrump(scene, textureKey);
         });
         scene.load.start();
     } else {
-        drawTrump(scene, textureKey);
+        drawdrump(scene, textureKey);
     }
 
     for (let i = 1; i <= 4; i++) {
@@ -347,16 +312,16 @@ function showGameUI(scene) {
         .setDepth(999);
 }
 
-function drawTrump(scene, textureKey) {
+function drawdrump(scene, textureKey) {
     const imageWidth = scene.textures.get(textureKey).getSourceImage().width;
-    const trumpScale = (scene.scale.width * 0.7) / imageWidth;
+    const drumpScale = (scene.scale.width * 0.7) / imageWidth;
 
-    trump = scene.add.image(scene.scale.width / 2, scene.scale.height / 2.3, textureKey)
-        .setScale(trumpScale)
+    drump = scene.add.image(scene.scale.width / 2, scene.scale.height / 2.3, textureKey)
+        .setScale(drumpScale)
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
 
-    trump.on("pointerdown", () => handlePunch());
+    drump.on("pointerdown", () => handlePunch());
 }
 
 function handlePunch() {
@@ -372,26 +337,26 @@ function handlePunch() {
     if (!hitCooldown) {
         hitCooldown = true;
         const frameNum = Math.min(punches, 27);
-        const key = `trump${frameNum}`;
-        if (!loadedTrumpFrames.has(key)) {
-            game.scene.scenes[0].load.image(key, `trump-images/trump%20(${frameNum}).webp`);
+        const key = `drump${frameNum}`;
+        if (!loadeddrumpFrames.has(key)) {
+            game.scene.scenes[0].load.image(key, `drump-images/${key}`);
             game.scene.scenes[0].load.once('complete', () => {
-                loadedTrumpFrames.add(key);
-                trump.setTexture(key);
+                loadeddrumpFrames.add(key);
+                drump.setTexture(key);
             });
             game.scene.scenes[0].load.start();
         } else {
-            trump.setTexture(key);
+            drump.setTexture(key);
         }
 
-        const floatingText = trump.scene.add.text(trump.x, trump.y - 100, "+1", {
+        const floatingText = drump.scene.add.text(drump.x, drump.y - 100, "+1", {
             font: "bold 24px Arial",
             fill: "#ff0000",
             stroke: "#fff",
             strokeThickness: 3
         }).setOrigin(0.5);
 
-        trump.scene.tweens.add({
+        drump.scene.tweens.add({
             targets: floatingText,
             y: floatingText.y - 50,
             alpha: 0,
@@ -405,7 +370,7 @@ function handlePunch() {
         }, 200);
     }
 
-    fetch("https://trumptossleaderboard-production.up.railway.app/submit", {
+    fetch("https://drumptossleaderboard-production.up.railway.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: storedUsername, user_id: userId, score: punches })
