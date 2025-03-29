@@ -340,7 +340,7 @@ function drawdrump(scene, textureKey) {
     }
 
     // Shift downwards by 10% of screen height
-    const yPosition = scene.scale.height / 2.3 + (scene.scale.height * 0.2);
+    const yPosition = scene.scale.height / 2.3 + (scene.scale.height * 0.15);
 
     drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
         .setScale(scale)
@@ -475,6 +475,22 @@ function handlePunch() {
         if (backwardInterval) clearInterval(backwardInterval);
         startBackwardAnimation();
     }
+
+    fetch("https://drumpleaderboard-production.up.railway.app/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: storedUsername, user_id: userId, score: punches })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        console.log("Score submitted successfully!");
+    })
+    .catch(error => {
+        console.error("Error submitting score:", error);
+    });
+
 }
 
 function startBackwardAnimation() {
