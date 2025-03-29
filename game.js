@@ -71,8 +71,8 @@ function removeLoader() {
 
 function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
-    this.load.image("background", "drump-images/background.png"); // Make sure the file is available
-    this.load.image("punch", "drump-images/punch.png"); // Punch image
+    this.load.image("background", "drump-images/Background.png"); // Make sure the file is available
+    this.load.image("punch", "drump-images/punch.gif"); // Punch image
     this.load.image("shoe", "shoe.png");
     this.load.image("sound_on", "sound_on.svg");
     this.load.image("sound_off", "sound_off.svg");
