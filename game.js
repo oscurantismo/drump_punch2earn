@@ -332,7 +332,7 @@ function drawdrump(scene, textureKey) {
 
     const imageWidth = image.width;
     const imageHeight = image.height;
-    const maxWidth = window.innerWidth * 0.6; // 60vw
+    const maxWidth = window.innerWidth * 0.7; // 60vw
     const scale = Math.min(maxWidth / imageWidth, window.innerHeight / imageHeight);
 
     if (drump) {
@@ -400,7 +400,7 @@ function showPunchEffect() {
         drump.y,
         "punch"
     )
-    .setScale(0.7)
+    .setScale(0.9)
     .setOrigin(0.5) // Center the frame
     .setCrop(0, 0, 200, 200) // Ensure only one frame is visible
     .setDepth(9999) // Ensure it is above everything else
@@ -412,7 +412,7 @@ function showPunchEffect() {
     setTimeout(() => {
         punchEffect.destroy();
         console.log("Punch effect removed");
-    }, 2000);
+    }, 500);
 }
 
 
@@ -452,7 +452,7 @@ function handlePunch() {
         // Show punch effect
         showPunchEffect();
 
-        const floatingText = drump.scene.add.text(drump.x, drump.y - 100, "+1", {
+        const floatingText = drump.scene.add.text(drump.x, drump.y - 100, "🤛+1", {
             font: "bold 24px Arial",
             fill: "#ff0000",
             stroke: "#fff",
