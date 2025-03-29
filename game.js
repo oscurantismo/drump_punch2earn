@@ -46,7 +46,7 @@ function createLoader() {
     loader.innerHTML = `
         <div class="spinner"></div>
         <p style="font-family: 'Arial', sans-serif; font-size: 14px; color: #000; margin-top: 20px;">
-            Made with ❤️ and contribution from 🇨🇦
+            Made with ❤️ and contribution from &#127464;&#127462;
         </p>
         <style>
         .spinner {
@@ -101,12 +101,13 @@ function create() {
         punches = parseInt(cached);
     }
 
-    game.scene.scenes[0].anims.create({
+    this.anims.create({
         key: 'punchAnim',
-        frames: game.scene.scenes[0].anims.generateFrameNumbers('punch', { start: 0, end: 5 }),
-        frameRate: 10, // Adjust frame rate as needed
+        frames: this.anims.generateFrameNumbers('punch', { start: 0, end: 7 }), // Adjust end number if needed
+        frameRate: 10,
         repeat: 0
     });
+
 
 
     fetch("https://drumpleaderboard-production.up.railway.app/register", {
@@ -391,37 +392,29 @@ function showGameUI(scene) {
 }
 
 function showPunchEffect() {
-    const scene = game.scene.scenes[0];
-    
-    // Ensure the sprite is created in the correct scene and play the animation
-    const punchEffect = scene.add.sprite(
+    if (!game.scene.scenes[0]) return;
+
+    // Ensure punch effect is created and visible
+    const punchEffect = game.scene.scenes[0].add.sprite(
         drump.x,
         drump.y,
         "punch"
     )
     .setScale(0.7)
-    .setDepth(9999)
-    .setOrigin(0.5)
-    .setAlpha(1);
+    .setOrigin(0.5) // Center the frame
+    .setCrop(0, 0, 200, 200) // Ensure only one frame is visible
+    .setDepth(9999) // Ensure it is above everything else
+    .play('punchAnim');
 
-    console.log("Punch effect created at:", drump.x, drump.y);
+    console.log("Punch effect shown");
 
-    if (scene.anims.exists('punchAnim')) {
-        punchEffect.play('punchAnim');
-        console.log("Punch animation started.");
-    } else {
-        console.error("Animation 'punchAnim' not found. Check if it was created.");
-    }
-
-    // Adjust position to ensure it's perfectly centered
-    punchEffect.setPosition(drump.x, drump.y);
-
-    // Remove punch effect after 2 seconds
+    // Keep the punch effect visible for 2 seconds before removing it
     setTimeout(() => {
         punchEffect.destroy();
-        console.log("Punch effect removed.");
+        console.log("Punch effect removed");
     }, 2000);
 }
+
 
 function handlePunch() {
     punches++;
