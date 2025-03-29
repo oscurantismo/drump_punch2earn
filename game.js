@@ -3,7 +3,7 @@ let punches = 0;
 let activeTab = "game";
 let storedUsername = "Anonymous";
 let userId = "";
-let loadedDrumpFrames = new Set(["1a-min.png"]);
+let loadeddrumpFrames = new Set(["1a-min.png"]);
 
 window.onload = () => {
     createLoader();
