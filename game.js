@@ -84,12 +84,12 @@ function create() {
         punches = parseInt(cached);
     }
 
-    fetch("https://drump-production.up.railway.app/register", {
+    fetch("https://drumpleaderboard-production.up.railway.app/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: storedUsername, user_id: userId })
     })
-    .then(() => fetch("https://drump-production.up.railway.app/leaderboard"))
+    .then(() => fetch("https://drumpleaderboard-production.up.railway.app/leaderboard"))
     .then(res => res.json())
     .then(scores => {
         const entry = scores.find(u => u.user_id == userId);
@@ -253,7 +253,7 @@ function showTab(tab, scene = null) {
         container.style.zIndex = "999";
 
         const iframe = document.createElement("iframe");
-        iframe.src = `https://drump-production.up.railway.app/leaderboard-page?user_id=${userId}`;
+        iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${userId}`;
         iframe.style.width = "100%";
         iframe.style.height = "100%";
         iframe.style.border = "none";
@@ -370,7 +370,7 @@ function handlePunch() {
         }, 200);
     }
 
-    fetch("https://drump-production.up.railway.app/submit", {
+    fetch("https://drumpleaderboard-production.up.railway.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: storedUsername, user_id: userId, score: punches })
