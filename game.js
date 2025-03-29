@@ -6,6 +6,7 @@ let userId = "";
 let loadeddrumpFrames = new Set(["drump-images/1a-min.png"]);
 let backwardInterval;
 let lastPunchTime = 0;
+let currentFrame = 1; // Track Drump's current image frame
 const BACKWARD_DELAY = 2000; // 2 seconds before going backward
 const BACKWARD_SPEED = 50; // 300ms per frame
 
@@ -384,9 +385,12 @@ function handlePunch() {
     if (!hitCooldown) {
         hitCooldown = true;
 
-        // Image progression from 1 to 30
-        const frameNum = Math.min(punches, 30);
-        const key = `${frameNum}a-min.png`;
+        // Ensure frame progresses one by one, capping at 30
+        if (currentFrame < 30) {
+            currentFrame++;
+        }
+
+        const key = `${currentFrame}a-min.png`;
 
         if (!loadeddrumpFrames.has(key)) {
             game.scene.scenes[0].load.image(key, `drump-images/${key}`);
@@ -399,21 +403,20 @@ function handlePunch() {
             drump.setTexture(key);
         }
 
-        // Keep image 30 if user is still punching
-        if (frameNum === 30) {
-            console.log("Image 30 reached. Holding image 30 until the user stops punching.");
-        }
+        // Display punch effect on the right, overlapping 20%
+        const punchEffect = game.scene.scenes[0].add.image(
+            drump.x + (drump.displayWidth * 0.6),
+            drump.y,
+            "punch"
+        )
+        .setScale(0.7)
+        .setDepth(5)
+        .setOrigin(0.5)
+        .setAlpha(0);
 
-        // Punch effect animation
-        const punchEffect = game.scene.scenes[0].add.image(drump.x + (drump.displayWidth * 0.55), drump.y, "punch")
-            .setScale(0.7)
-            .setDepth(5)
-            .setOrigin(0.5)
-            .setAlpha(0);
-
+        // Smooth fade-in and fade-out animation
         game.scene.scenes[0].tweens.add({
             targets: punchEffect,
-            x: drump.x + (drump.displayWidth * 0.2),
             alpha: 1,
             duration: 75,
             onComplete: () => {
