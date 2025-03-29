@@ -4,6 +4,10 @@ let activeTab = "game";
 let storedUsername = "Anonymous";
 let userId = "";
 let loadeddrumpFrames = new Set(["1a-min.png"]);
+let backwardInterval;
+let lastPunchTime = 0;
+const BACKWARD_DELAY = 2000; // 2 seconds before going backward
+const BACKWARD_SPEED = 300; // 300ms per frame
 
 window.onload = () => {
     createLoader();
@@ -105,192 +109,9 @@ function create() {
     });
 }
 
-function renderTopBar() {
-    const top = document.createElement("div");
-    top.style.position = "fixed";
-    top.style.top = "0.5rem";
-    top.style.left = "1rem";
-    top.style.background = "#fff";
-    top.style.color = "#000";
-    top.style.border = "2px solid #0047ab";
-    top.style.borderRadius = "10px";
-    top.style.fontFamily = "'Arial Black', sans-serif";
-    top.style.padding = "6px 12px";
-    top.style.zIndex = "1000";
-    top.innerText = `${storedUsername}`;
-    document.body.appendChild(top);
-
-    const punchBar = document.createElement("div");
-    punchBar.id = "punch-bar";
-    punchBar.style.position = "fixed";
-    punchBar.style.top = "50px";
-    punchBar.style.left = "1rem";
-    punchBar.style.right = "1rem";
-    punchBar.style.background = "#b22234";
-    punchBar.style.color = "#ffffff";
-    punchBar.style.textAlign = "center";
-    punchBar.style.fontFamily = "'Arial Black', sans-serif";
-    punchBar.style.fontSize = "18px";
-    punchBar.style.padding = "6px 0";
-    punchBar.style.borderRadius = "8px";
-    punchBar.style.zIndex = "999";
-    punchBar.innerText = `🥾 Punches: ${punches}`;
-    document.body.appendChild(punchBar);
-
-    const iconSize = 32;
-    soundButton = document.createElement("img");
-    soundButton.src = "sound_on.svg";
-    soundButton.style.position = "fixed";
-    soundButton.style.top = "calc(0.5rem + 4px)";
-    soundButton.style.right = "12px";
-    soundButton.style.width = iconSize + "px";
-    soundButton.style.height = iconSize + "px";
-    soundButton.style.cursor = "pointer";
-    soundButton.style.zIndex = "1001";
-    soundButton.onclick = () => {
-        soundEnabled = !soundEnabled;
-        soundButton.src = soundEnabled ? "sound_on.svg" : "sound_off.svg";
-    };
-    document.body.appendChild(soundButton);
-}
-
-function updatePunchDisplay() {
-    const bar = document.getElementById("punch-bar");
-    if (bar) bar.innerText = `🥾 Punches: ${punches}`;
-}
-
-function renderTabs() {
-    const tabBar = document.createElement("div");
-    tabBar.id = "tab-container";
-    tabBar.style.position = "fixed";
-    tabBar.style.bottom = "0";
-    tabBar.style.left = "0";
-    tabBar.style.width = "100%";
-    tabBar.style.display = "flex";
-    tabBar.style.justifyContent = "space-around";
-    tabBar.style.background = "#002868";
-    tabBar.style.zIndex = "1000";
-
-    ["game", "leaderboard", "info"].forEach(tab => {
-        const btn = document.createElement("button");
-        btn.innerText = tab.toUpperCase();
-        btn.style.flex = "1";
-        btn.style.padding = "12px";
-        btn.style.fontSize = "14px";
-        btn.style.border = "none";
-        btn.style.color = "#fff";
-        btn.style.background = (tab === activeTab) ? "#003f8a" : "#002868";
-        btn.onclick = () => {
-            activeTab = tab;
-            showTab(tab);
-            document.querySelectorAll("#tab-container button").forEach(b => b.style.background = "#002868");
-            btn.style.background = "#003f8a";
-        };
-        tabBar.appendChild(btn);
-    });
-
-    document.body.appendChild(tabBar);
-}
-
-function renderShareButton() {
-    const btn = document.createElement("button");
-    btn.innerText = "📣 Share Score";
-    btn.style.position = "fixed";
-    btn.style.bottom = "60px";
-    btn.style.right = "20px";
-    btn.style.padding = "10px 14px";
-    btn.style.fontSize = "14px";
-    btn.style.background = "#0077cc";
-    btn.style.color = "#fff";
-    btn.style.border = "none";
-    btn.style.borderRadius = "8px";
-    btn.style.fontFamily = "'Arial Black', sans-serif";
-    btn.style.zIndex = "1001";
-
-    btn.onclick = () => {
-        const botLink = "https://t.me/Drump_punch_bot";
-        const message = `I punched ${punches} points in Drump | Punch2Earn. Wanna punch to earn?`;
-
-        Telegram.WebApp.showPopup({
-            title: "Share your score",
-            message: `Choose where to share your ${punches} punches:`,
-            buttons: [
-                { id: "telegram", type: "default", text: "Telegram" },
-                { id: "x", type: "default", text: "X (Twitter)" },
-                { id: "whatsapp", type: "default", text: "WhatsApp" },
-            ]
-        }, (btnId) => {
-            const links = {
-                telegram: `https://t.me/share/url?url=${encodeURIComponent(botLink)}&text=${encodeURIComponent(message)}`,
-                whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(message + ' ' + botLink)}`,
-                x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(message + ' ' + botLink)}`
-            };
-            if (btnId && links[btnId]) {
-                window.open(links[btnId], "_blank");
-            }
-        });
-    };
-
-    document.body.appendChild(btn);
-}
-function showTab(tab, scene = null) {
-    ["game-container", "leaderboard-container", "info-container"].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.remove();
-    });
-
-    if (tab === "game" && scene) {
-        showGameUI(scene);
-    } else if (tab === "leaderboard") {
-        const container = document.createElement("div");
-        container.id = "leaderboard-container";
-        container.style.position = "fixed";
-        container.style.overflowY = "auto";
-        container.style.top = "100px"; // below punch bar
-        container.style.bottom = "48px"; // above nav tabs
-        container.style.left = "0";
-        container.style.width = "100%";
-        container.style.zIndex = "999";
-
-        const iframe = document.createElement("iframe");
-        iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${userId}`;
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.style.border = "none";
-
-        container.appendChild(iframe);
-        document.body.appendChild(container);
-    } else if (tab === "info") {
-        const info = document.createElement("div");
-        info.id = "info-container";
-        info.style.position = "fixed";
-        info.style.top = "100px";
-        info.style.bottom = "48px";
-        info.style.left = "0";
-        info.style.width = "100%";
-        info.style.padding = "20px";
-        info.style.background = "#ffffff";
-        info.style.fontFamily = "Arial";
-        info.style.overflowY = "auto";
-        info.style.overflowX = "hidden";
-        info.style.boxSizing = "border-box";
-        info.style.maxWidth = "100%";
-        info.style.zIndex = "999";
-        info.innerHTML = `
-            <h2>👟 Drump | Punch2Earn</h2>
-            <p>Punch drump with a shoe. Simple as that. From like-minded cryptonerds tired of unpredictability. 
-            <h3>What do I do?</h3>
-            <p>Punch to earn. Collect punches. Compete on the leaderboard.</p>
-            <p>🏗 <b>Upcoming:</b> Event drops, airdrops, collectibles. Stay tuned for more updates.</p>
-            <p>🤖 Powered by frustration.py</p>
-        `;
-        document.body.appendChild(info);
-    }
-}
-
 function showGameUI(scene) {
-    const current = Math.min(punches, 27);
-    const textureKey = `drump${current}`;
+    const current = Math.min(punches, 30);
+    const textureKey = `${current}a-min.png`;
     if (!loadeddrumpFrames.has(textureKey)) {
         scene.load.image(textureKey, `drump-images/${textureKey}`);
         scene.load.once('complete', () => {
@@ -326,6 +147,7 @@ function drawdrump(scene, textureKey) {
 
 function handlePunch() {
     punches++;
+    lastPunchTime = Date.now();
     updatePunchDisplay();
     localStorage.setItem(`score_${userId}`, punches);
 
@@ -336,8 +158,8 @@ function handlePunch() {
 
     if (!hitCooldown) {
         hitCooldown = true;
-        const frameNum = Math.min(punches, 27);
-        const key = `drump${frameNum}`;
+        const frameNum = Math.min(punches, 30);
+        const key = `${frameNum}a-min.png`;
         if (!loadeddrumpFrames.has(key)) {
             game.scene.scenes[0].load.image(key, `drump-images/${key}`);
             game.scene.scenes[0].load.once('complete', () => {
@@ -368,13 +190,33 @@ function handlePunch() {
         setTimeout(() => {
             hitCooldown = false;
         }, 200);
-    }
 
-    fetch("https://drumpleaderboard-production.up.railway.app/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: storedUsername, user_id: userId, score: punches })
-    });
+        if (backwardInterval) clearInterval(backwardInterval);
+        startBackwardAnimation();
+    }
+}
+
+function startBackwardAnimation() {
+    backwardInterval = setInterval(() => {
+        const now = Date.now();
+        if (now - lastPunchTime >= BACKWARD_DELAY) {
+            const frameNum = parseInt(drump.texture.key.replace('a-min.png', ''));
+            if (frameNum > 1) {
+                const newFrameNum = frameNum - 1;
+                const key = `${newFrameNum}a-min.png`;
+                if (!loadeddrumpFrames.has(key)) {
+                    game.scene.scenes[0].load.image(key, `drump-images/${key}`);
+                    game.scene.scenes[0].load.once('complete', () => {
+                        loadeddrumpFrames.add(key);
+                        drump.setTexture(key);
+                    });
+                    game.scene.scenes[0].load.start();
+                } else {
+                    drump.setTexture(key);
+                }
+            }
+        }
+    }, BACKWARD_SPEED);
 }
 
 function update() {
