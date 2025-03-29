@@ -277,7 +277,9 @@ function showTab(tab, scene = null) {
         container.style.top = "100px"; // below punch bar
         container.style.bottom = "48px"; // above nav tabs
         container.style.left = "0";
-        container.style.width = "100%";
+        container.style.width = "100vw"; // Ensure full width
+        container.style.height = "calc(100vh - 148px)"; // Adjust to remove the gap
+        container.style.background = "#ffffff"; // Ensure white background
         container.style.zIndex = "999";
 
         const iframe = document.createElement("iframe");
@@ -292,12 +294,13 @@ function showTab(tab, scene = null) {
         const info = document.createElement("div");
         info.id = "info-container";
         info.style.position = "fixed";
-        info.style.top = "100px";
-        info.style.bottom = "48px";
+        info.style.top = "100px"; // below punch bar
+        info.style.bottom = "48px"; // above nav tabs
         info.style.left = "0";
-        info.style.width = "100%";
+        info.style.width = "100vw"; // Ensure full width
+        info.style.height = "calc(100vh - 148px)"; // Adjust to remove the gap
         info.style.padding = "20px";
-        info.style.background = "#ffffff";
+        info.style.background = "#ffffff"; // Ensure white background
         info.style.fontFamily = "Arial";
         info.style.overflowY = "auto";
         info.style.overflowX = "hidden";
@@ -386,28 +389,37 @@ function showGameUI(scene) {
 }
 
 function showPunchEffect() {
-    const punchEffect = game.scene.scenes[0].add.sprite(
+    const scene = game.scene.scenes[0];
+    
+    // Ensure the sprite is created in the correct scene and play the animation
+    const punchEffect = scene.add.sprite(
         drump.x,
         drump.y,
         "punch"
     )
     .setScale(0.7)
-    .setDepth(9999) // Ensure it is above everything
+    .setDepth(9999)
     .setOrigin(0.5)
     .setAlpha(1);
 
-    console.log("Punch effect shown");
+    console.log("Punch effect created at:", drump.x, drump.y);
 
-    punchEffect.play('punchAnim');
+    if (scene.anims.exists('punchAnim')) {
+        punchEffect.play('punchAnim');
+        console.log("Punch animation started.");
+    } else {
+        console.error("Animation 'punchAnim' not found. Check if it was created.");
+    }
+
+    // Adjust position to ensure it's perfectly centered
+    punchEffect.setPosition(drump.x, drump.y);
 
     // Remove punch effect after 2 seconds
     setTimeout(() => {
         punchEffect.destroy();
-        console.log("Punch effect removed");
+        console.log("Punch effect removed.");
     }, 2000);
 }
-
-
 
 function handlePunch() {
     punches++;
