@@ -158,6 +158,88 @@ function renderTopBar() {
     document.body.appendChild(soundButton);
 }
 
+function updatePunchDisplay() {
+    const bar = document.getElementById("punch-bar");
+    if (bar) {
+        bar.innerText = `🥾 Punches: ${punches}`;
+    }
+}
+
+function renderTabs() {
+    const tabBar = document.createElement("div");
+    tabBar.id = "tab-container";
+    tabBar.style.position = "fixed";
+    tabBar.style.bottom = "0";
+    tabBar.style.left = "0";
+    tabBar.style.width = "100%";
+    tabBar.style.display = "flex";
+    tabBar.style.justifyContent = "space-around";
+    tabBar.style.background = "#002868";
+    tabBar.style.zIndex = "1000";
+
+    ["game", "leaderboard", "info"].forEach(tab => {
+        const btn = document.createElement("button");
+        btn.innerText = tab.toUpperCase();
+        btn.style.flex = "1";
+        btn.style.padding = "12px";
+        btn.style.fontSize = "14px";
+        btn.style.border = "none";
+        btn.style.color = "#fff";
+        btn.style.background = (tab === activeTab) ? "#003f8a" : "#002868";
+        btn.onclick = () => {
+            activeTab = tab;
+            showTab(tab);
+            document.querySelectorAll("#tab-container button").forEach(b => b.style.background = "#002868");
+            btn.style.background = "#003f8a";
+        };
+        tabBar.appendChild(btn);
+    });
+
+    document.body.appendChild(tabBar);
+}
+
+function renderShareButton() {
+    const btn = document.createElement("button");
+    btn.innerText = "📣 Share Score";
+    btn.style.position = "fixed";
+    btn.style.bottom = "60px";
+    btn.style.right = "20px";
+    btn.style.padding = "10px 14px";
+    btn.style.fontSize = "14px";
+    btn.style.background = "#0077cc";
+    btn.style.color = "#fff";
+    btn.style.border = "none";
+    btn.style.borderRadius = "8px";
+    btn.style.fontFamily = "'Arial Black', sans-serif";
+    btn.style.zIndex = "1001";
+
+    btn.onclick = () => {
+        const botLink = "https://t.me/Drump_punch_bot";
+        const message = `I punched ${punches} points in Drump | Punch2Earn. Wanna punch to earn?`;
+
+        Telegram.WebApp.showPopup({
+            title: "Share your score",
+            message: `Choose where to share your ${punches} punches:`,
+            buttons: [
+                { id: "telegram", type: "default", text: "Telegram" },
+                { id: "x", type: "default", text: "X (Twitter)" },
+                { id: "whatsapp", type: "default", text: "WhatsApp" },
+            ]
+        }, (btnId) => {
+            const links = {
+                telegram: `https://t.me/share/url?url=${encodeURIComponent(botLink)}&text=${encodeURIComponent(message)}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(message + ' ' + botLink)}`,
+                x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(message + ' ' + botLink)}`
+            };
+            if (btnId && links[btnId]) {
+                window.open(links[btnId], "_blank");
+            }
+        });
+    };
+
+    document.body.appendChild(btn);
+}
+
 
 function showGameUI(scene) {
     const current = Math.min(punches, 30);
