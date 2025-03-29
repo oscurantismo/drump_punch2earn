@@ -84,12 +84,12 @@ function create() {
         punches = parseInt(cached);
     }
 
-    fetch("https://drumptossleaderboard-production.up.railway.app/register", {
+    fetch("https://drump-production.up.railway.app/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: storedUsername, user_id: userId })
     })
-    .then(() => fetch("https://drumptossleaderboard-production.up.railway.app/leaderboard"))
+    .then(() => fetch("https://drump-production.up.railway.app/leaderboard"))
     .then(res => res.json())
     .then(scores => {
         const entry = scores.find(u => u.user_id == userId);
@@ -208,8 +208,8 @@ function renderShareButton() {
     btn.style.zIndex = "1001";
 
     btn.onclick = () => {
-        const botLink = "https://t.me/drumpToss_bot";
-        const message = `I punched ${punches} points in drumpToss. Wanna punch to earn?`;
+        const botLink = "https://t.me/Drump_punch_bot";
+        const message = `I punched ${punches} points in Drump | Punch2Earn. Wanna punch to earn?`;
 
         Telegram.WebApp.showPopup({
             title: "Share your score",
@@ -253,7 +253,7 @@ function showTab(tab, scene = null) {
         container.style.zIndex = "999";
 
         const iframe = document.createElement("iframe");
-        iframe.src = `https://drumptossleaderboard-production.up.railway.app/leaderboard-page?user_id=${userId}`;
+        iframe.src = `https://drump-production.up.railway.app/leaderboard-page?user_id=${userId}`;
         iframe.style.width = "100%";
         iframe.style.height = "100%";
         iframe.style.border = "none";
@@ -277,7 +277,7 @@ function showTab(tab, scene = null) {
         info.style.maxWidth = "100%";
         info.style.zIndex = "999";
         info.innerHTML = `
-            <h2>👟 drumpToss</h2>
+            <h2>👟 Drump | Punch2Earn</h2>
             <p>Punch drump with a shoe. Simple as that. From like-minded cryptonerds tired of unpredictability. 
             <h3>What do I do?</h3>
             <p>Punch to earn. Collect punches. Compete on the leaderboard.</p>
@@ -292,7 +292,7 @@ function showGameUI(scene) {
     const current = Math.min(punches, 27);
     const textureKey = `drump${current}`;
     if (!loadeddrumpFrames.has(textureKey)) {
-        scene.load.image(textureKey, `drump-images/drump%20(${current}).webp`);
+        scene.load.image(textureKey, `drump-images/${textureKey}`);
         scene.load.once('complete', () => {
             loadeddrumpFrames.add(textureKey);
             drawdrump(scene, textureKey);
@@ -370,7 +370,7 @@ function handlePunch() {
         }, 200);
     }
 
-    fetch("https://drumptossleaderboard-production.up.railway.app/submit", {
+    fetch("https://drump-production.up.railway.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: storedUsername, user_id: userId, score: punches })
