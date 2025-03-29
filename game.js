@@ -42,6 +42,9 @@ function createLoader() {
     loader.style.zIndex = "2000";
     loader.innerHTML = `
         <div class="spinner"></div>
+        <p style="font-family: 'Arial', sans-serif; font-size: 14px; color: #000; margin-top: 20px;">
+            Made with ❤️ and contribution from :ca
+        </p>
         <style>
         .spinner {
             border: 6px solid #eee;
