@@ -301,7 +301,7 @@ function showTab(tab, scene = null) {
 
 function showGameUI(scene) {
     // Always start with the first image (1a-min.png) on app load
-    const textureKey = `1a-min.png`;
+    const textureKey = `drump-images/1a-min.png`;
 
     if (!loadeddrumpFrames.has(textureKey)) {
         scene.load.image(textureKey, `drump-images/${textureKey}`);
@@ -324,13 +324,25 @@ function showGameUI(scene) {
         .setDepth(999);
 }
 
-
 function drawdrump(scene, textureKey) {
-    const imageWidth = scene.textures.get(textureKey).getSourceImage().width;
-    const drumpScale = (scene.scale.width * 0.7) / imageWidth;
+    const image = scene.textures.get(textureKey).getSourceImage();
+
+    if (!image) {
+        console.error(`Failed to load image: ${textureKey}`);
+        return;
+    }
+
+    const imageWidth = image.width;
+    const imageHeight = image.height;
+    const maxWidth = window.innerWidth * 0.7; // 70vw
+    const scale = Math.min(maxWidth / imageWidth, 1);
+
+    if (drump) {
+        drump.destroy();
+    }
 
     drump = scene.add.image(scene.scale.width / 2, scene.scale.height / 2.3, textureKey)
-        .setScale(drumpScale)
+        .setScale(scale)
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
 
