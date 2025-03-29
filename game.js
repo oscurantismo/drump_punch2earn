@@ -408,14 +408,14 @@ function handlePunch() {
     if (!hitCooldown) {
         hitCooldown = true;
 
-        // Gradual progression from 1 to 30
+        // Ensure frame progresses gradually without jumping to 30
         if (currentFrame < 30) {
             currentFrame++;
-            lastFrameBeforeBackwards = currentFrame; // Save the current state
         }
 
         const key = `${currentFrame}a-min.png`;
 
+        // Check if image is preloaded; load if not
         if (!loadeddrumpFrames.has(key)) {
             game.scene.scenes[0].load.image(key, `drump-images/${key}`);
             game.scene.scenes[0].load.once('complete', () => {
@@ -427,7 +427,8 @@ function handlePunch() {
             drump.setTexture(key);
         }
 
-        showPunchEffect(); // Display the punch effect
+        // Show punch effect
+        showPunchEffect();
 
         const floatingText = drump.scene.add.text(drump.x, drump.y - 100, "+1", {
             font: "bold 24px Arial",
@@ -453,7 +454,6 @@ function handlePunch() {
         startBackwardAnimation();
     }
 }
-
 
 function startBackwardAnimation() {
     if (backwardInterval) clearInterval(backwardInterval);
