@@ -7,6 +7,7 @@ let loadeddrumpFrames = new Set(["drump-images/1a-min.png"]);
 let backwardInterval;
 let lastPunchTime = 0;
 let currentFrame = 1; // Track Drump's current image frame
+let lastFrameBeforeBackwards = 1; // Track the last frame before backward animation
 const BACKWARD_DELAY = 2000; // 2 seconds before going backward
 const BACKWARD_SPEED = 50; // 300ms per frame
 
@@ -320,7 +321,7 @@ function drawdrump(scene, textureKey) {
     }
 
     // Shift downwards by 10% of screen height
-    const yPosition = scene.scale.height / 2.3 + (scene.scale.height * 0.1);
+    const yPosition = scene.scale.height / 2.3 + (scene.scale.height * 0.2);
 
     drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
         .setScale(scale)
@@ -388,6 +389,7 @@ function handlePunch() {
         // Ensure frame progresses one by one, capping at 30
         if (currentFrame < 30) {
             currentFrame++;
+            lastFrameBeforeBackwards = currentFrame;
         }
 
         const key = `${currentFrame}a-min.png`;
@@ -403,16 +405,16 @@ function handlePunch() {
             drump.setTexture(key);
         }
 
-        // Display punch effect on the right, overlapping 20%
+        // Display punch effect on top, in the center of Drump
         const punchEffect = game.scene.scenes[0].add.image(
-            drump.x + (drump.displayWidth * 0.6),
+            drump.x,
             drump.y,
             "punch"
         )
         .setScale(0.7)
-        .setDepth(5)
+        .setDepth(9999) // Ensure it appears on top of everything
         .setOrigin(0.5)
-        .setAlpha(0);
+        .setAlpha(0); // Start invisible
 
         // Smooth fade-in and fade-out animation
         game.scene.scenes[0].tweens.add({
@@ -463,7 +465,7 @@ function startBackwardAnimation() {
         const now = Date.now();
         if (now - lastPunchTime >= BACKWARD_DELAY) {
             const frameNum = parseInt(drump.texture.key.replace('a-min.png', ''));
-            
+
             // Ensure the backward animation stops at image 1
             if (frameNum <= 1) {
                 clearInterval(backwardInterval);
@@ -471,6 +473,7 @@ function startBackwardAnimation() {
             }
 
             const newFrameNum = frameNum - 1;
+            lastFrameBeforeBackwards = newFrameNum; // Update the last frame before backward animation
             const key = `${newFrameNum}a-min.png`;
 
             if (!loadeddrumpFrames.has(key)) {
