@@ -318,8 +318,8 @@ function drawdrump(scene, textureKey) {
         drump.destroy();
     }
 
-    // Calculate position with a 30% downward shift
-    const yPosition = scene.scale.height / 2.3 + (scene.scale.height * 0.3);
+    // Shift downwards by 10% of screen height
+    const yPosition = scene.scale.height / 2.3 + (scene.scale.height * 0.1);
 
     drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
         .setScale(scale)
@@ -328,7 +328,6 @@ function drawdrump(scene, textureKey) {
 
     drump.on("pointerdown", () => handlePunch());
 }
-
 
 function showGameUI(scene) {
     // Add the background image and set it to cover the whole screen
@@ -384,9 +383,9 @@ function handlePunch() {
 
     if (!hitCooldown) {
         hitCooldown = true;
-        
-        // Ensure the image progresses gradually from 1 to 30
-        const frameNum = Math.min(punches, 30); 
+
+        // Image progression from 1 to 30
+        const frameNum = Math.min(punches, 30);
         const key = `${frameNum}a-min.png`;
 
         if (!loadeddrumpFrames.has(key)) {
@@ -400,18 +399,23 @@ function handlePunch() {
             drump.setTexture(key);
         }
 
+        // Keep image 30 if user is still punching
+        if (frameNum === 30) {
+            console.log("Image 30 reached. Holding image 30 until the user stops punching.");
+        }
+
         // Punch effect animation
         const punchEffect = game.scene.scenes[0].add.image(drump.x + (drump.displayWidth * 0.55), drump.y, "punch")
             .setScale(0.7)
             .setDepth(5)
             .setOrigin(0.5)
-            .setAlpha(0); // Start invisible
+            .setAlpha(0);
 
         game.scene.scenes[0].tweens.add({
             targets: punchEffect,
             x: drump.x + (drump.displayWidth * 0.2),
             alpha: 1,
-            duration: 75, // Fade-in
+            duration: 75,
             onComplete: () => {
                 game.scene.scenes[0].tweens.add({
                     targets: punchEffect,
