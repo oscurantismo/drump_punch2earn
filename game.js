@@ -301,7 +301,7 @@ function showTab(tab, scene = null) {
 
 function showGameUI(scene) {
     // Always start with the first image (1a-min.png) on app load
-    const textureKey = `drump-images/1a-min.png`;
+    const textureKey = `1a-min.png`;
 
     if (!loadeddrumpFrames.has(textureKey)) {
         scene.load.image(textureKey, `drump-images/${textureKey}`);
