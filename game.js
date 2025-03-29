@@ -75,8 +75,8 @@ function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
     this.load.image("background", "drump-images/Background.png"); // Make sure the file is available
     this.load.spritesheet("punch", "drump-images/punch-ezgif.com-gif-to-sprite-converter.png", {
-        frameWidth: 200, // Adjust to your actual frame width
-        frameHeight: 200, // Adjust to your actual frame height
+        frameWidth: 300, // Adjust to your actual frame width
+        frameHeight: 300, // Adjust to your actual frame height
         endFrame: 8 // Adjust to your actual frame count
         });
 
@@ -275,11 +275,12 @@ function showTab(tab, scene = null) {
         container.style.position = "fixed";
         container.style.overflowY = "auto";
         container.style.top = "100px"; // below punch bar
-        container.style.bottom = "48px"; // above nav tabs
+        container.style.bottom = "0"; // Remove gaps by aligning to bottom
         container.style.left = "0";
-        container.style.width = "100vw"; // Ensure full width
-        container.style.height = "calc(100vh - 148px)"; // Adjust to remove the gap
-        container.style.background = "#ffffff"; // Ensure white background
+        container.style.right = "0";
+        container.style.width = "100vw";
+        container.style.height = "calc(100vh - 100px)"; // Adjust dynamically to fit screen without gaps
+        container.style.background = "#ffffff";
         container.style.zIndex = "999";
 
         const iframe = document.createElement("iframe");
@@ -294,18 +295,18 @@ function showTab(tab, scene = null) {
         const info = document.createElement("div");
         info.id = "info-container";
         info.style.position = "fixed";
-        info.style.top = "100px"; // below punch bar
-        info.style.bottom = "48px"; // above nav tabs
+        info.style.top = "100px"; // Start below punch bar
+        info.style.bottom = "0"; // Remove gaps by aligning to bottom
         info.style.left = "0";
-        info.style.width = "100vw"; // Ensure full width
-        info.style.height = "calc(100vh - 148px)"; // Adjust to remove the gap
+        info.style.right = "0";
+        info.style.width = "100vw";
+        info.style.height = "calc(100vh - 100px)"; // Adjust dynamically to fit screen without gaps
         info.style.padding = "20px";
-        info.style.background = "#ffffff"; // Ensure white background
+        info.style.background = "#ffffff";
         info.style.fontFamily = "Arial";
         info.style.overflowY = "auto";
         info.style.overflowX = "hidden";
         info.style.boxSizing = "border-box";
-        info.style.maxWidth = "100%";
         info.style.zIndex = "999";
         info.innerHTML = `
             <h2>👟 Drump | Punch2Earn</h2>
@@ -318,6 +319,7 @@ function showTab(tab, scene = null) {
         document.body.appendChild(info);
     }
 }
+
 
 function drawdrump(scene, textureKey) {
     const image = scene.textures.get(textureKey).getSourceImage();
