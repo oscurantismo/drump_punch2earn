@@ -154,7 +154,6 @@ function fetchProfileData() {
         });
 }
 
-
 function renderProfilePage() {
     // Remove any existing profile container to prevent duplicates
     const existingProfile = document.getElementById("profile-container");
@@ -212,22 +211,63 @@ function renderProfilePage() {
     referralMessage.style.marginBottom = "20px";
     card.appendChild(referralMessage);
 
-    // Referral link
-    const referralLink = document.createElement("a");
-    referralLink.href = `https://t.me/TrumpToss_bot?start=referral_${userId}`;
-    referralLink.innerText = "📤 Share Referral Link";
-    referralLink.target = "_blank";
-    referralLink.style.display = "inline-block";
-    referralLink.style.textDecoration = "none";
-    referralLink.style.background = "#b22234";
-    referralLink.style.color = "#fff";
-    referralLink.style.padding = "10px 20px";
-    referralLink.style.borderRadius = "12px";
-    referralLink.style.fontWeight = "bold";
-    referralLink.style.transition = "background 0.3s";
-    referralLink.onmouseover = () => referralLink.style.background = "#a21b2f";
-    referralLink.onmouseout = () => referralLink.style.background = "#b22234";
-    card.appendChild(referralLink);
+    // Referral Link Section
+    const referralContainer = document.createElement("div");
+    referralContainer.style.display = "flex";
+    referralContainer.style.alignItems = "center";
+    referralContainer.style.marginBottom = "20px";
+
+    const referralInput = document.createElement("input");
+    referralInput.type = "text";
+    referralInput.value = `https://t.me/TrumpToss_bot?start=referral_${userId}`;
+    referralInput.readOnly = true;
+    referralInput.style.flex = "1";
+    referralInput.style.padding = "10px";
+    referralInput.style.border = "2px solid #0047ab";
+    referralInput.style.borderRadius = "12px";
+    referralInput.style.background = "#fff";
+    referralInput.style.color = "#000";
+    referralInput.style.fontSize = "14px";
+
+    // Copy Button
+    const copyButton = document.createElement("button");
+    copyButton.innerText = "📋 Copy";
+    copyButton.style.marginLeft = "10px";
+    copyButton.style.padding = "10px";
+    copyButton.style.background = "#0077cc";
+    copyButton.style.color = "#fff";
+    copyButton.style.border = "none";
+    copyButton.style.borderRadius = "12px";
+    copyButton.style.cursor = "pointer";
+    copyButton.onclick = () => {
+        referralInput.select();
+        navigator.clipboard.writeText(referralInput.value).then(() => {
+            alert("Referral link copied to clipboard!");
+        }).catch(err => {
+            console.error("Failed to copy referral link: ", err);
+            alert("Failed to copy referral link. Please try again.");
+        });
+    };
+
+    referralContainer.appendChild(referralInput);
+    referralContainer.appendChild(copyButton);
+    card.appendChild(referralContainer);
+
+    // Share Button
+    const shareButton = document.createElement("button");
+    shareButton.innerText = "🚀 Share Link";
+    shareButton.style.padding = "12px 20px";
+    shareButton.style.background = "#0047ab";
+    shareButton.style.color = "#fff";
+    shareButton.style.border = "none";
+    shareButton.style.borderRadius = "12px";
+    shareButton.style.cursor = "pointer";
+    shareButton.style.marginBottom = "20px";
+    shareButton.onclick = () => {
+        const message = `Hey! 👋 I’ve been playing TrumpToss and it's hilarious! 😂 Earn points by throwing shoes at Trump. Join me and get started here: https://t.me/TrumpToss_bot?start=referral_${userId}`;
+        Telegram.WebApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(`https://t.me/TrumpToss_bot?start=referral_${userId}`)}&text=${encodeURIComponent(message)}`);
+    };
+    card.appendChild(shareButton);
 
     // Close button
     const closeButton = document.createElement("button");
@@ -238,7 +278,6 @@ function renderProfilePage() {
     closeButton.style.borderRadius = "12px";
     closeButton.style.border = "none";
     closeButton.style.cursor = "pointer";
-    closeButton.style.marginTop = "20px";
     closeButton.style.transition = "background 0.3s";
     closeButton.onmouseover = () => closeButton.style.background = "#e05547";
     closeButton.onmouseout = () => closeButton.style.background = "#ff6756";
@@ -252,6 +291,7 @@ function renderProfilePage() {
     // Fetch and display profile data
     fetchProfileData();
 }
+
 
 function closeProfile() {
     const container = document.getElementById("profile-container");
