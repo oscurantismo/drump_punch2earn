@@ -134,8 +134,14 @@ function create() {
 }
 
 
-// Referral Profile Page
 function renderProfilePage() {
+    // Remove any existing profile container to prevent duplicates
+    const existingProfile = document.getElementById("profile-container");
+    if (existingProfile) {
+        existingProfile.remove();
+    }
+
+    // Create the profile container
     const container = document.createElement("div");
     container.id = "profile-container";
     container.style.position = "fixed";
@@ -143,29 +149,87 @@ function renderProfilePage() {
     container.style.left = "0";
     container.style.width = "100vw";
     container.style.height = "100vh";
-    container.style.background = "#fff";
+    container.style.background = "#ffffff";
     container.style.zIndex = "2000";
-    container.style.padding = "20px";
-    container.innerHTML = `
-        <h2>${storedUsername}'s Profile</h2>
-        <p>Coins: <span id="coin-count">0</span></p>
-        <p>Invite friends and earn 10 coins per referral!</p>
-        <p>Your referral link: <a href="https://t.me/TrumpToss_bot?start=referral_${userId}" target="_blank">Share Link</a></p>
-        <button onclick="closeProfile()">Close</button>
-    `;
-    document.body.appendChild(container);
-    fetchProfileData();
-}
+    container.style.display = "flex";
+    container.style.flexDirection = "column";
+    container.style.alignItems = "center";
+    container.style.justifyContent = "center";
+    container.style.fontFamily = "'Arial Black', sans-serif";
 
-function fetchProfileData() {
-    fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${userId}`)
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("coin-count").textContent = data.coins || 0;
-        })
-        .catch(error => {
-            console.error("Error fetching profile data:", error);
-        });
+    // Profile card
+    const card = document.createElement("div");
+    card.style.background = "#0047ab";
+    card.style.color = "#fff";
+    card.style.padding = "30px";
+    card.style.borderRadius = "20px";
+    card.style.width = "90%";
+    card.style.maxWidth = "400px";
+    card.style.textAlign = "center";
+    card.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)";
+    card.style.border = "2px solid #002868";
+
+    // Title
+    const title = document.createElement("h2");
+    title.innerText = `${storedUsername}'s Profile`;
+    title.style.color = "#ffffff";
+    title.style.marginBottom = "20px";
+    card.appendChild(title);
+
+    // Coins display
+    const coinDisplay = document.createElement("p");
+    coinDisplay.innerHTML = `💰 Coins: <span id="coin-count">0</span>`;
+    coinDisplay.style.fontSize = "18px";
+    coinDisplay.style.marginBottom = "20px";
+    card.appendChild(coinDisplay);
+
+    // Referral message
+    const referralMessage = document.createElement("p");
+    referralMessage.innerText = "Invite friends and earn 10 coins per referral!";
+    referralMessage.style.fontSize = "14px";
+    referralMessage.style.color = "#ffcc00";
+    referralMessage.style.marginBottom = "20px";
+    card.appendChild(referralMessage);
+
+    // Referral link
+    const referralLink = document.createElement("a");
+    referralLink.href = `https://t.me/TrumpToss_bot?start=referral_${userId}`;
+    referralLink.innerText = "📤 Share Referral Link";
+    referralLink.target = "_blank";
+    referralLink.style.display = "inline-block";
+    referralLink.style.textDecoration = "none";
+    referralLink.style.background = "#b22234";
+    referralLink.style.color = "#fff";
+    referralLink.style.padding = "10px 20px";
+    referralLink.style.borderRadius = "12px";
+    referralLink.style.fontWeight = "bold";
+    referralLink.style.transition = "background 0.3s";
+    referralLink.onmouseover = () => referralLink.style.background = "#a21b2f";
+    referralLink.onmouseout = () => referralLink.style.background = "#b22234";
+    card.appendChild(referralLink);
+
+    // Close button
+    const closeButton = document.createElement("button");
+    closeButton.innerText = "❌ Close";
+    closeButton.style.background = "#ff6756";
+    closeButton.style.color = "#fff";
+    closeButton.style.padding = "10px 20px";
+    closeButton.style.borderRadius = "12px";
+    closeButton.style.border = "none";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.marginTop = "20px";
+    closeButton.style.transition = "background 0.3s";
+    closeButton.onmouseover = () => closeButton.style.background = "#e05547";
+    closeButton.onmouseout = () => closeButton.style.background = "#ff6756";
+    closeButton.onclick = closeProfile;
+    card.appendChild(closeButton);
+
+    // Append card to container and to the body
+    container.appendChild(card);
+    document.body.appendChild(container);
+
+    // Fetch and display profile data
+    fetchProfileData();
 }
 
 function closeProfile() {
