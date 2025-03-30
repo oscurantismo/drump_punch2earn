@@ -133,6 +133,27 @@ function create() {
     });
 }
 
+// Fetch user profile data
+function fetchProfileData() {
+    fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${userId}`)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            document.getElementById("coin-count").textContent = data.coins || 0;
+        })
+        .catch(error => {
+            console.error("Error fetching profile data:", error);
+            alert("Failed to fetch profile data. Please try again later.");
+        });
+}
+
 
 function renderProfilePage() {
     // Remove any existing profile container to prevent duplicates
