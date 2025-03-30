@@ -25,7 +25,7 @@ window.onload = () => {
     game = new Phaser.Game(gameConfig);
 };
 
-let drump, shoeCursor, punchSounds = [], soundButton;
+let drump, punchSounds = [], soundButton;
 let hitCooldown = false;
 let soundEnabled = true;
 
@@ -105,12 +105,12 @@ function create() {
 
     this.anims.create({
         key: 'punchAnim',
-        frames: this.anims.generateFrameNumbers('punch', { start: 0, end: 7 }), // Adjust end number if needed
+        frames: this.anims.generateFrameNumbers('punch', { start: 0, end: 7 }),
         frameRate: 10,
         repeat: 0
     });
 
-
+    this.input.setDefaultCursor("default"); // Apply default cursor on all devices
 
     fetch("https://drumpleaderboard-production.up.railway.app/register", {
         method: "POST",
@@ -132,6 +132,7 @@ function create() {
         showTab("game", this);
     });
 }
+
 
 // Referral Profile Page
 function renderProfilePage() {
@@ -160,7 +161,10 @@ function fetchProfileData() {
     fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${userId}`)
         .then(res => res.json())
         .then(data => {
-            document.getElementById("coin-count").textContent = data.coins;
+            document.getElementById("coin-count").textContent = data.coins || 0;
+        })
+        .catch(error => {
+            console.error("Error fetching profile data:", error);
         });
 }
 
@@ -168,6 +172,7 @@ function closeProfile() {
     const container = document.getElementById("profile-container");
     if (container) container.remove();
 }
+
 
 // Event to Open Profile
 function renderTopBar() {
@@ -221,56 +226,11 @@ function renderTopBar() {
         soundButton.src = soundEnabled ? "sound_on.svg" : "sound_off.svg";
     };
     document.body.appendChild(soundButton);
+
+    // Ensure default cursor on all devices
+    document.body.style.cursor = "default";
 }
 
-function renderTopBar() {
-    const top = document.createElement("div");
-    top.style.position = "fixed";
-    top.style.top = "0.5rem";
-    top.style.left = "1rem";
-    top.style.background = "#fff";
-    top.style.color = "#000";
-    top.style.border = "2px solid #0047ab";
-    top.style.borderRadius = "10px";
-    top.style.fontFamily = "'Arial Black', sans-serif";
-    top.style.padding = "6px 12px";
-    top.style.zIndex = "1000";
-    top.innerText = `${storedUsername}`;
-    document.body.appendChild(top);
-
-    const punchBar = document.createElement("div");
-    punchBar.id = "punch-bar";
-    punchBar.style.position = "fixed";
-    punchBar.style.top = "50px";
-    punchBar.style.left = "1rem";
-    punchBar.style.right = "1rem";
-    punchBar.style.background = "#b22234";
-    punchBar.style.color = "#ffffff";
-    punchBar.style.textAlign = "center";
-    punchBar.style.fontFamily = "'Arial Black', sans-serif";
-    punchBar.style.fontSize = "18px";
-    punchBar.style.padding = "6px 0";
-    punchBar.style.borderRadius = "8px";
-    punchBar.style.zIndex = "999";
-    punchBar.innerText = `🥾 Punches: ${punches}`;
-    document.body.appendChild(punchBar);
-
-    const iconSize = 32;
-    soundButton = document.createElement("img");
-    soundButton.src = "sound_on.svg";
-    soundButton.style.position = "fixed";
-    soundButton.style.top = "calc(0.5rem + 4px)";
-    soundButton.style.right = "12px";
-    soundButton.style.width = iconSize + "px";
-    soundButton.style.height = iconSize + "px";
-    soundButton.style.cursor = "pointer";
-    soundButton.style.zIndex = "1001";
-    soundButton.onclick = () => {
-        soundEnabled = !soundEnabled;
-        soundButton.src = soundEnabled ? "sound_on.svg" : "sound_off.svg";
-    };
-    document.body.appendChild(soundButton);
-}
 
 function updatePunchDisplay() {
     const bar = document.getElementById("punch-bar");
@@ -627,11 +587,4 @@ function startBackwardAnimation() {
             }
         }
     }, adjustedSpeed); // Faster animation (30% faster)
-}
-
-function update() {
-    if (shoeCursor && game.input && game.input.activePointer) {
-        const pointer = game.input.activePointer;
-        shoeCursor.setPosition(pointer.x, pointer.y);
-    }
 }
