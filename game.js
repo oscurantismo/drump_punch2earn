@@ -277,7 +277,6 @@ function updatePunchDisplay() {
     if (bar) {
         bar.innerText = `🥾 Punches: ${punches}`;
     }
-}
 
     usernameElement.style.cursor = "pointer";
     usernameElement.onclick = renderProfilePage;
