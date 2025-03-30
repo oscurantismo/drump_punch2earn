@@ -563,8 +563,12 @@ function showPunchEffect() {
     }, 500);
 }
 
-
 function handlePunch() {
+    if (activeTab !== "game") {
+        console.log("Score submission blocked. User is not on the game screen.");
+        return; // Prevent score submission if not on the game screen
+    }
+
     punches++;
     lastPunchTime = Date.now();
     updatePunchDisplay();
@@ -638,7 +642,6 @@ function handlePunch() {
     .catch(error => {
         console.error("Error submitting score:", error);
     });
-
 }
 
 function startBackwardAnimation() {
