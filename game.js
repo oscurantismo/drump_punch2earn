@@ -176,7 +176,15 @@ function closeProfile() {
 
 // Event to Open Profile
 function renderTopBar() {
+    // Remove any existing top bar to prevent duplicates
+    const existingTopBar = document.getElementById("top-bar");
+    if (existingTopBar) {
+        existingTopBar.remove();
+    }
+
+    // Create the top bar container
     const top = document.createElement("div");
+    top.id = "top-bar";
     top.style.position = "fixed";
     top.style.top = "0.5rem";
     top.style.left = "1rem";
@@ -188,12 +196,14 @@ function renderTopBar() {
     top.style.padding = "6px 12px";
     top.style.zIndex = "1000";
 
-    usernameElement = document.createElement("div"); // Ensure it's globally accessible
+    // Create the username display with profile access
+    usernameElement = document.createElement("div"); 
     usernameElement.innerHTML = `👤 ${storedUsername}`;
     usernameElement.style.cursor = "pointer";
     usernameElement.onclick = renderProfilePage;
     top.appendChild(usernameElement);
 
+    // Create the punch counter
     const punchBar = document.createElement("div");
     punchBar.id = "punch-bar";
     punchBar.style.position = "fixed";
@@ -211,14 +221,15 @@ function renderTopBar() {
     punchBar.innerText = `🥾 Punches: ${punches}`;
     document.body.appendChild(punchBar);
 
+    // Add sound toggle button
     const iconSize = 32;
     soundButton = document.createElement("img");
-    soundButton.src = "sound_on.svg";
+    soundButton.src = soundEnabled ? "sound_on.svg" : "sound_off.svg";
     soundButton.style.position = "fixed";
     soundButton.style.top = "calc(0.5rem + 4px)";
     soundButton.style.right = "12px";
-    soundButton.style.width = iconSize + "px";
-    soundButton.style.height = iconSize + "px";
+    soundButton.style.width = `${iconSize}px`;
+    soundButton.style.height = `${iconSize}px`;
     soundButton.style.cursor = "pointer";
     soundButton.style.zIndex = "1001";
     soundButton.onclick = () => {
@@ -227,9 +238,13 @@ function renderTopBar() {
     };
     document.body.appendChild(soundButton);
 
+    // Append the top bar to the document
+    document.body.appendChild(top);
+
     // Ensure default cursor on all devices
     document.body.style.cursor = "default";
 }
+
 
 function updatePunchDisplay() {
     const bar = document.getElementById("punch-bar");
