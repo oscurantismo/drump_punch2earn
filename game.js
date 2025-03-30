@@ -2,6 +2,7 @@ let game;
 let punches = 0;
 let activeTab = "game";
 let storedUsername = "Anonymous";
+let usernameElement;
 let userId = "";
 let loadeddrumpFrames = new Set(["drump-images/1a-min.png"]);
 let backwardInterval;
@@ -82,7 +83,6 @@ function preload() {
         endFrame: 8 // Adjust to your actual frame count
         });
 
-    this.load.image("shoe", "shoe.png");
     this.load.image("sound_on", "sound_on.svg");
     this.load.image("sound_off", "sound_off.svg");
     for (let i = 1; i <= 4; i++) {
@@ -188,7 +188,7 @@ function renderTopBar() {
     top.style.padding = "6px 12px";
     top.style.zIndex = "1000";
 
-    const usernameElement = document.createElement("div");
+    usernameElement = document.createElement("div"); // Ensure it's globally accessible
     usernameElement.innerHTML = `👤 ${storedUsername}`;
     usernameElement.style.cursor = "pointer";
     usernameElement.onclick = renderProfilePage;
@@ -231,19 +231,13 @@ function renderTopBar() {
     document.body.style.cursor = "default";
 }
 
-
 function updatePunchDisplay() {
     const bar = document.getElementById("punch-bar");
     if (bar) {
         bar.innerText = `🥾 Punches: ${punches}`;
     }
-
-    usernameElement.style.cursor = "pointer";
-    usernameElement.onclick = renderProfilePage;
-    top.appendChild(usernameElement);
-
-    document.body.appendChild(top);
 }
+
 
 function renderTabs() {
     const tabBar = document.createElement("div");
@@ -441,13 +435,6 @@ function showGameUI(scene) {
 
     for (let i = 1; i <= 4; i++) {
         punchSounds.push(scene.sound.add("punch" + i));
-    }
-
-    if (/Mobi|Android/i.test(navigator.userAgent)) {
-        scene.input.setDefaultCursor("default");
-    } else {
-        scene.input.setDefaultCursor("none");
-        shoeCursor = scene.add.image(scene.input.activePointer.x, scene.input.activePointer.y, "shoe").setScale(0.5).setDepth(999);
     }
 
 }
