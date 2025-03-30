@@ -64,6 +64,8 @@ function createLoader() {
         </style>
     `;
     document.body.appendChild(loader);
+
+    setTimeout(() => removeLoader(), 5000);
 }
 
 function removeLoader() {
@@ -131,6 +133,96 @@ function create() {
     });
 }
 
+// Referral Profile Page
+function renderProfilePage() {
+    const container = document.createElement("div");
+    container.id = "profile-container";
+    container.style.position = "fixed";
+    container.style.top = "0";
+    container.style.left = "0";
+    container.style.width = "100vw";
+    container.style.height = "100vh";
+    container.style.background = "#fff";
+    container.style.zIndex = "2000";
+    container.style.padding = "20px";
+    container.innerHTML = `
+        <h2>${storedUsername}'s Profile</h2>
+        <p>Coins: <span id="coin-count">0</span></p>
+        <p>Invite friends and earn 10 coins per referral!</p>
+        <p>Your referral link: <a href="https://t.me/TrumpToss_bot?start=referral_${userId}" target="_blank">Share Link</a></p>
+        <button onclick="closeProfile()">Close</button>
+    `;
+    document.body.appendChild(container);
+    fetchProfileData();
+}
+
+function fetchProfileData() {
+    fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${userId}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("coin-count").textContent = data.coins;
+        });
+}
+
+function closeProfile() {
+    const container = document.getElementById("profile-container");
+    if (container) container.remove();
+}
+
+// Event to Open Profile
+function renderTopBar() {
+    const top = document.createElement("div");
+    top.style.position = "fixed";
+    top.style.top = "0.5rem";
+    top.style.left = "1rem";
+    top.style.background = "#fff";
+    top.style.color = "#000";
+    top.style.border = "2px solid #0047ab";
+    top.style.borderRadius = "10px";
+    top.style.fontFamily = "'Arial Black', sans-serif";
+    top.style.padding = "6px 12px";
+    top.style.zIndex = "1000";
+
+    const usernameElement = document.createElement("div");
+    usernameElement.innerHTML = `👤 ${storedUsername}`;
+    usernameElement.style.cursor = "pointer";
+    usernameElement.onclick = renderProfilePage;
+    top.appendChild(usernameElement);
+
+    const punchBar = document.createElement("div");
+    punchBar.id = "punch-bar";
+    punchBar.style.position = "fixed";
+    punchBar.style.top = "50px";
+    punchBar.style.left = "1rem";
+    punchBar.style.right = "1rem";
+    punchBar.style.background = "#b22234";
+    punchBar.style.color = "#ffffff";
+    punchBar.style.textAlign = "center";
+    punchBar.style.fontFamily = "'Arial Black', sans-serif";
+    punchBar.style.fontSize = "18px";
+    punchBar.style.padding = "6px 0";
+    punchBar.style.borderRadius = "8px";
+    punchBar.style.zIndex = "999";
+    punchBar.innerText = `🥾 Punches: ${punches}`;
+    document.body.appendChild(punchBar);
+
+    const iconSize = 32;
+    soundButton = document.createElement("img");
+    soundButton.src = "sound_on.svg";
+    soundButton.style.position = "fixed";
+    soundButton.style.top = "calc(0.5rem + 4px)";
+    soundButton.style.right = "12px";
+    soundButton.style.width = iconSize + "px";
+    soundButton.style.height = iconSize + "px";
+    soundButton.style.cursor = "pointer";
+    soundButton.style.zIndex = "1001";
+    soundButton.onclick = () => {
+        soundEnabled = !soundEnabled;
+        soundButton.src = soundEnabled ? "sound_on.svg" : "sound_off.svg";
+    };
+    document.body.appendChild(soundButton);
+}
+
 function renderTopBar() {
     const top = document.createElement("div");
     top.style.position = "fixed";
@@ -185,6 +277,13 @@ function updatePunchDisplay() {
     if (bar) {
         bar.innerText = `🥾 Punches: ${punches}`;
     }
+}
+
+    usernameElement.style.cursor = "pointer";
+    usernameElement.onclick = renderProfilePage;
+    top.appendChild(usernameElement);
+
+    document.body.appendChild(top);
 }
 
 function renderTabs() {
@@ -385,10 +484,13 @@ function showGameUI(scene) {
         punchSounds.push(scene.sound.add("punch" + i));
     }
 
-    scene.input.setDefaultCursor("none");
-    shoeCursor = scene.add.image(scene.input.activePointer.x, scene.input.activePointer.y, "shoe")
-        .setScale(0.5)
-        .setDepth(999);
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        scene.input.setDefaultCursor("default");
+    } else {
+        scene.input.setDefaultCursor("none");
+        shoeCursor = scene.add.image(scene.input.activePointer.x, scene.input.activePointer.y, "shoe").setScale(0.5).setDepth(999);
+    }
+
 }
 
 function showPunchEffect() {
