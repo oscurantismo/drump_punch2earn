@@ -19,7 +19,7 @@ window.onload = () => {
         width: window.innerWidth,
         height: window.innerHeight,
         backgroundColor: "#ffffff",
-        scene: { preload, create, update }
+        scene: { preload, create }
     };
 
     game = new Phaser.Game(gameConfig);
