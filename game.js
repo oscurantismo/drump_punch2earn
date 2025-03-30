@@ -208,64 +208,74 @@ function renderProfilePage() {
     referralMessage.innerText = "Invite friends and earn 10 coins per referral!";
     referralMessage.style.fontSize = "14px";
     referralMessage.style.color = "#ffcc00";
-    referralMessage.style.marginBottom = "20px";
+    referralMessage.style.marginBottom = "10px";
     card.appendChild(referralMessage);
 
-    // Referral Link Section
-    const referralContainer = document.createElement("div");
-    referralContainer.style.display = "flex";
-    referralContainer.style.alignItems = "center";
-    referralContainer.style.marginBottom = "20px";
+    // Referral link field
+    const referralLink = document.createElement("input");
+    referralLink.type = "text";
+    referralLink.value = `https://t.me/Drump_bot?start=referral_${userId}`;
+    referralLink.readOnly = true;
+    referralLink.style.width = "80%";
+    referralLink.style.padding = "10px";
+    referralLink.style.borderRadius = "8px";
+    referralLink.style.border = "1px solid #ccc";
+    referralLink.style.marginBottom = "10px";
+    referralLink.style.fontFamily = "Arial, sans-serif";
+    card.appendChild(referralLink);
 
-    const referralInput = document.createElement("input");
-    referralInput.type = "text";
-    referralInput.value = `https://t.me/TrumpToss_bot?start=referral_${userId}`;
-    referralInput.readOnly = true;
-    referralInput.style.flex = "1";
-    referralInput.style.padding = "10px";
-    referralInput.style.border = "2px solid #0047ab";
-    referralInput.style.borderRadius = "12px";
-    referralInput.style.background = "#fff";
-    referralInput.style.color = "#000";
-    referralInput.style.fontSize = "14px";
-
-    // Copy Button
+    // Copy button
     const copyButton = document.createElement("button");
-    copyButton.innerText = "📋 Copy";
-    copyButton.style.marginLeft = "10px";
-    copyButton.style.padding = "10px";
+    copyButton.innerText = "📋 Copy Link";
     copyButton.style.background = "#0077cc";
     copyButton.style.color = "#fff";
-    copyButton.style.border = "none";
+    copyButton.style.padding = "10px 20px";
     copyButton.style.borderRadius = "12px";
+    copyButton.style.border = "none";
     copyButton.style.cursor = "pointer";
+    copyButton.style.marginLeft = "10px";
+    copyButton.style.transition = "background 0.3s";
+    copyButton.onmouseover = () => copyButton.style.background = "#005fa3";
+    copyButton.onmouseout = () => copyButton.style.background = "#0077cc";
     copyButton.onclick = () => {
-        referralInput.select();
-        navigator.clipboard.writeText(referralInput.value).then(() => {
-            alert("Referral link copied to clipboard!");
-        }).catch(err => {
-            console.error("Failed to copy referral link: ", err);
-            alert("Failed to copy referral link. Please try again.");
-        });
+        navigator.clipboard.writeText(referralLink.value);
+        alert("Referral link copied to clipboard!");
     };
+    card.appendChild(copyButton);
 
-    referralContainer.appendChild(referralInput);
-    referralContainer.appendChild(copyButton);
-    card.appendChild(referralContainer);
-
-    // Share Button
+    // Share button
     const shareButton = document.createElement("button");
-    shareButton.innerText = "🚀 Share Link";
-    shareButton.style.padding = "12px 20px";
-    shareButton.style.background = "#0047ab";
+    shareButton.innerText = "📤 Share Link";
+    shareButton.style.background = "#b22234";
     shareButton.style.color = "#fff";
-    shareButton.style.border = "none";
+    shareButton.style.padding = "10px 20px";
     shareButton.style.borderRadius = "12px";
+    shareButton.style.border = "none";
     shareButton.style.cursor = "pointer";
-    shareButton.style.marginBottom = "20px";
+    shareButton.style.marginTop = "10px";
+    shareButton.style.transition = "background 0.3s";
+    shareButton.onmouseover = () => shareButton.style.background = "#a21b2f";
+    shareButton.onmouseout = () => shareButton.style.background = "#b22234";
     shareButton.onclick = () => {
-        const message = `Hey! 👋 I’ve been playing TrumpToss and it's hilarious! 😂 Earn points by throwing shoes at Trump. Join me and get started here: https://t.me/TrumpToss_bot?start=referral_${userId}`;
-        Telegram.WebApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(`https://t.me/TrumpToss_bot?start=referral_${userId}`)}&text=${encodeURIComponent(message)}`);
+        const message = `Join me on Drump | Punch2Earn! Earn points and compete. Use my referral link: ${referralLink.value}`;
+        Telegram.WebApp.showPopup({
+            title: "Share your referral link",
+            message: `Choose where to share your referral link:`,
+            buttons: [
+                { id: "telegram", type: "default", text: "Telegram" },
+                { id: "x", type: "default", text: "X (Twitter)" },
+                { id: "whatsapp", type: "default", text: "WhatsApp" },
+            ]
+        }, (btnId) => {
+            const links = {
+                telegram: `https://t.me/share/url?url=${encodeURIComponent(referralLink.value)}&text=${encodeURIComponent(message)}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`,
+                x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`
+            };
+            if (btnId && links[btnId]) {
+                window.open(links[btnId], "_blank");
+            }
+        });
     };
     card.appendChild(shareButton);
 
@@ -278,6 +288,7 @@ function renderProfilePage() {
     closeButton.style.borderRadius = "12px";
     closeButton.style.border = "none";
     closeButton.style.cursor = "pointer";
+    closeButton.style.marginTop = "20px";
     closeButton.style.transition = "background 0.3s";
     closeButton.onmouseover = () => closeButton.style.background = "#e05547";
     closeButton.onmouseout = () => closeButton.style.background = "#ff6756";
@@ -291,7 +302,6 @@ function renderProfilePage() {
     // Fetch and display profile data
     fetchProfileData();
 }
-
 
 function closeProfile() {
     const container = document.getElementById("profile-container");
