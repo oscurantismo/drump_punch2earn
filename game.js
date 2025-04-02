@@ -155,27 +155,33 @@ function fetchProfileData() {
 }
 
 function renderProfilePage() {
-    // Remove any existing profile container to prevent duplicates
-    const existingProfile = document.getElementById("profile-container");
-    if (existingProfile) {
-        existingProfile.remove();
-    }
+    // Set active tab to prevent punches
+    activeTab = "profile";
+
+    // Remove other containers (just like tab switch)
+    ["game-container", "leaderboard-container", "info-container", "profile-container"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+    });
 
     // Create the profile container
     const container = document.createElement("div");
     container.id = "profile-container";
     container.style.position = "fixed";
-    container.style.top = "0";
+    container.style.top = "100px"; // matches other tabs
     container.style.left = "0";
     container.style.width = "100vw";
-    container.style.height = "100vh";
+    container.style.height = "calc(100vh - 100px)";
     container.style.background = "#ffffff";
-    container.style.zIndex = "2000";
+    container.style.zIndex = "999";
     container.style.display = "flex";
     container.style.flexDirection = "column";
     container.style.alignItems = "center";
     container.style.justifyContent = "center";
     container.style.fontFamily = "'Arial Black', sans-serif";
+    container.style.overflowY = "auto";
+    container.style.padding = "20px";
+    container.style.boxSizing = "border-box";
 
     // Profile card
     const card = document.createElement("div");
@@ -295,11 +301,9 @@ function renderProfilePage() {
     closeButton.onclick = closeProfile;
     card.appendChild(closeButton);
 
-    // Append card to container and to the body
     container.appendChild(card);
     document.body.appendChild(container);
 
-    // Fetch and display profile data
     fetchProfileData();
 }
 
