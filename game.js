@@ -310,8 +310,10 @@ function renderProfilePage() {
 function closeProfile() {
     const container = document.getElementById("profile-container");
     if (container) container.remove();
-}
 
+    // ✅ Return user back to "game" state
+    activeTab = "game";
+}
 
 // Event to Open Profile
 function renderTopBar() {
