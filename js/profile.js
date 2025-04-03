@@ -234,25 +234,6 @@ function fetchProfileData() {
         .catch(err => console.error("Error fetching profile data:", err));
 }
 
-function fetchReferralHistory() {
-    fetch(`https://drumpleaderboard-production.up.railway.app/referral-history?user_id=${window.userId}`)
-        .then(res => {
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res.json();
-        })
-        .then(data => {
-            if (!Array.isArray(data)) {
-                console.warn("Referral history data is not an array:", data);
-                renderReferralHistory([]);
-            } else {
-                renderReferralHistory(data);
-            }
-        })
-        .catch(err => {
-            console.error("Error fetching referral history:", err);
-            renderReferralHistory([]); // Fallback to empty
-        });
-}
 
 function closeProfile() {
     const profile = document.getElementById("profile-container");
