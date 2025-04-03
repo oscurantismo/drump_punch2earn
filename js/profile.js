@@ -162,23 +162,6 @@ function renderProfilePage() {
     btnGroup.appendChild(shareBtn);
     card.appendChild(btnGroup);
 
-    // Referral history section
-    const historyTitle = document.createElement("h3");
-    historyTitle.innerText = "📜 Referral History";
-    historyTitle.style.marginTop = "16px";
-    historyTitle.style.fontSize = "16px";
-    historyTitle.style.color = "#002868";
-    card.appendChild(historyTitle);
-
-    const historyList = document.createElement("ul");
-    historyList.id = "referral-history";
-    historyList.style.listStyle = "none";
-    historyList.style.padding = "0";
-    historyList.style.width = "100%";
-    historyList.style.fontSize = "13px";
-    historyList.style.color = "#222";
-    card.appendChild(historyList);
-
     // Close button
     const closeButton = document.createElement("button");
     closeButton.innerHTML = "🚪 Exit Profile";
