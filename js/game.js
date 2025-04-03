@@ -17,7 +17,7 @@ function createGame() {
         width: window.innerWidth,
         height: window.innerHeight,
         backgroundColor: "#ffffff",
-        scene: { preload, create, update },
+        scene: { preload, create },
         audio: {
             disableWebAudio: false
         }
