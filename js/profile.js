@@ -2,72 +2,73 @@ function renderProfilePage() {
     const existingProfile = document.getElementById("profile-container");
     if (existingProfile) existingProfile.remove();
 
-    window.activeTab = "profile"; // Prevent punch logic while profile is open
+    window.activeTab = "profile";
 
     const container = document.createElement("div");
     container.id = "profile-container";
     container.style.position = "fixed";
-    container.style.top = "100px";
-    container.style.bottom = "0";
+    container.style.top = "0";
     container.style.left = "0";
-    container.style.right = "0";
     container.style.width = "100vw";
-    container.style.height = "calc(100vh - 100px)";
-    container.style.background = "#ffffff";
-    container.style.zIndex = "999";
+    container.style.height = "100vh";
+    container.style.background = "#002868";
+    container.style.zIndex = "2000";
     container.style.overflowY = "auto";
     container.style.fontFamily = "'Arial Black', sans-serif";
     container.style.display = "flex";
-    container.style.justifyContent = "center";
+    container.style.flexDirection = "column";
+    container.style.alignItems = "center";
     container.style.padding = "20px";
     container.style.boxSizing = "border-box";
 
     const card = document.createElement("div");
-    card.style.background = "#0047ab";
-    card.style.color = "#fff";
-    card.style.padding = "30px 20px";
+    card.style.background = "#ffffff";
     card.style.borderRadius = "20px";
+    card.style.padding = "24px 20px";
     card.style.width = "100%";
-    card.style.maxWidth = "400px";
+    card.style.maxWidth = "420px";
     card.style.textAlign = "center";
-    card.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)";
-    card.style.border = "2px solid #002868";
+    card.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
+    card.style.boxSizing = "border-box";
 
-    // Title
+    const avatar = document.createElement("div");
+    avatar.innerText = "🧑‍💻";
+    avatar.style.fontSize = "56px";
+    avatar.style.marginBottom = "12px";
+    card.appendChild(avatar);
+
     const title = document.createElement("h2");
     title.innerText = `${window.storedUsername}'s Profile`;
-    title.style.marginBottom = "20px";
+    title.style.color = "#0047ab";
+    title.style.marginBottom = "8px";
     card.appendChild(title);
 
-    // Punch count
     const punchDisplay = document.createElement("p");
     punchDisplay.innerHTML = `🥾 Punches: <span id="coin-count">0</span>`;
-    punchDisplay.style.fontSize = "18px";
+    punchDisplay.style.fontSize = "20px";
     punchDisplay.style.marginBottom = "20px";
     card.appendChild(punchDisplay);
 
-    // Referral instructions
     const referralMessage = document.createElement("p");
-    referralMessage.innerHTML = `👥 Invite friends and earn <b>+100 punches</b> when they hit 10 punches.`;
+    referralMessage.innerHTML = `👥 Invite friends and earn <b>+100 punches</b><br>once they reach 10 punches.`;
     referralMessage.style.fontSize = "14px";
-    referralMessage.style.color = "#ffcc00";
+    referralMessage.style.color = "#222";
     referralMessage.style.marginBottom = "16px";
+    referralMessage.style.lineHeight = "1.4";
     card.appendChild(referralMessage);
 
-    // Referral link field
     const referralLink = document.createElement("input");
     referralLink.type = "text";
     referralLink.value = `https://t.me/Drump_bot?start=referral_${window.userId}`;
     referralLink.readOnly = true;
     referralLink.style.width = "100%";
     referralLink.style.padding = "10px";
-    referralLink.style.borderRadius = "8px";
-    referralLink.style.border = "1px solid #ccc";
-    referralLink.style.fontFamily = "Arial, sans-serif";
+    referralLink.style.borderRadius = "10px";
+    referralLink.style.border = "1px solid #aaa";
     referralLink.style.marginBottom = "10px";
+    referralLink.style.fontFamily = "Arial, sans-serif";
     card.appendChild(referralLink);
 
-    // Copy and share buttons wrapper
     const buttonGroup = document.createElement("div");
     buttonGroup.style.display = "flex";
     buttonGroup.style.justifyContent = "space-between";
@@ -80,7 +81,7 @@ function renderProfilePage() {
     styleActionButton(copyButton, "#0077cc", "#005fa3");
     copyButton.onclick = () => {
         navigator.clipboard.writeText(referralLink.value);
-        alert("Referral link copied to clipboard!");
+        alert("Referral link copied!");
     };
 
     const shareButton = document.createElement("button");
@@ -113,14 +114,13 @@ function renderProfilePage() {
     buttonGroup.appendChild(shareButton);
     card.appendChild(buttonGroup);
 
-    // Referral history header
     const historyTitle = document.createElement("h3");
     historyTitle.innerText = "📜 Referral History";
     historyTitle.style.marginTop = "20px";
     historyTitle.style.fontSize = "16px";
+    historyTitle.style.color = "#0047ab";
     card.appendChild(historyTitle);
 
-    // History list container
     const historyContainer = document.createElement("ul");
     historyContainer.id = "referral-history";
     historyContainer.style.listStyle = "none";
@@ -128,13 +128,13 @@ function renderProfilePage() {
     historyContainer.style.margin = "0";
     historyContainer.style.fontSize = "14px";
     historyContainer.style.textAlign = "left";
+    historyContainer.style.marginTop = "10px";
     card.appendChild(historyContainer);
 
-    // Close button
     const closeButton = document.createElement("button");
     closeButton.innerText = "❌ Close";
-    styleActionButton(closeButton, "#ff6756", "#e05547");
     closeButton.style.marginTop = "24px";
+    styleActionButton(closeButton, "#ff6756", "#e05547");
     closeButton.onclick = () => {
         container.remove();
         window.activeTab = "game";
@@ -148,16 +148,17 @@ function renderProfilePage() {
     fetchReferralHistory();
 }
 
-function styleActionButton(button, bg, hover) {
-    button.style.background = bg;
+function styleActionButton(button, color, hoverColor) {
+    button.style.background = color;
     button.style.color = "#fff";
-    button.style.padding = "10px";
-    button.style.borderRadius = "10px";
+    button.style.padding = "10px 20px";
+    button.style.borderRadius = "12px";
     button.style.border = "none";
     button.style.cursor = "pointer";
+    button.style.fontWeight = "bold";
     button.style.transition = "background 0.3s";
-    button.onmouseover = () => button.style.background = hover;
-    button.onmouseout = () => button.style.background = bg;
+    button.onmouseover = () => button.style.background = hoverColor;
+    button.onmouseout = () => button.style.background = color;
 }
 
 function fetchProfileData() {
