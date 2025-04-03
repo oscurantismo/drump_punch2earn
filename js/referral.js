@@ -121,7 +121,7 @@ function renderReferralHistory(data) {
         // Fallback: just append at the end
             card.appendChild(container);
         }
-
+    }
 }
 
 export { checkAndSendReferral, fetchReferralHistory, renderReferralHistory };
