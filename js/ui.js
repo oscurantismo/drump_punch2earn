@@ -41,7 +41,7 @@ function renderTopBar() {
     punchBar.style.padding = "6px 0";
     punchBar.style.borderRadius = "8px";
     punchBar.style.zIndex = "999";
-    punchBar.innerText = `🥾 Punches: ${window.punches || 0}`;
+    punchBar.innerText = `🥊 Punches: <span id="punch-count">${window.punches}</span>`;
     document.body.appendChild(punchBar);
 
     const iconSize = 32;
