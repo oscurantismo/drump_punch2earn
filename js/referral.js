@@ -55,6 +55,11 @@ function fetchReferralHistory() {
 
 
 function renderReferralHistory(data) {
+    if (!Array.isArray(data)) {
+        console.warn("Referral history data is not an array. Defaulting to empty.");
+        data = [];
+    }
+
     const container = document.createElement("div");
     container.style.marginTop = "20px";
     container.style.background = "#fff";
@@ -70,26 +75,39 @@ function renderReferralHistory(data) {
     title.style.marginBottom = "10px";
     container.appendChild(title);
 
-    if (data.history?.length === 0) {
+    if (data.length === 0) {
         const none = document.createElement("p");
         none.innerText = "Nothing here yet. Invite friends to update.";
+        none.style.color = "#777";
+        none.style.fontStyle = "italic";
         container.appendChild(none);
     } else {
-        data.history.forEach(entry => {
-            const p = document.createElement("p");
-            p.style.marginBottom = "8px";
-            p.innerHTML = `
-                <strong>${entry.referred_username}</strong> submitted ${entry.referred_punches} punches<br>
-                🕒 ${entry.timestamp}<br>
-                🎁 Reward: +100 punches (from ${entry.previous_score} ➜ ${entry.new_score})
-            `;
-            container.appendChild(p);
+        const table = document.createElement("table");
+        table.style.width = "100%";
+        table.style.borderCollapse = "collapse";
+
+        const thead = document.createElement("thead");
+        thead.innerHTML = `<tr>
+            <th style="text-align: left; padding: 8px;">User</th>
+            <th style="text-align: left; padding: 8px;">Reward</th>
+        </tr>`;
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        data.forEach(ref => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td style="padding: 8px;">${ref.ref_username}</td>
+                             <td style="padding: 8px;">+${ref.reward} punches</td>`;
+            tbody.appendChild(row);
         });
+        table.appendChild(tbody);
+        container.appendChild(table);
     }
 
     const profileCard = document.querySelector("#profile-container div");
     if (profileCard) profileCard.appendChild(container);
 }
+
 
 export { checkAndSendReferral, fetchReferralHistory, renderReferralHistory };
 
