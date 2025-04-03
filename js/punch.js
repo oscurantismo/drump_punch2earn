@@ -1,6 +1,4 @@
-// punch.js
-
-let punches = 0;
+let drump, punchSounds, loadeddrumpFrames;
 let hitCooldown = false;
 let currentFrame = 1;
 let lastPunchTime = 0;
@@ -8,108 +6,67 @@ let backwardInterval;
 const BACKWARD_DELAY = 2000;
 const BACKWARD_SPEED = 50;
 
-let drumpRef;
-let punchSoundsRef = [];
-let loadedFrames = new Set(["drump-images/1a-min.png"]);
-
-/**
- * Initialize punch module
- * Should be called once in game.js or main setup file
- */
-function initPunchModule({ drump, punchSounds, loadeddrumpFrames }) {
-    drumpRef = drump;
-    punchSoundsRef = punchSounds;
-    if (loadeddrumpFrames) {
-        loadedFrames = loadeddrumpFrames;
-    }
-}
-
-/**
- * Returns true if the user is currently on the game tab
- */
-function isOnGameScreen() {
-    const otherContainers = [
-        document.getElementById("leaderboard-container"),
-        document.getElementById("info-container"),
-        document.getElementById("profile-container")
-    ];
-    return otherContainers.every(c => c === null);
+function initPunchModule(config) {
+    drump = config.drump;
+    punchSounds = config.punchSounds;
+    loadeddrumpFrames = config.loadeddrumpFrames;
 }
 
 function handlePunch() {
-    if (!isOnGameScreen()) {
-        console.log("Score submission blocked. User is not on the game screen.");
-        return;
-    }
+    if (!drump || hitCooldown || window.activeTab !== "game") return;
 
-    punches++;
+    hitCooldown = true;
+    window.punches = (window.punches || 0) + 1;
     lastPunchTime = Date.now();
-    updatePunchDisplay();
-    localStorage.setItem(`score_${window.userId}`, punches);
 
-    if (window.soundEnabled && punchSoundsRef.length > 0) {
-        const sound = Phaser.Math.RND.pick(punchSoundsRef);
+    updatePunchDisplay();
+    localStorage.setItem(`score_${window.userId}`, window.punches);
+
+    if (window.soundEnabled && punchSounds.length > 0) {
+        const sound = Phaser.Math.RND.pick(punchSounds);
         sound.play();
     }
 
-    if (!hitCooldown) {
-        hitCooldown = true;
+    if (currentFrame < 30) currentFrame++;
 
-        if (currentFrame < 30) currentFrame++;
-        const key = `${currentFrame}a-min.png`;
-        const scene = window.game.scene.scenes[0];
+    const key = `${currentFrame}a-min.png`;
 
-        if (!loadedFrames.has(key)) {
-            scene.load.image(key, `drump-images/${key}`);
-            scene.load.once('complete', () => {
-                loadedFrames.add(key);
-                drumpRef.setTexture(key);
-            });
-            scene.load.start();
-        } else {
-            drumpRef.setTexture(key);
-        }
-
-        showPunchEffect(scene);
-        animateFloatingText(scene);
-
-        setTimeout(() => {
-            hitCooldown = false;
-        }, 200);
-
-        if (backwardInterval) clearInterval(backwardInterval);
-        startBackwardAnimation(scene);
+    if (!loadeddrumpFrames.has(key)) {
+        game.scene.scenes[0].load.image(key, `drump-images/${key}`);
+        game.scene.scenes[0].load.once('complete', () => {
+            loadeddrumpFrames.add(key);
+            drump.setTexture(key);
+        });
+        game.scene.scenes[0].load.start();
+    } else {
+        drump.setTexture(key);
     }
 
-    fetch("https://drumpleaderboard-production.up.railway.app/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            username: window.storedUsername,
-            user_id: window.userId,
-            score: punches
-        })
-    }).catch(console.error);
+    showPunchEffect();
+    animateFloatingText("+1");
+
+    setTimeout(() => { hitCooldown = false; }, 200);
+
+    if (backwardInterval) clearInterval(backwardInterval);
+    startBackwardAnimation();
+
+    submitPunchScore();
 }
 
-function showPunchEffect(scene) {
-    if (!drumpRef) return;
-
-    const punchEffect = scene.add.sprite(drumpRef.x, drumpRef.y, "punch")
+function showPunchEffect() {
+    const scene = game.scene.scenes[0];
+    const punchEffect = scene.add.sprite(drump.x, drump.y, "punch")
         .setScale(0.9)
         .setOrigin(0.5)
         .setDepth(9999)
         .play("punchAnim");
 
-    setTimeout(() => {
-        punchEffect.destroy();
-    }, 500);
+    setTimeout(() => punchEffect.destroy(), 500);
 }
 
-function animateFloatingText(scene) {
-    if (!drumpRef) return;
-
-    const text = scene.add.text(drumpRef.x, drumpRef.y - 100, "🤛+1", {
+function animateFloatingText(text) {
+    const scene = game.scene.scenes[0];
+    const floating = scene.add.text(drump.x, drump.y - 100, `🤛${text}`, {
         font: "bold 24px Arial",
         fill: "#ff0000",
         stroke: "#fff",
@@ -117,57 +74,67 @@ function animateFloatingText(scene) {
     }).setOrigin(0.5);
 
     scene.tweens.add({
-        targets: text,
-        y: text.y - 50,
+        targets: floating,
+        y: floating.y - 50,
         alpha: 0,
         duration: 800,
-        ease: "Power1",
-        onComplete: () => text.destroy()
+        ease: 'Power1',
+        onComplete: () => floating.destroy()
     });
 }
 
-function startBackwardAnimation(scene) {
-    if (backwardInterval) clearInterval(backwardInterval);
+function startBackwardAnimation() {
+    const adjustedSpeed = BACKWARD_SPEED * 0.7;
 
     backwardInterval = setInterval(() => {
-        if (Date.now() - lastPunchTime >= BACKWARD_DELAY) {
-            const frameNum = parseInt(drumpRef.texture.key.replace("a-min.png", ""));
-            if (frameNum <= 1) {
-                clearInterval(backwardInterval);
-                currentFrame = 1;
-                return;
-            }
+        const now = Date.now();
+        if (now - lastPunchTime < BACKWARD_DELAY) return;
 
-            const newFrameNum = frameNum - 1;
-            currentFrame = newFrameNum;
-            const key = `${newFrameNum}a-min.png`;
-
-            if (!loadedFrames.has(key)) {
-                scene.load.image(key, `drump-images/${key}`);
-                scene.load.once("complete", () => {
-                    loadedFrames.add(key);
-                    drumpRef.setTexture(key);
-                });
-                scene.load.start();
-            } else {
-                drumpRef.setTexture(key);
-            }
+        if (currentFrame <= 1) {
+            clearInterval(backwardInterval);
+            currentFrame = 1;
+            return;
         }
-    }, BACKWARD_SPEED * 0.7);
+
+        currentFrame--;
+        const key = `${currentFrame}a-min.png`;
+
+        if (!loadeddrumpFrames.has(key)) {
+            game.scene.scenes[0].load.image(key, `drump-images/${key}`);
+            game.scene.scenes[0].load.once('complete', () => {
+                loadeddrumpFrames.add(key);
+                drump.setTexture(key);
+            });
+            game.scene.scenes[0].load.start();
+        } else {
+            drump.setTexture(key);
+        }
+    }, adjustedSpeed);
 }
 
 function updatePunchDisplay() {
     const bar = document.getElementById("punch-bar");
     if (bar) {
-        bar.innerText = `🥾 Punches: ${punches}`;
+        bar.innerText = `🥾 Punches: ${window.punches}`;
     }
 }
 
-export {
-    initPunchModule,
-    handlePunch,
-    showPunchEffect,
-    startBackwardAnimation,
-    updatePunchDisplay,
-    punches
-};
+function submitPunchScore() {
+    fetch("https://drumpleaderboard-production.up.railway.app/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: window.storedUsername,
+            user_id: window.userId,
+            score: window.punches
+        })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return res.json();
+    })
+    .then(() => console.log("✅ Punch score submitted"))
+    .catch(err => console.error("❌ Punch submit failed:", err));
+}
+
+export { initPunchModule, handlePunch };
