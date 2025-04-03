@@ -49,7 +49,7 @@ function showTab(tab, scene = null) {
         info.style.boxSizing = "border-box";
         info.style.zIndex = "999";
         info.innerHTML = `
-            <h2>👟 Drump | Punch2Earn</h2>
+            <h2>🥊 Drump | Punch2Earn</h2>
             <p>Punch Drump with a shoe. Simple as that. From like-minded cryptonerds tired of unpredictability.</p>
             <h3>How to Play</h3>
             <p>Punch to earn. Collect punches. Compete on the leaderboard. Invite friends for rewards.</p>
