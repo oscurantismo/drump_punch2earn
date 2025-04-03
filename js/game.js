@@ -47,6 +47,8 @@ function create() {
         window.userId = initUser.id.toString();
     }
 
+    window.activeTab = "game";
+
     const cached = localStorage.getItem(`score_${window.userId}`);
     if (cached !== null) {
         window.punches = parseInt(cached);
