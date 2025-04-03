@@ -40,6 +40,7 @@ function preload() {
 
 function create() {
     Telegram.WebApp.ready();
+
     const initUser = Telegram.WebApp.initDataUnsafe?.user;
     if (initUser) {
         window.storedUsername = initUser.username || `${initUser.first_name}_${initUser.last_name || ""}`.trim();
@@ -117,7 +118,13 @@ function drawDrump(scene, textureKey) {
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
 
-    drump.on("pointerdown", handlePunch);
+    drump.on("pointerdown", () => {
+        if (window.activeTab === "game" && !document.getElementById("profile-container")) {
+            handlePunch();
+        } else {
+            console.log("❌ Score submission blocked. User is not on the game screen.");
+        }
+    });
 
     // Pass reference to punch.js
     initPunchModule({ drump, punchSounds, loadeddrumpFrames });
@@ -182,10 +189,6 @@ function createLoader() {
         const el = document.getElementById("loader");
         if (el) el.remove();
     }, 3000);
-}
-
-function update() {
-    // Add logic here only if needed
 }
 
 export { game };
