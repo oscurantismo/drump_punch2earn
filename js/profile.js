@@ -84,7 +84,7 @@ function renderProfilePage() {
 
     // Punch count    
     const punchesStat = document.createElement("div");
-    punchesStat.innerHTML = `🥊 Punches: <span id="coin-count">0</span>`;
+    punchesStat.innerHTML = `🥊 Punches: <span id="punch-count">0</span>`;
     punchesStat.style.fontSize = "18px";
     punchesStat.style.marginBottom = "20px";
     punchesStat.style.color = "#0047ab";
@@ -239,7 +239,7 @@ function fetchProfileData() {
             return res.json();
         })
         .then(data => {
-            const coinDisplay = document.getElementById("coin-count");
+            const coinDisplay = document.getElementById("punch-count");
             if (coinDisplay) coinDisplay.textContent = data.coins ?? "0";
         })
         .catch(err => console.error("Error fetching profile data:", err));
