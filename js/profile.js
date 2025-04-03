@@ -208,7 +208,13 @@ function renderProfilePage() {
     document.body.appendChild(container);
 
     fetchProfileData();
-    fetchReferralHistory();
+    
+    if (window.userId) {
+        fetchReferralHistory();
+    } else {
+        console.warn("User ID not available yet. Skipping referral history fetch.");
+    }
+
 }
 
 function styleGameButton(button, bg, hoverBg) {
