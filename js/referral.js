@@ -109,8 +109,8 @@ function renderReferralHistory(data) {
 
     const card = document.querySelector("#profile-container div");
     if (card) {
-        const closeButton = card.querySelector("button:last-of-type");
-        card.insertBefore(container, closeButton);
+        const closeBtn = card.querySelector("button:last-of-type");
+        card.insertBefore(container, closeBtn);
     }
 }
 
