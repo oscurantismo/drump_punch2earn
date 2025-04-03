@@ -42,6 +42,28 @@ function renderProfilePage() {
     card.style.display = "flex";
     card.style.flexDirection = "column";
     card.style.alignItems = "center";
+    card.style.position = "relative"; // Add this line to enable absolute child positioning
+
+    // Top-right close (X) icon
+    const topCloseBtn = document.createElement("button");
+    topCloseBtn.innerHTML = "✖";
+    topCloseBtn.setAttribute("aria-label", "Close profile");
+    topCloseBtn.style.position = "absolute";
+    topCloseBtn.style.top = "12px";
+    topCloseBtn.style.right = "12px";
+    topCloseBtn.style.background = "transparent";
+    topCloseBtn.style.border = "none";
+    topCloseBtn.style.fontSize = "20px";
+    topCloseBtn.style.fontWeight = "bold";
+    topCloseBtn.style.color = "#aaa";
+    topCloseBtn.style.cursor = "pointer";
+    topCloseBtn.style.transition = "color 0.3s ease";
+    topCloseBtn.onmouseover = () => topCloseBtn.style.color = "#e74c3c";
+    topCloseBtn.onmouseout = () => topCloseBtn.style.color = "#aaa";
+    topCloseBtn.onclick = closeProfile;
+
+    card.appendChild(topCloseBtn);
+
 
     // username
     const username = document.createElement("h2");
