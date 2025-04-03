@@ -1,3 +1,5 @@
+import { fetchReferralHistory, renderReferralHistory } from "./referral.js";
+
 function renderProfilePage() {
     const existingProfile = document.getElementById("profile-container");
     if (existingProfile) existingProfile.remove();
