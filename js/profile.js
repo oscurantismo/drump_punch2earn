@@ -235,29 +235,20 @@ function fetchProfileData() {
 function fetchReferralHistory() {
     fetch(`https://drumpleaderboard-production.up.railway.app/referral-history?user_id=${window.userId}`)
         .then(res => {
-            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             return res.json();
         })
         .then(data => {
-            const list = document.getElementById("referral-history");
-            if (!list) return;
-
-            if (data.history.length === 0) {
-                const li = document.createElement("li");
-                li.innerText = "No referrals yet.";
-                list.appendChild(li);
-                return;
+            if (!Array.isArray(data)) {
+                console.warn("Referral history data is not an array:", data);
+                renderReferralHistory([]);
+            } else {
+                renderReferralHistory(data);
             }
-
-            data.history.forEach(entry => {
-                const li = document.createElement("li");
-                li.innerText = `+100 from ${entry.referred_user} on ${entry.date} (Score: ${entry.old_score} → ${entry.new_score})`;
-                li.style.marginBottom = "6px";
-                list.appendChild(li);
-            });
         })
         .catch(err => {
             console.error("Error fetching referral history:", err);
+            renderReferralHistory([]); // Fallback to empty
         });
 }
 
