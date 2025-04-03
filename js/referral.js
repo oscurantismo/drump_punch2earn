@@ -107,12 +107,21 @@ function renderReferralHistory(data) {
         container.appendChild(table);
     }
     
-
     const card = document.querySelector("#profile-container div");
+
     if (card) {
-        const closeBtn = card.querySelector("button:last-of-type");
-        card.insertBefore(container, closeBtn);
+    // Find the close button by its innerText
+        const closeBtn = Array.from(card.querySelectorAll("button"))
+        .find(btn => btn.innerText.trim() === "🚪 Exit Profile");
+
+        if (closeBtn && card.contains(closeBtn)) {
+        // Insert the referral history above the close button
+            card.insertBefore(container, closeBtn);
+        } else {
+        // Fallback: just append at the end
+            card.appendChild(container);
     }
+
 }
 
 export { checkAndSendReferral, fetchReferralHistory, renderReferralHistory };
