@@ -124,7 +124,7 @@ function renderProfilePage() {
     const referralInput = document.createElement("input");
     referralInput.type = "text";
     referralInput.readOnly = true;
-    referralInput.value = `https://t.me/Drump_bot?start=referral_${window.userId}`;
+    referralInput.value = `https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
     referralInput.style.width = "100%";
     referralInput.style.padding = "10px";
     referralInput.style.borderRadius = "8px";
