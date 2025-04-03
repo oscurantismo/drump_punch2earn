@@ -9,17 +9,22 @@ let loadeddrumpFrames = new Set(["drump-images/1a-min.png"]);
 window.onload = () => {
     createLoader();
 
+function createGame() {
     const gameConfig = {
         type: Phaser.AUTO,
         width: window.innerWidth,
         height: window.innerHeight,
         backgroundColor: "#ffffff",
-        scene: { preload, create }
+        scene: { preload, create, update },
+        audio: {
+            disableWebAudio: false
+        }
     };
 
     game = new Phaser.Game(gameConfig);
     window.game = game;
-};
+}
+
 
 function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
