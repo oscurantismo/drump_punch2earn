@@ -250,4 +250,10 @@ function fetchReferralHistory() {
         });
 }
 
+function closeProfile() {
+    const profile = document.getElementById("profile-container");
+    if (profile) profile.remove();
+    window.activeTab = "game"; // re-enable punching
+}
+
 export { renderProfilePage };
