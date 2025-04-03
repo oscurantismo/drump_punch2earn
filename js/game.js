@@ -8,6 +8,8 @@ let loadeddrumpFrames = new Set(["drump-images/1a-min.png"]);
 
 window.onload = () => {
     createLoader();
+    createGame();
+};
 
 function createGame() {
     const gameConfig = {
