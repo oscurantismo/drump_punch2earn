@@ -198,8 +198,4 @@ function createLoader() {
     }, 3000);
 }
 
-export {
-    game,
-    showGameUI,
-    drawDrump
-};
+export { game, showGameUI, drawDrump };
