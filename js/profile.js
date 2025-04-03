@@ -2,93 +2,101 @@ function renderProfilePage() {
     const existingProfile = document.getElementById("profile-container");
     if (existingProfile) existingProfile.remove();
 
-    window.activeTab = "profile";
+    window.activeTab = "profile"; // Disable punching while profile is open
 
     const container = document.createElement("div");
     container.id = "profile-container";
     container.style.position = "fixed";
     container.style.top = "0";
     container.style.left = "0";
+    container.style.right = "0";
+    container.style.bottom = "0";
     container.style.width = "100vw";
     container.style.height = "100vh";
-    container.style.background = "#002868";
+    container.style.background = "#0047ab";
     container.style.zIndex = "2000";
     container.style.overflowY = "auto";
     container.style.fontFamily = "'Arial Black', sans-serif";
     container.style.display = "flex";
     container.style.flexDirection = "column";
     container.style.alignItems = "center";
-    container.style.padding = "20px";
+    container.style.padding = "24px";
     container.style.boxSizing = "border-box";
 
+    // Card wrapper
     const card = document.createElement("div");
     card.style.background = "#ffffff";
-    card.style.borderRadius = "20px";
-    card.style.padding = "24px 20px";
+    card.style.color = "#002868";
+    card.style.borderRadius = "18px";
     card.style.width = "100%";
     card.style.maxWidth = "420px";
-    card.style.textAlign = "center";
-    card.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
+    card.style.padding = "24px";
+    card.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.25)";
     card.style.boxSizing = "border-box";
+    card.style.display = "flex";
+    card.style.flexDirection = "column";
+    card.style.alignItems = "center";
 
-    const avatar = document.createElement("div");
-    avatar.innerText = "🧑‍💻";
-    avatar.style.fontSize = "56px";
-    avatar.style.marginBottom = "12px";
-    card.appendChild(avatar);
-
+    // Title
     const title = document.createElement("h2");
     title.innerText = `${window.storedUsername}'s Profile`;
-    title.style.color = "#0047ab";
-    title.style.marginBottom = "8px";
+    title.style.marginBottom = "16px";
+    title.style.color = "#002868";
     card.appendChild(title);
 
+    // Punch count
     const punchDisplay = document.createElement("p");
     punchDisplay.innerHTML = `🥾 Punches: <span id="coin-count">0</span>`;
     punchDisplay.style.fontSize = "20px";
+    punchDisplay.style.fontWeight = "bold";
     punchDisplay.style.marginBottom = "20px";
     card.appendChild(punchDisplay);
 
-    const referralMessage = document.createElement("p");
-    referralMessage.innerHTML = `👥 Invite friends and earn <b>+100 punches</b><br>once they reach 10 punches.`;
-    referralMessage.style.fontSize = "14px";
-    referralMessage.style.color = "#222";
-    referralMessage.style.marginBottom = "16px";
-    referralMessage.style.lineHeight = "1.4";
-    card.appendChild(referralMessage);
+    // Referral reward description
+    const rewardText = document.createElement("p");
+    rewardText.innerHTML = `👥 Invite friends and earn <b style="color: #ff4500;">+100 punches</b> when they reach <b>10 punches</b>.`;
+    rewardText.style.fontSize = "14px";
+    rewardText.style.textAlign = "center";
+    rewardText.style.color = "#444";
+    rewardText.style.marginBottom = "18px";
+    card.appendChild(rewardText);
 
+    // Referral link field
     const referralLink = document.createElement("input");
     referralLink.type = "text";
     referralLink.value = `https://t.me/Drump_bot?start=referral_${window.userId}`;
     referralLink.readOnly = true;
     referralLink.style.width = "100%";
-    referralLink.style.padding = "10px";
-    referralLink.style.borderRadius = "10px";
-    referralLink.style.border = "1px solid #aaa";
-    referralLink.style.marginBottom = "10px";
+    referralLink.style.padding = "12px";
+    referralLink.style.marginBottom = "12px";
+    referralLink.style.border = "2px solid #0047ab";
+    referralLink.style.borderRadius = "8px";
+    referralLink.style.fontSize = "14px";
     referralLink.style.fontFamily = "Arial, sans-serif";
+    referralLink.style.color = "#002868";
     card.appendChild(referralLink);
 
-    const buttonGroup = document.createElement("div");
-    buttonGroup.style.display = "flex";
-    buttonGroup.style.justifyContent = "space-between";
-    buttonGroup.style.marginBottom = "16px";
+    // Copy & Share buttons
+    const btnGroup = document.createElement("div");
+    btnGroup.style.display = "flex";
+    btnGroup.style.gap = "10px";
+    btnGroup.style.width = "100%";
+    btnGroup.style.marginBottom = "16px";
 
-    const copyButton = document.createElement("button");
-    copyButton.innerText = "📋 Copy";
-    copyButton.style.flex = "1";
-    copyButton.style.marginRight = "10px";
-    styleActionButton(copyButton, "#0077cc", "#005fa3");
-    copyButton.onclick = () => {
+    const copyBtn = document.createElement("button");
+    copyBtn.innerText = "📋 Copy";
+    copyBtn.style.flex = "1";
+    styleProfileButton(copyBtn, "#0077cc", "#005fa3");
+    copyBtn.onclick = () => {
         navigator.clipboard.writeText(referralLink.value);
-        alert("Referral link copied!");
+        alert("Referral link copied to clipboard!");
     };
 
-    const shareButton = document.createElement("button");
-    shareButton.innerText = "📤 Share";
-    shareButton.style.flex = "1";
-    styleActionButton(shareButton, "#b22234", "#a21b2f");
-    shareButton.onclick = () => {
+    const shareBtn = document.createElement("button");
+    shareBtn.innerText = "📤 Share";
+    shareBtn.style.flex = "1";
+    styleProfileButton(shareBtn, "#b22234", "#a21b2f");
+    shareBtn.onclick = () => {
         const message = `Join me on Drump | Punch2Earn! 🥾 Earn points and compete. Use my referral link: ${referralLink.value}`;
         Telegram.WebApp.showPopup({
             title: "Share your referral link",
@@ -96,7 +104,7 @@ function renderProfilePage() {
             buttons: [
                 { id: "telegram", type: "default", text: "Telegram" },
                 { id: "x", type: "default", text: "X (Twitter)" },
-                { id: "whatsapp", type: "default", text: "WhatsApp" },
+                { id: "whatsapp", type: "default", text: "WhatsApp" }
             ]
         }, (btnId) => {
             const links = {
@@ -110,36 +118,38 @@ function renderProfilePage() {
         });
     };
 
-    buttonGroup.appendChild(copyButton);
-    buttonGroup.appendChild(shareButton);
-    card.appendChild(buttonGroup);
+    btnGroup.appendChild(copyBtn);
+    btnGroup.appendChild(shareBtn);
+    card.appendChild(btnGroup);
 
+    // Referral history section
     const historyTitle = document.createElement("h3");
     historyTitle.innerText = "📜 Referral History";
-    historyTitle.style.marginTop = "20px";
+    historyTitle.style.marginTop = "16px";
     historyTitle.style.fontSize = "16px";
-    historyTitle.style.color = "#0047ab";
+    historyTitle.style.color = "#002868";
     card.appendChild(historyTitle);
 
-    const historyContainer = document.createElement("ul");
-    historyContainer.id = "referral-history";
-    historyContainer.style.listStyle = "none";
-    historyContainer.style.padding = "0";
-    historyContainer.style.margin = "0";
-    historyContainer.style.fontSize = "14px";
-    historyContainer.style.textAlign = "left";
-    historyContainer.style.marginTop = "10px";
-    card.appendChild(historyContainer);
+    const historyList = document.createElement("ul");
+    historyList.id = "referral-history";
+    historyList.style.listStyle = "none";
+    historyList.style.padding = "0";
+    historyList.style.width = "100%";
+    historyList.style.fontSize = "13px";
+    historyList.style.color = "#222";
+    card.appendChild(historyList);
 
-    const closeButton = document.createElement("button");
-    closeButton.innerText = "❌ Close";
-    closeButton.style.marginTop = "24px";
-    styleActionButton(closeButton, "#ff6756", "#e05547");
-    closeButton.onclick = () => {
+    // Close button
+    const closeBtn = document.createElement("button");
+    closeBtn.innerText = "❌ Close";
+    styleProfileButton(closeBtn, "#ff6756", "#e05547");
+    closeBtn.style.marginTop = "20px";
+    closeBtn.style.width = "100%";
+    closeBtn.onclick = () => {
         container.remove();
         window.activeTab = "game";
     };
-    card.appendChild(closeButton);
+    card.appendChild(closeBtn);
 
     container.appendChild(card);
     document.body.appendChild(container);
@@ -148,18 +158,20 @@ function renderProfilePage() {
     fetchReferralHistory();
 }
 
-function styleActionButton(button, color, hoverColor) {
-    button.style.background = color;
+function styleProfileButton(button, bg, hoverBg) {
+    button.style.background = bg;
     button.style.color = "#fff";
-    button.style.padding = "10px 20px";
-    button.style.borderRadius = "12px";
+    button.style.padding = "10px 0";
+    button.style.borderRadius = "10px";
     button.style.border = "none";
     button.style.cursor = "pointer";
-    button.style.fontWeight = "bold";
+    button.style.fontSize = "14px";
+    button.style.fontFamily = "'Arial Black', sans-serif";
     button.style.transition = "background 0.3s";
-    button.onmouseover = () => button.style.background = hoverColor;
-    button.onmouseout = () => button.style.background = color;
+    button.onmouseover = () => button.style.background = hoverBg;
+    button.onmouseout = () => button.style.background = bg;
 }
+
 
 function fetchProfileData() {
     fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
