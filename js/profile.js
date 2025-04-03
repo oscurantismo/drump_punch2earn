@@ -239,8 +239,8 @@ function fetchProfileData() {
             return res.json();
         })
         .then(data => {
-            const coinDisplay = document.getElementById("punch-count");
-            if (coinDisplay) coinDisplay.textContent = data.coins ?? "0";
+            const punchDisplay = document.getElementById("punch-count");
+            if (punchDisplay) punchDisplay.textContent = data.punches ?? "0";
         })
         .catch(err => console.error("Error fetching profile data:", err));
 }
