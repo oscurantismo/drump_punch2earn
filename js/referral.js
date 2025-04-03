@@ -90,3 +90,6 @@ function renderReferralHistory(data) {
     const profileCard = document.querySelector("#profile-container div");
     if (profileCard) profileCard.appendChild(container);
 }
+
+export { checkAndSendReferral, fetchReferralHistory, renderReferralHistory };
+
