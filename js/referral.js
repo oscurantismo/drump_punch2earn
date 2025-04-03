@@ -72,7 +72,7 @@ function renderReferralHistory(data) {
 
     if (data.history?.length === 0) {
         const none = document.createElement("p");
-        none.innerText = "No referrals yet.";
+        none.innerText = "Nothing here yet. Invite friends to update.";
         container.appendChild(none);
     } else {
         data.history.forEach(entry => {
