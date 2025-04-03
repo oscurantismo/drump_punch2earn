@@ -49,6 +49,7 @@ function create() {
     Telegram.WebApp.ready();
 
     const initUser = Telegram.WebApp.initDataUnsafe?.user;
+    
     if (initUser) {
         window.storedUsername = initUser.username || `${initUser.first_name}_${initUser.last_name || ""}`.trim();
         window.userId = initUser.id.toString();
