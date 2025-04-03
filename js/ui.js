@@ -67,7 +67,7 @@ function renderTopBar() {
 function updatePunchDisplay() {
     const bar = document.getElementById("punch-bar");
     if (bar) {
-        bar.innerText = `🥾 Punches: ${window.punches}`;
+        bar.innerText = `🥊 Punches: ${window.punches}`;
     }
 }
 
