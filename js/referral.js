@@ -49,10 +49,9 @@ function fetchReferralHistory() {
         })
         .catch(err => {
             console.error("Error fetching referral history:", err);
-            renderReferralHistory([]); // Fallback to empty
+            renderReferralHistory([]);
         });
 }
-
 
 function renderReferralHistory(data) {
     if (!Array.isArray(data)) {
@@ -62,17 +61,19 @@ function renderReferralHistory(data) {
 
     const container = document.createElement("div");
     container.style.marginTop = "20px";
-    container.style.background = "#fff";
+    container.style.background = "#ffffff";
     container.style.padding = "16px";
     container.style.borderRadius = "12px";
     container.style.color = "#000";
     container.style.fontFamily = "Arial, sans-serif";
     container.style.fontSize = "14px";
     container.style.textAlign = "left";
+    container.style.width = "100%";
 
     const title = document.createElement("h3");
     title.innerText = "📋 Referral History";
     title.style.marginBottom = "10px";
+    title.style.color = "#002868";
     container.appendChild(title);
 
     if (data.length === 0) {
@@ -85,29 +86,32 @@ function renderReferralHistory(data) {
         const table = document.createElement("table");
         table.style.width = "100%";
         table.style.borderCollapse = "collapse";
+        table.style.fontSize = "13px";
 
         const thead = document.createElement("thead");
         thead.innerHTML = `<tr>
-            <th style="text-align: left; padding: 8px;">User</th>
-            <th style="text-align: left; padding: 8px;">Reward</th>
+            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">User</th>
+            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Reward</th>
         </tr>`;
         table.appendChild(thead);
 
         const tbody = document.createElement("tbody");
         data.forEach(ref => {
             const row = document.createElement("tr");
-            row.innerHTML = `<td style="padding: 8px;">${ref.ref_username}</td>
-                             <td style="padding: 8px;">+${ref.reward} punches</td>`;
+            row.innerHTML = `
+                <td style="padding: 8px; border-bottom: 1px solid #eee;">${ref.ref_username}</td>
+                <td style="padding: 8px; border-bottom: 1px solid #eee;">+${ref.reward} punches</td>`;
             tbody.appendChild(row);
         });
         table.appendChild(tbody);
         container.appendChild(table);
     }
 
-    const profileCard = document.querySelector("#profile-container div");
-    if (profileCard) profileCard.appendChild(container);
+    const card = document.querySelector("#profile-container div");
+    if (card) {
+        const closeBtn = card.querySelector("button:last-of-type");
+        card.insertBefore(container, closeBtn);
+    }
 }
 
-
 export { checkAndSendReferral, fetchReferralHistory, renderReferralHistory };
-
