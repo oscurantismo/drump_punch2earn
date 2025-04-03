@@ -159,7 +159,7 @@ function renderProfilePage() {
 
     btnGroup.appendChild(copyBtn);
     btnGroup.appendChild(shareBtn);
-    card.appendChild(btnRow);
+    card.appendChild(btnGroup);
 
     // Referral history section
     const historyTitle = document.createElement("h3");
