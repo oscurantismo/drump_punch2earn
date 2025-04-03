@@ -60,17 +60,16 @@ function renderProfilePage() {
 
     // Punch count    
     const punchesStat = document.createElement("div");
-    punchesStat.innerHTML = `🥾 Punches: <span id="coin-count">0</span>`;
+    punchesStat.innerHTML = `🥊 Punches: <span id="coin-count">0</span>`;
     punchesStat.style.fontSize = "18px";
     punchesStat.style.marginBottom = "20px";
     punchesStat.style.color = "#0047ab";
     card.appendChild(punchesStat);
 
     //divider
-
     const divider = document.createElement("hr");
     divider.style.border = "none";
-    divider.style.borderTop = "2px solid #eee";
+    divider.style.borderTop = "2px solid #000000";
     divider.style.margin = "20px 0";
     card.appendChild(divider);
 
@@ -83,7 +82,7 @@ function renderProfilePage() {
     card.appendChild(referralTitle);
 
     const referralMsg = document.createElement("p");
-    referralMsg.innerText = "Invite friends and earn +100 🥾 punches!";
+    referralMsg.innerText = "Invite friends and earn +100 🥊 punches!";
     referralMsg.style.fontSize = "14px";
     referralMsg.style.color = "#666";
     referralMsg.style.marginBottom = "6px";
@@ -179,12 +178,24 @@ function renderProfilePage() {
     card.appendChild(historyList);
 
     // Close button
-    const closeBtn = document.createElement("button");
-    closeBtn.innerText = "❌ Close";
-    styleGameButton(closeBtn, "#ff6756", "#e05547");
-    closeBtn.style.marginTop = "10px";
-    closeBtn.onclick = closeProfile;
-    card.appendChild(closeBtn);
+    const closeButton = document.createElement("button");
+    closeButton.innerHTML = "🚪 Exit Profile";
+    closeButton.style.background = "#e74c3c";
+    closeButton.style.color = "#fff";
+    closeButton.style.padding = "12px 24px";
+    closeButton.style.fontSize = "16px";
+    closeButton.style.fontWeight = "bold";
+    closeButton.style.borderRadius = "12px";
+    closeButton.style.border = "none";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.marginTop = "28px";
+    closeButton.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+    closeButton.style.transition = "background 0.3s";
+    closeButton.onmouseover = () => closeButton.style.background = "#c0392b";
+    closeButton.onmouseout = () => closeButton.style.background = "#e74c3c";
+    closeButton.onclick = closeProfile;
+    card.appendChild(closeButton);
+
 
     container.appendChild(card);
     document.body.appendChild(container);
