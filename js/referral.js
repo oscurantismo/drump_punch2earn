@@ -106,6 +106,7 @@ function renderReferralHistory(data) {
         table.appendChild(tbody);
         container.appendChild(table);
     }
+    
 
     const card = document.querySelector("#profile-container div");
     if (card) {
