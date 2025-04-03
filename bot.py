@@ -48,7 +48,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("🕹 Play Drump | Punch2Earn", web_app=WebAppInfo(url=WEB_APP_URL))],
         [InlineKeyboardButton("📊 Check Leaderboard", callback_data="leaderboard")],
-        [InlineKeyboardButton("📄 My Profile", callback_data="profile")],
         [InlineKeyboardButton("ℹ️ Info", callback_data="info")]
     ])
 
