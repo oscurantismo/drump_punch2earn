@@ -193,7 +193,7 @@ function renderProfilePage() {
     fetchReferralHistory();
 }
 
-function styleProfileButton(button, bg, hoverBg) {
+function styleGameButton(button, bg, hoverBg) {
     button.style.background = bg;
     button.style.color = "#fff";
     button.style.padding = "10px 0";
