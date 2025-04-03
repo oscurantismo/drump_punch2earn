@@ -120,7 +120,7 @@ function renderReferralHistory(data) {
         } else {
         // Fallback: just append at the end
             card.appendChild(container);
-    }
+        }
 
 }
 
