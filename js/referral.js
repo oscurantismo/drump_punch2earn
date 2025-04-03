@@ -35,26 +35,21 @@ function checkAndSendReferral(userId, punches) {
 
 function fetchReferralHistory() {
     fetch(`https://drumpleaderboard-production.up.railway.app/referral-history?user_id=${window.userId}`)
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        })
         .then(data => {
-            const list = document.getElementById("referral-history");
-            list.innerHTML = ""; // Clear previous
-
-            if (!data.length) {
-                const item = document.createElement("li");
-                item.innerText = "No referral rewards yet.";
-                list.appendChild(item);
-                return;
+            if (!Array.isArray(data)) {
+                console.warn("Referral history data is not an array:", data);
+                renderReferralHistory([]);
+            } else {
+                renderReferralHistory(data);
             }
-
-            data.forEach(ref => {
-                const li = document.createElement("li");
-                li.innerText = `+${ref.reward} punches from ${ref.ref_username} on ${new Date(ref.timestamp).toLocaleDateString()} (from ${ref.before_score} → ${ref.after_score})`;
-                list.appendChild(li);
-            });
         })
         .catch(err => {
-            console.error("Failed to load referral history:", err);
+            console.error("Error fetching referral history:", err);
+            renderReferralHistory([]); // Fallback to empty
         });
 }
 
