@@ -191,4 +191,8 @@ function createLoader() {
     }, 3000);
 }
 
-export { game };
+export {
+    game,
+    showGameUI,
+    drawDrump
+};
