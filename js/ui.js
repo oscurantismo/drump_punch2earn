@@ -120,7 +120,7 @@ function renderShareButton() {
     btn.style.zIndex = "1001";
 
     btn.onclick = () => {
-        const botLink = "https://t.me/Drump_bot";
+        const botLink = "https://t.me/Drump_punch_bot";
         const message = `I punched ${window.punches || 0} points in Drump | Punch2Earn. Wanna punch to earn?`;
 
         Telegram.WebApp.showPopup({
