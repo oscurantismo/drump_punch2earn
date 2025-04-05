@@ -50,9 +50,9 @@ function showTab(tab, scene = null) {
         info.style.zIndex = "999";
         info.innerHTML = `
             <h2>🥊 Drump | Punch2Earn</h2>
-            <p>Punch Drump with a shoe. Simple as that. From like-minded cryptonerds tired of unpredictability.</p>
+            <p>Punch Drump. Score punches. Simple as that. From like-minded cryptonerds tired of unpredictability.</p>
             <h3>How to Play</h3>
-            <p>Punch to earn. Collect punches. Compete on the leaderboard. Invite friends for rewards.</p>
+            <p>Punch to earn. The more you punch, the higher the reward. Climb the leaderboard. Invite friends for extra bonuses.</p>
             <p>🎁 <b>Referral Bonus:</b> Get +1000 punches when your referral scores 10+. Both sides get +1000 punches - it's a great way to start!</p>
             <p>🏗 <b>Upcoming:</b> Event drops, airdrops, collectibles. Stay tuned for more updates.</p>
         `;
