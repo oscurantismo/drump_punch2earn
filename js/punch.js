@@ -51,20 +51,23 @@ function handlePunch() {
     startBackwardAnimation();
 
     submitPunchScore();
-}
 
-function refreshPunchCount() {
     fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
-        .then(res => res.json())
-        .then(data => {
-            window.punches = data.punches;
-            localStorage.setItem(`score_${window.userId}`, data.punches);
+    .then(res => res.json())
+    .then(data => {
+        window.punches = data.punches ?? 0;
 
-            const counter = document.getElementById("coin-count") || document.getElementById("punch-count");
-            if (counter) counter.textContent = data.punches;
-        });
+        // Update main game UI counter
+        const gamePunchEl = document.getElementById("punch-count");
+        if (gamePunchEl) gamePunchEl.textContent = window.punches;
+
+        // Update profile UI counter (if visible)
+        const profilePunchEl = document.querySelector("#profile-container #punch-count");
+        if (profilePunchEl) profilePunchEl.textContent = window.punches;
+    })
+    .catch(err => console.error("❌ Failed to sync punches from server:", err));
+
 }
-
 
 function showPunchEffect() {
     const scene = game.scene.scenes[0];
