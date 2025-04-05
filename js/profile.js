@@ -1,4 +1,5 @@
 import { fetchReferralHistory, renderReferralHistory } from "./referral.js";
+import { updatePunchDisplay } from "./ui.js";
 
 function renderProfilePage() {
     const existingProfile = document.getElementById("profile-container");
@@ -254,6 +255,7 @@ function closeProfile() {
     const profile = document.getElementById("profile-container");
     if (profile) profile.remove();
     window.activeTab = "game";
+    updatePunchDisplay();  // Ensures display is refreshed after returning
 }
 
 function styleGameButton(button, bg, hoverBg) {
