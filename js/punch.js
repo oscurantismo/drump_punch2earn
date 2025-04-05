@@ -72,7 +72,9 @@ function handlePunch() {
         fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
             .then(res => res.json())
             .then(data => {
-                if (typeof data.punches === "number" && data.punches > window.punches) {
+                if (typeof data.punches === "number") {
+                    // Only update if backend is higher (never overwrite local)
+                    if (data.punches > window.punches) {
                     window.punches = data.punches;
 
                     const gamePunchEl = document.getElementById("punch-count");
@@ -82,6 +84,10 @@ function handlePunch() {
                     if (profilePunchEl) profilePunchEl.textContent = window.punches;
 
                     updatePunchDisplay();
+                    } else {
+                    console.log("⏩ Skipped punch overwrite: local is newer or equal");
+                    console.log("Local:", window.punches, "Backend:", data.punches);
+
                 }
             })
             .catch(err => console.error("❌ Failed to sync punches from server:", err));
