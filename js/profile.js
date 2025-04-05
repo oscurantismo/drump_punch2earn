@@ -109,7 +109,7 @@ function renderProfilePage() {
     card.appendChild(referralTitle);
 
     const referralMsg = document.createElement("p");
-    referralMsg.innerText = "Invite friends and earn +100 🥊 punches!";
+    referralMsg.innerText = "Invite friends and earn +1000 🥊 punches!";
     Object.assign(referralMsg.style, {
         fontSize: "14px",
         color: "#666",
@@ -118,7 +118,7 @@ function renderProfilePage() {
     card.appendChild(referralMsg);
 
     const referralCondition = document.createElement("p");
-    referralCondition.innerText = "Your friend must punch at least 10 times for you to earn the reward.";
+    referralCondition.innerText = "Your friend must punch at least 10 times for you to both earn the reward.";
     Object.assign(referralCondition.style, {
         fontSize: "12px",
         color: "#999",
@@ -233,7 +233,7 @@ function fetchProfileData() {
             const punchesStat = document.getElementById("punch-count");
 
             if (typeof data.punches === "number") {
-                window.punches = data.punches; // Force update from server
+                window.punches = data.punches;
             }
 
             if (punchesStat) {
@@ -242,7 +242,6 @@ function fetchProfileData() {
                 console.warn("❌ Could not find #punch-count to update.");
             }
 
-            // Also update punch-bar if needed
             const punchBar = document.getElementById("punch-bar");
             if (punchBar) {
                 punchBar.innerHTML = `🥊 Punches: <span id="punch-count">${window.punches}</span>`;
@@ -250,7 +249,6 @@ function fetchProfileData() {
         })
         .catch(err => console.error("Error fetching profile data:", err));
 }
-
 
 function closeProfile() {
     const profile = document.getElementById("profile-container");
