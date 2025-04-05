@@ -60,27 +60,33 @@ function renderReferralHistory(data) {
     }
 
     const container = document.createElement("div");
-    container.style.marginTop = "20px";
-    container.style.background = "#ffffff";
-    container.style.padding = "16px";
-    container.style.borderRadius = "12px";
-    container.style.color = "#000";
-    container.style.fontFamily = "Arial, sans-serif";
-    container.style.fontSize = "14px";
-    container.style.textAlign = "left";
-    container.style.width = "100%";
+    Object.assign(container.style, {
+        marginTop: "20px",
+        background: "#ffffff",
+        padding: "16px",
+        borderRadius: "12px",
+        color: "#000",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "14px",
+        textAlign: "left",
+        width: "100%"
+    });
 
     const title = document.createElement("h3");
     title.innerText = "📋 Referral History";
-    title.style.marginBottom = "10px";
-    title.style.color = "#002868";
+    Object.assign(title.style, {
+        marginBottom: "10px",
+        color: "#002868"
+    });
     container.appendChild(title);
 
     if (data.length === 0) {
         const none = document.createElement("p");
         none.innerText = "Nothing here yet. Invite friends to update.";
-        none.style.color = "#777";
-        none.style.fontStyle = "italic";
+        Object.assign(none.style, {
+            color: "#777",
+            fontStyle: "italic"
+        });
         container.appendChild(none);
     } else {
         const table = document.createElement("table");
@@ -89,36 +95,37 @@ function renderReferralHistory(data) {
         table.style.fontSize = "13px";
 
         const thead = document.createElement("thead");
-        thead.innerHTML = `<tr>
-            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">User</th>
-            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Reward</th>
-        </tr>`;
+        thead.innerHTML = `
+            <tr>
+                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">User</th>
+                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Reward</th>
+                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Time</th>
+            </tr>`;
         table.appendChild(thead);
 
         const tbody = document.createElement("tbody");
         data.forEach(ref => {
+            const time = new Date(ref.timestamp).toLocaleString();
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td style="padding: 8px; border-bottom: 1px solid #eee;">${ref.ref_username}</td>
-                <td style="padding: 8px; border-bottom: 1px solid #eee;">+${ref.reward} punches</td>`;
+                <td style="padding: 8px; border-bottom: 1px solid #eee;">+${ref.reward} punches</td>
+                <td style="padding: 8px; border-bottom: 1px solid #eee;">${time}</td>`;
             tbody.appendChild(row);
         });
         table.appendChild(tbody);
         container.appendChild(table);
     }
-    
+
     const card = document.querySelector("#profile-container div");
 
     if (card) {
-    // Find the close button by its innerText
         const closeBtn = Array.from(card.querySelectorAll("button"))
-        .find(btn => btn.innerText.trim() === "🚪 Exit Profile");
+            .find(btn => btn.innerText.trim() === "🚪 Exit Profile");
 
         if (closeBtn && card.contains(closeBtn)) {
-        // Insert the referral history above the close button
             card.insertBefore(container, closeBtn);
         } else {
-        // Fallback: just append at the end
             card.appendChild(container);
         }
     }
