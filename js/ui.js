@@ -27,7 +27,6 @@ function renderTopBar() {
     top.appendChild(usernameElement);
     document.body.appendChild(top);
 
-    // Punch bar
     const punchBar = document.createElement("div");
     punchBar.id = "punch-bar";
     punchBar.style.position = "fixed";
@@ -42,13 +41,33 @@ function renderTopBar() {
     punchBar.style.padding = "6px 0";
     punchBar.style.borderRadius = "8px";
     punchBar.style.zIndex = "999";
-    punchBar.innerHTML = ""; // Empty first
-    updatePunchDisplay();     // Let logic handle rendering
-
+    punchBar.innerHTML = `🥊 Punches: ${window.punches || 0}`;
     document.body.appendChild(punchBar);
 
+    const punchProgress = document.createElement("div");
+    punchProgress.id = "punch-progress";
+    punchProgress.style.position = "fixed";
+    punchProgress.style.top = "88px";
+    punchProgress.style.left = "1rem";
+    punchProgress.style.fontFamily = "'Arial Black', sans-serif";
+    punchProgress.style.fontSize = "16px";
+    punchProgress.style.color = "#002868";
+    punchProgress.style.zIndex = "999";
+    document.body.appendChild(punchProgress);
 
-    // Sound toggle
+    const bonusHint = document.createElement("div");
+    bonusHint.id = "bonus-hint";
+    bonusHint.style.position = "fixed";
+    bonusHint.style.top = "112px";
+    bonusHint.style.left = "1rem";
+    bonusHint.style.fontSize = "13px";
+    bonusHint.style.color = "#444";
+    bonusHint.style.zIndex = "999";
+    bonusHint.style.fontFamily = "Arial, sans-serif";
+    document.body.appendChild(bonusHint);
+
+    updatePunchDisplay();
+
     const iconSize = 32;
     soundButton = document.createElement("img");
     soundButton.src = "sound_on.svg";
@@ -71,21 +90,20 @@ function renderTopBar() {
 
 function updatePunchDisplay() {
     const count = window.punches || 0;
+
+    const punchBar = document.getElementById("punch-bar");
+    if (punchBar) punchBar.innerHTML = `🥊 Punches: ${count}`;
+
     const nextMilestone = Math.ceil(count / 100) * 100;
     const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
     const remaining = showMilestone - count;
 
-    const punchBar = document.getElementById("punch-bar");
-    if (punchBar) {
-        punchBar.innerHTML = `
-            🥊 Punches: <span id="punch-count">${count}</span><br>
-            <span style="font-size: 13px; font-weight: normal; color: #fff;" id="bonus-hint">
-                ${remaining} punches until +25 bonus
-            </span>
-        `;
-    }
-}
+    const countEl = document.getElementById("punch-progress");
+    const hintEl = document.getElementById("bonus-hint");
 
+    if (countEl) countEl.innerHTML = `🥊 ${count} / ${showMilestone}`;
+    if (hintEl) hintEl.innerText = `${remaining} punches until +25 bonus`;
+}
 
 function renderTabs() {
     const tabBar = document.createElement("div");
