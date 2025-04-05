@@ -15,7 +15,7 @@ function showTab(tab, scene = null) {
         container.style.position = "fixed";
         container.style.top = "100px";
         container.style.bottom = "0";
-        container.style.marginBottom = "80px"; // Add space for nav tabs
+        container.style.marginBottom = "180px"; // Add space for nav tabs
         container.style.left = "0";
         container.style.right = "0";
         container.style.width = "100vw";
@@ -53,9 +53,8 @@ function showTab(tab, scene = null) {
             <p>Punch Drump with a shoe. Simple as that. From like-minded cryptonerds tired of unpredictability.</p>
             <h3>How to Play</h3>
             <p>Punch to earn. Collect punches. Compete on the leaderboard. Invite friends for rewards.</p>
-            <p>🎁 <b>Referral Bonus:</b> +100 punches when your referral scores 10+.</p>
+            <p>🎁 <b>Referral Bonus:</b> Get +1000 punches when your referral scores 10+. Both sides get +1000 punches - it's a great way to start!</p>
             <p>🏗 <b>Upcoming:</b> Event drops, airdrops, collectibles. Stay tuned for more updates.</p>
-            <p>🤖 Powered by frustration.py</p>
         `;
         document.body.appendChild(info);
     }
