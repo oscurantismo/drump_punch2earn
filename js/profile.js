@@ -230,14 +230,14 @@ function fetchProfileData() {
             return res.json();
         })
         .then(data => {
-            const punchDisplay = document.getElementById("punch-count");
+            const punchesStat = document.getElementById("punch-count");
 
             if (typeof data.punches === "number") {
                 window.punches = data.punches; // Force update from server
             }
 
-            if (punchDisplay) {
-                punchDisplay.textContent = data.punches ?? "0";
+            if (punchesStat) {
+                punchesStat.textContent = data.punches ?? "0";
             } else {
                 console.warn("❌ Could not find #punch-count to update.");
             }
