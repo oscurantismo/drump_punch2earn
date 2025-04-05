@@ -243,9 +243,9 @@ function fetchProfileData() {
                 console.warn("❌ Could not find #punch-count to update.");
             }
 
-            const punchBar = document.getElementById("punch-bar");
-            if (punchBar) {
-                punchBar.innerHTML = `🥊 Punches: <span id="punch-count">${window.punches}</span>`;
+            const punchesStat = document.getElementById("punch-count");
+            if (punchesStat) {
+                punchesStat.innerHTML = `🥊 Punches: <span id="punch-count">${window.punches}</span>`;
             }
         })
         .catch(err => console.error("Error fetching profile data:", err));
@@ -255,7 +255,7 @@ function closeProfile() {
     const profile = document.getElementById("profile-container");
     if (profile) profile.remove();
     window.activeTab = "game";
-    updatePunchDisplay();  // Ensures display is refreshed after returning
+    updatePunchDisplay(); // Ensure punch bar refreshes visually
 }
 
 function styleGameButton(button, bg, hoverBg) {
