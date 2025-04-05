@@ -89,13 +89,6 @@ function create() {
     renderShareButton();
 
     showGameUI(this);
-
-    initPunchModule({
-        drump,
-        punchSounds,
-        loadeddrumpFrames
-    });
-
     registerUser();
 }
 
