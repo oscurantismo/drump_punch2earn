@@ -24,9 +24,11 @@ function handlePunch() {
     let bonus = 0;
     if (newPunches % 100 === 0) {
         bonus = 25;
+        window.punches = newPunches + bonus;
+    } else {
+        window.punches = newPunches;
     }
 
-    window.punches = newPunches + bonus;
     lastPunchTime = Date.now();
 
     updatePunchDisplay();
@@ -40,14 +42,15 @@ function handlePunch() {
     if (currentFrame < 30) currentFrame++;
 
     const key = `${currentFrame}a-min.png`;
+    const scene = game.scene.scenes[0];
 
     if (!loadeddrumpFrames.has(key)) {
-        game.scene.scenes[0].load.image(key, `drump-images/${key}`);
-        game.scene.scenes[0].load.once('complete', () => {
+        scene.load.image(key, `drump-images/${key}`);
+        scene.load.once('complete', () => {
             loadeddrumpFrames.add(key);
             drump.setTexture(key);
         });
-        game.scene.scenes[0].load.start();
+        scene.load.start();
     } else {
         drump.setTexture(key);
     }
@@ -62,7 +65,7 @@ function handlePunch() {
 
     submitPunchScore();
 
-    // Sync from server
+    // Sync with backend to ensure accuracy
     fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
         .then(res => res.json())
         .then(data => {
@@ -74,7 +77,7 @@ function handlePunch() {
             const profilePunchEl = document.querySelector("#profile-container #punch-count");
             if (profilePunchEl) profilePunchEl.textContent = window.punches;
 
-            updatePunchDisplay(); // Refresh progress
+            updatePunchDisplay();
         })
         .catch(err => console.error("❌ Failed to sync punches from server:", err));
 }
