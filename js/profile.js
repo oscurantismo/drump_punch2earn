@@ -219,6 +219,11 @@ function renderProfilePage() {
 }
 
 function fetchProfileData() {
+    if (!window.userId) {
+        console.warn("❌ userId not available. Cannot fetch profile data.");
+        return;
+    }
+
     fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
         .then(res => {
             if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
@@ -226,15 +231,26 @@ function fetchProfileData() {
         })
         .then(data => {
             const punchDisplay = document.getElementById("punch-count");
-            if (punchDisplay) punchDisplay.textContent = data.punches ?? "0";
-            // Sync client state if needed
-            if (typeof window.punches === "undefined" || data.punches > window.punches) {
-                window.punches = data.punches;
-                localStorage.setItem(`score_${window.userId}`, data.punches);
+
+            if (typeof data.punches === "number") {
+                window.punches = data.punches; // Force update from server
+            }
+
+            if (punchDisplay) {
+                punchDisplay.textContent = data.punches ?? "0";
+            } else {
+                console.warn("❌ Could not find #punch-count to update.");
+            }
+
+            // Also update punch-bar if needed
+            const punchBar = document.getElementById("punch-bar");
+            if (punchBar) {
+                punchBar.innerHTML = `🥊 Punches: <span id="punch-count">${window.punches}</span>`;
             }
         })
         .catch(err => console.error("Error fetching profile data:", err));
 }
+
 
 function closeProfile() {
     const profile = document.getElementById("profile-container");
