@@ -42,11 +42,9 @@ function renderTopBar() {
     punchBar.style.padding = "6px 0";
     punchBar.style.borderRadius = "8px";
     punchBar.style.zIndex = "999";
-    punchBar.innerHTML = `
-        🥊 Punches: <span id="punch-count">${window.punches}</span><br>
-        <div id="punch-progress" style="font-size: 13px; color: #fff; margin-top: 4px;"></div>
-        <div id="bonus-hint" style="font-size: 12px; color: #ffebcd; margin-top: 2px;"></div>
-    `;
+    punchBar.innerHTML = ""; // Empty first
+    updatePunchDisplay();     // Let logic handle rendering
+
     document.body.appendChild(punchBar);
 
 
@@ -74,21 +72,19 @@ function renderTopBar() {
 function updatePunchDisplay() {
     const count = window.punches || 0;
     const nextMilestone = Math.ceil(count / 100) * 100;
-    const target = (nextMilestone === count) ? count + 100 : nextMilestone;
-    const remaining = target - count;
+    const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
+    const remaining = showMilestone - count;
 
-    const bar = document.getElementById("punch-bar");
-    if (bar) {
-        bar.innerHTML = `🥊 Punches: <span id="punch-count">${count}</span>`;
+    const punchBar = document.getElementById("punch-bar");
+    if (punchBar) {
+        punchBar.innerHTML = `
+            🥊 Punches: <span id="punch-count">${count}</span><br>
+            <span style="font-size: 13px; font-weight: normal; color: #fff;" id="bonus-hint">
+                ${remaining} punches until +25 bonus
+            </span>
+        `;
     }
-
-    const countEl = document.getElementById("punch-progress");
-    const hintEl = document.getElementById("bonus-hint");
-
-    if (countEl) countEl.innerHTML = `+25 bonus every 100 punches`;
-    if (hintEl) hintEl.innerText = `${remaining} punches until bonus`;
 }
-
 
 
 function renderTabs() {
