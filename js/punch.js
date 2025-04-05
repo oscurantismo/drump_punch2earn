@@ -10,7 +10,7 @@ function initPunchModule(config) {
     drump = config.drump;
     punchSounds = config.punchSounds;
     loadeddrumpFrames = config.loadeddrumpFrames;
-    updatePunchDisplay(); // Initial call
+    updatePunchDisplay(); // Ensures punchBar and bonus bar show up on load
 }
 
 function handlePunch() {
@@ -22,7 +22,14 @@ function handlePunch() {
     const newPunches = previousPunches + 1;
     window.punches = newPunches;
 
+    const isBonus = newPunches % 100 === 0;
+    const bonus = isBonus ? 25 : 0;
+    if (isBonus) {
+        window.punches += bonus;
+    }
+
     lastPunchTime = Date.now();
+
     updatePunchDisplay();
     localStorage.setItem(`score_${window.userId}`, window.punches);
 
@@ -38,7 +45,7 @@ function handlePunch() {
 
     if (!loadeddrumpFrames.has(key)) {
         scene.load.image(key, `drump-images/${key}`);
-        scene.load.once('complete', () => {
+        scene.load.once("complete", () => {
             loadeddrumpFrames.add(key);
             drump.setTexture(key);
         });
@@ -48,32 +55,63 @@ function handlePunch() {
     }
 
     showPunchEffect();
-    animateFloatingText("+1");
+    animateFloatingText(`+1${bonus ? ` 🎉 +${bonus}` : ""}`);
 
-    setTimeout(() => { hitCooldown = false; }, 200);
+    setTimeout(() => {
+        hitCooldown = false;
+    }, 150); // Responsive but throttled
 
     if (backwardInterval) clearInterval(backwardInterval);
     startBackwardAnimation();
 
     submitPunchScore();
+    syncFromBackend(); // Also refreshes punch UI state
+}
 
-    // Sync with backend
+function updatePunchDisplay() {
+    const count = window.punches || 0;
+    const nextMilestone = Math.ceil(count / 100) * 100;
+    const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
+    const remaining = showMilestone - count;
+
+    const bar = document.getElementById("punchBar");
+    const hint = document.getElementById("bonus-hint");
+    const profileStat = document.getElementById("punchProfileStat");
+
+    if (bar) bar.innerText = `🥊 Punches: ${count}`;
+    if (hint) hint.innerText = `${remaining} punches until +25 bonus`;
+    if (profileStat) profileStat.textContent = count;
+}
+
+function syncFromBackend() {
+    if (!window.userId) return;
+
     fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
         .then(res => res.json())
         .then(data => {
             window.punches = data.punches ?? 0;
-
-            const gamePunchEl = document.getElementById("punch-count");
-            if (gamePunchEl) gamePunchEl.textContent = window.punches;
-
-            const profilePunchEl = document.querySelector("#profile-container #punch-count");
-            if (profilePunchEl) profilePunchEl.textContent = window.punches;
-
             updatePunchDisplay();
         })
         .catch(err => console.error("❌ Failed to sync punches from server:", err));
 }
 
+function submitPunchScore() {
+    fetch("https://drumpleaderboard-production.up.railway.app/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: window.storedUsername,
+            user_id: window.userId,
+            score: window.punches
+        })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return res.json();
+    })
+    .then(() => console.log("✅ Punch score submitted"))
+    .catch(err => console.error("❌ Punch submit failed:", err));
+}
 
 function showPunchEffect() {
     const scene = game.scene.scenes[0];
@@ -100,7 +138,7 @@ function animateFloatingText(text) {
         y: floating.y - 50,
         alpha: 0,
         duration: 800,
-        ease: 'Power1',
+        ease: "Power1",
         onComplete: () => floating.destroy()
     });
 }
@@ -120,50 +158,19 @@ function startBackwardAnimation() {
 
         currentFrame--;
         const key = `${currentFrame}a-min.png`;
+        const scene = game.scene.scenes[0];
 
         if (!loadeddrumpFrames.has(key)) {
-            game.scene.scenes[0].load.image(key, `drump-images/${key}`);
-            game.scene.scenes[0].load.once('complete', () => {
+            scene.load.image(key, `drump-images/${key}`);
+            scene.load.once("complete", () => {
                 loadeddrumpFrames.add(key);
                 drump.setTexture(key);
             });
-            game.scene.scenes[0].load.start();
+            scene.load.start();
         } else {
             drump.setTexture(key);
         }
     }, adjustedSpeed);
-}
-
-function updatePunchDisplay() {
-    const count = window.punches || 0;
-    const nextMilestone = Math.ceil(count / 100) * 100;
-    const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
-    const remaining = showMilestone - count;
-
-    const countEl = document.getElementById("punch-progress");
-    const hintEl = document.getElementById("bonus-hint");
-
-    if (countEl) countEl.innerHTML = `🥊 ${count} / ${showMilestone}`;
-    if (hintEl) hintEl.innerText = `${remaining} punches until +25 bonus`;
-}
-
-
-function submitPunchScore() {
-    fetch("https://drumpleaderboard-production.up.railway.app/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            username: window.storedUsername,
-            user_id: window.userId,
-            score: window.punches
-        })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-    })
-    .then(() => console.log("✅ Punch score submitted"))
-    .catch(err => console.error("❌ Punch submit failed:", err));
 }
 
 export { initPunchModule, handlePunch };
