@@ -20,17 +20,9 @@ function handlePunch() {
 
     const previousPunches = window.punches || 0;
     const newPunches = previousPunches + 1;
-
-    let bonus = 0;
-    if (newPunches % 100 === 0) {
-        bonus = 25;
-        window.punches = newPunches + bonus;
-    } else {
-        window.punches = newPunches;
-    }
+    window.punches = newPunches;
 
     lastPunchTime = Date.now();
-
     updatePunchDisplay();
     localStorage.setItem(`score_${window.userId}`, window.punches);
 
@@ -56,7 +48,7 @@ function handlePunch() {
     }
 
     showPunchEffect();
-    animateFloatingText(`+1${bonus ? ` 🎉 +${bonus}` : ''}`);
+    animateFloatingText("+1");
 
     setTimeout(() => { hitCooldown = false; }, 200);
 
@@ -65,7 +57,7 @@ function handlePunch() {
 
     submitPunchScore();
 
-    // Sync with backend to ensure accuracy
+    // Sync with backend
     fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
         .then(res => res.json())
         .then(data => {
@@ -81,6 +73,7 @@ function handlePunch() {
         })
         .catch(err => console.error("❌ Failed to sync punches from server:", err));
 }
+
 
 function showPunchEffect() {
     const scene = game.scene.scenes[0];
