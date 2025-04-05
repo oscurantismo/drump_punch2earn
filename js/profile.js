@@ -111,7 +111,7 @@ function renderProfilePage() {
     card.appendChild(referralTitle);
 
     const referralMsg = document.createElement("p");
-    referralMsg.innerText = "Invite friends and earn +100 🥊 punches!";
+    referralMsg.innerText = "Invite friends and earn +1000 🥊 punches for each sent and accepted referral!";
     Object.assign(referralMsg.style, {
         fontSize: "14px",
         color: "#666",
@@ -166,7 +166,7 @@ function renderProfilePage() {
     shareBtn.style.flex = "1";
     styleGameButton(shareBtn, "#b22234", "#9e1e2c");
     shareBtn.onclick = () => {
-        const message = `Join me in Drump | Punch2Earn! Punch Trump and earn rewards 💥 Use my link: ${referralInput.value}`;
+        const message = `Join me in Drump | Punch2Earn! Punch and earn rewards 💥 Use my link: ${referralInput.value}`;
         Telegram.WebApp.showPopup({
             title: "Share your referral link",
             message: "Choose where to share your invite:",
