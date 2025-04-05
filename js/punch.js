@@ -17,25 +17,24 @@ function handlePunch() {
     if (!drump || hitCooldown || window.activeTab !== "game") return;
 
     hitCooldown = true;
-    window.punches = (window.punches || 0) + 1;
-    lastPunchTime = Date.now();
 
-    // Check if punch count hits a 100-punch milestone
-    if (window.punches % 100 === 0) {
-        const bonus = Math.floor(window.punches * 0.25);
-        window.punches += bonus;
-        animateFloatingText(`+${bonus} Bonus!`);
-    } else {
-        animateFloatingText("+1");
+    const previousPunches = window.punches || 0;
+    const newPunches = previousPunches + 1;
+
+    let bonus = 0;
+    if (newPunches % 100 === 0) {
+        bonus = 25;
     }
+
+    window.punches = newPunches + bonus;
+    lastPunchTime = Date.now();
 
     updatePunchDisplay();
     localStorage.setItem(`score_${window.userId}`, window.punches);
 
     if (window.soundEnabled && punchSounds.length > 0) {
         const sound = Phaser.Math.RND.pick(punchSounds);
-        if (sound && sound.isPlaying) sound.stop();
-        if (sound) sound.play();
+        sound.play();
     }
 
     if (currentFrame < 30) currentFrame++;
@@ -54,6 +53,7 @@ function handlePunch() {
     }
 
     showPunchEffect();
+    animateFloatingText(`+1${bonus ? ` 🎉 +${bonus}` : ''}`);
 
     setTimeout(() => { hitCooldown = false; }, 200);
 
@@ -62,15 +62,19 @@ function handlePunch() {
 
     submitPunchScore();
 
+    // Sync from server
     fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
         .then(res => res.json())
         .then(data => {
             window.punches = data.punches ?? 0;
+
             const gamePunchEl = document.getElementById("punch-count");
             if (gamePunchEl) gamePunchEl.textContent = window.punches;
+
             const profilePunchEl = document.querySelector("#profile-container #punch-count");
             if (profilePunchEl) profilePunchEl.textContent = window.punches;
-            updatePunchDisplay();
+
+            updatePunchDisplay(); // Refresh progress
         })
         .catch(err => console.error("❌ Failed to sync punches from server:", err));
 }
@@ -135,21 +139,18 @@ function startBackwardAnimation() {
 }
 
 function updatePunchDisplay() {
-    const punchBar = document.getElementById("punch-bar");
-    if (!punchBar) return;
+    const count = window.punches || 0;
+    const nextMilestone = Math.ceil(count / 100) * 100;
+    const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
+    const remaining = showMilestone - count;
 
-    const nextBonusAt = Math.ceil((window.punches + 1) / 100) * 100;
-    const punchesLeft = nextBonusAt - window.punches;
+    const countEl = document.getElementById("punch-progress");
+    const hintEl = document.getElementById("bonus-hint");
 
-    punchBar.innerHTML = `
-        <div style="font-size: 16px; font-weight: bold;">
-            🥊 Punches: <span id="punch-count">${window.punches}</span>
-        </div>
-        <div style="font-size: 14px; color: #888; margin-top: 2px;">
-            ${window.punches} / ${nextBonusAt} <span style="font-size: 12px;">(${punchesLeft} to next bonus)</span>
-        </div>
-    `;
+    if (countEl) countEl.innerHTML = `🥊 ${count} / ${showMilestone}`;
+    if (hintEl) hintEl.innerText = `${remaining} punches until +25 bonus`;
 }
+
 
 function submitPunchScore() {
     fetch("https://drumpleaderboard-production.up.railway.app/submit", {
