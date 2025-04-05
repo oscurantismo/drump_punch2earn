@@ -27,7 +27,7 @@ function renderTopBar() {
     top.appendChild(usernameElement);
     document.body.appendChild(top);
 
-    // Punch bar + bonus progress
+    // Punch bar
     const punchBar = document.createElement("div");
     punchBar.id = "punch-bar";
     punchBar.style.position = "fixed";
@@ -38,31 +38,29 @@ function renderTopBar() {
     punchBar.style.color = "#ffffff";
     punchBar.style.textAlign = "center";
     punchBar.style.fontFamily = "'Arial Black', sans-serif";
-    punchBar.style.fontSize = "16px";
-    punchBar.style.padding = "10px 0 2px";
+    punchBar.style.fontSize = "18px";
+    punchBar.style.padding = "6px 0";
     punchBar.style.borderRadius = "8px";
     punchBar.style.zIndex = "999";
-
-    // Main punch count
-    const countText = document.createElement("div");
-    countText.id = "punch-progress";
-    const current = window.punches || 0;
-    const nextBonus = Math.ceil(current / 100) * 100 + 100;
-    countText.innerHTML = `🥊 ${current} / ${nextBonus}`;
-    countText.style.fontSize = "18px";
-
-    // Subtext
-    const subtext = document.createElement("div");
-    subtext.id = "bonus-hint";
-    subtext.innerText = `${nextBonus - current} punches until +25% bonus`;
-    subtext.style.fontSize = "12px";
-    subtext.style.color = "#eee";
-    subtext.style.marginTop = "2px";
-
-    punchBar.appendChild(countText);
-    punchBar.appendChild(subtext);
+    punchBar.innerText = "🥊 Punches";
     document.body.appendChild(punchBar);
 
+    // Separate punch counter
+    const punchCount = document.createElement("div");
+    punchCount.id = "punch-count-display";
+    punchCount.style.position = "fixed";
+    punchCount.style.top = "85px";
+    punchCount.style.left = "1rem";
+    punchCount.style.right = "1rem";
+    punchCount.style.textAlign = "center";
+    punchCount.style.fontSize = "16px";
+    punchCount.style.fontFamily = "'Arial Black', sans-serif";
+    punchCount.style.color = "#0047ab";
+    punchCount.style.zIndex = "999";
+    punchCount.innerHTML = `Total: <span id="punch-count">${window.punches || 0}</span>`;
+    document.body.appendChild(punchCount);
+
+    // Sound toggle
     const iconSize = 32;
     soundButton = document.createElement("img");
     soundButton.src = "sound_on.svg";
@@ -83,17 +81,25 @@ function renderTopBar() {
     document.body.style.cursor = "default";
 }
 
+
 function updatePunchDisplay() {
     const count = window.punches || 0;
     const next = Math.ceil(count / 100) * 100 + 100;
     const remaining = next - count;
 
-    const countEl = document.getElementById("punch-progress");
-    const hintEl = document.getElementById("bonus-hint");
+    // Update main punch count
+    const punchCountEl = document.getElementById("punch-count");
+    if (punchCountEl) punchCountEl.textContent = count;
 
+    // Update bonus progress counter
+    const countEl = document.getElementById("punch-progress");
     if (countEl) countEl.innerHTML = `🥊 ${count} / ${next}`;
+
+    // Update bonus hint
+    const hintEl = document.getElementById("bonus-hint");
     if (hintEl) hintEl.innerText = `${remaining} punches until +25% bonus`;
 }
+
 
 function renderTabs() {
     const tabBar = document.createElement("div");
