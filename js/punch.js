@@ -53,6 +53,19 @@ function handlePunch() {
     submitPunchScore();
 }
 
+function refreshPunchCount() {
+    fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
+        .then(res => res.json())
+        .then(data => {
+            window.punches = data.punches;
+            localStorage.setItem(`score_${window.userId}`, data.punches);
+
+            const counter = document.getElementById("coin-count") || document.getElementById("punch-count");
+            if (counter) counter.textContent = data.punches;
+        });
+}
+
+
 function showPunchEffect() {
     const scene = game.scene.scenes[0];
     const punchEffect = scene.add.sprite(drump.x, drump.y, "punch")
