@@ -1,5 +1,5 @@
 import { handlePunch, initPunchModule } from "./punch.js";
-import { renderTopBar, renderTabs, renderShareButton } from "./ui.js";
+import { renderTopBar, renderTabs, renderShareButton, updatePunchDisplay } from "./ui.js";
 
 let game;
 let drump;
