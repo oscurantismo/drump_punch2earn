@@ -56,9 +56,12 @@ function create() {
     window.activeTab = "game";
 
     const cached = localStorage.getItem(`score_${window.userId}`);
+
     if (cached !== null) {
-        window.punches = parseInt(cached);
+    window.punches = parseInt(cached);
     }
+    updatePunchDisplay(); // ✅ Move this here after punches are loaded
+
 
     this.anims.create({
         key: "punchAnim",
