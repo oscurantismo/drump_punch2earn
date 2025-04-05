@@ -6,6 +6,7 @@ function renderProfilePage() {
     if (existingProfile) existingProfile.remove();
 
     window.activeTab = "profile";
+    updatePunchDisplay(); // Hide punch bar from main UI
 
     const container = document.createElement("div");
     container.id = "profile-container";
@@ -84,7 +85,7 @@ function renderProfilePage() {
     card.appendChild(avatar);
 
     const punchesStat = document.createElement("div");
-    punchesStat.innerHTML = `🥊 Punches: <span id="punch-count">0</span>`;
+    punchesStat.innerHTML = `🥊 <strong>Punches:</strong> <span id="punchProfileStat">0</span>`;
     Object.assign(punchesStat.style, {
         fontSize: "18px",
         marginBottom: "20px",
@@ -110,7 +111,7 @@ function renderProfilePage() {
     card.appendChild(referralTitle);
 
     const referralMsg = document.createElement("p");
-    referralMsg.innerText = "Invite friends and earn +1000 🥊 punches!";
+    referralMsg.innerText = "Invite friends and earn +100 🥊 punches!";
     Object.assign(referralMsg.style, {
         fontSize: "14px",
         color: "#666",
@@ -119,7 +120,7 @@ function renderProfilePage() {
     card.appendChild(referralMsg);
 
     const referralCondition = document.createElement("p");
-    referralCondition.innerText = "Your friend must punch at least 10 times for you to both earn the reward.";
+    referralCondition.innerText = "Your friend must punch at least 10 times for you to earn the reward.";
     Object.assign(referralCondition.style, {
         fontSize: "12px",
         color: "#999",
@@ -214,8 +215,6 @@ function renderProfilePage() {
     fetchProfileData();
     if (window.userId) {
         fetchReferralHistory();
-    } else {
-        console.warn("User ID not available yet. Skipping referral history fetch.");
     }
 }
 
@@ -231,22 +230,16 @@ function fetchProfileData() {
             return res.json();
         })
         .then(data => {
-            const punchesStat = document.getElementById("punch-count");
-
             if (typeof data.punches === "number") {
                 window.punches = data.punches;
             }
 
-            if (punchesStat) {
-                punchesStat.textContent = data.punches ?? "0";
-            } else {
-                console.warn("❌ Could not find #punch-count to update.");
+            const punchProfileStat = document.getElementById("punchProfileStat");
+            if (punchProfileStat) {
+                punchProfileStat.textContent = window.punches;
             }
 
-            const punchesCount = document.getElementById("punch-count");
-            if (punchesCount) {
-                punchesCount.innerHTML = `🥊 Punches: <span id="punch-count">${window.punches}</span>`;
-            }
+            updatePunchDisplay();
         })
         .catch(err => console.error("Error fetching profile data:", err));
 }
@@ -254,8 +247,9 @@ function fetchProfileData() {
 function closeProfile() {
     const profile = document.getElementById("profile-container");
     if (profile) profile.remove();
+
     window.activeTab = "game";
-    updatePunchDisplay(); // Ensure punch bar refreshes visually
+    updatePunchDisplay(); // ✅ Restore punchBar
 }
 
 function styleGameButton(button, bg, hoverBg) {
