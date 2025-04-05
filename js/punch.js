@@ -20,18 +20,19 @@ function handlePunch() {
 
     hitCooldown = true;
 
-    const previous = window.punches || 0;
-    const next = previous + 1;
-    let bonus = 0;
+    const previousPunches = window.punches || 0;
+    const newPunches = previousPunches + 1;
 
-    if (next % 100 === 0) {
+    let bonus = 0;
+    if (newPunches % 100 === 0) {
         bonus = 25;
-        window.punches = next + bonus;
+        window.punches = newPunches + bonus;
     } else {
-        window.punches = next;
+        window.punches = newPunches;
     }
 
     lastPunchTime = Date.now();
+
     updatePunchDisplay();
     localStorage.setItem(`score_${window.userId}`, window.punches);
 
@@ -59,29 +60,32 @@ function handlePunch() {
     showPunchEffect();
     animateFloatingText(`+1${bonus ? ` 🎉 +${bonus}` : ''}`);
 
-    setTimeout(() => {
-        hitCooldown = false;
-    }, 200);
+    setTimeout(() => { hitCooldown = false; }, 200);
 
     if (backwardInterval) clearInterval(backwardInterval);
     startBackwardAnimation();
 
     submitPunchScore();
 
-    // Sync with server
-    fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
-        .then(res => res.json())
-        .then(data => {
-            window.punches = data.punches ?? 0;
-            updatePunchDisplay();
+    // ✅ Only fetch from backend every 20 punches
+    if (window.punches % 20 === 0) {
+        fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (typeof data.punches === "number" && data.punches > window.punches) {
+                    window.punches = data.punches;
 
-            const gamePunchEl = document.getElementById("punch-count");
-            if (gamePunchEl) gamePunchEl.textContent = window.punches;
+                    const gamePunchEl = document.getElementById("punch-count");
+                    if (gamePunchEl) gamePunchEl.textContent = window.punches;
 
-            const profilePunchEl = document.querySelector("#profile-container #punch-count");
-            if (profilePunchEl) profilePunchEl.textContent = window.punches;
-        })
-        .catch(err => console.error("❌ Failed to sync punches from server:", err));
+                    const profilePunchEl = document.querySelector("#profile-container #punchProfileStat");
+                    if (profilePunchEl) profilePunchEl.textContent = window.punches;
+
+                    updatePunchDisplay();
+                }
+            })
+            .catch(err => console.error("❌ Failed to sync punches from server:", err));
+    }
 }
 
 function showPunchEffect() {
