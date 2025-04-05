@@ -6,7 +6,7 @@ function renderProfilePage() {
     if (existingProfile) existingProfile.remove();
 
     window.activeTab = "profile";
-    updatePunchDisplay(); // Hide punch bar from main UI
+    updatePunchDisplay();
 
     const container = document.createElement("div");
     container.id = "profile-container";
@@ -85,7 +85,7 @@ function renderProfilePage() {
     card.appendChild(avatar);
 
     const punchesStat = document.createElement("div");
-    punchesStat.innerHTML = `🥊 <strong>Punches:</strong> <span id="punchProfileStat">0</span>`;
+    punchesStat.innerHTML = `🥊 Punches: <span id="punchProfileStat">0</span>`;
     Object.assign(punchesStat.style, {
         fontSize: "18px",
         marginBottom: "20px",
@@ -213,9 +213,7 @@ function renderProfilePage() {
     document.body.appendChild(container);
 
     fetchProfileData();
-    if (window.userId) {
-        fetchReferralHistory();
-    }
+    if (window.userId) fetchReferralHistory();
 }
 
 function fetchProfileData() {
@@ -232,14 +230,10 @@ function fetchProfileData() {
         .then(data => {
             if (typeof data.punches === "number") {
                 window.punches = data.punches;
+                const punchProfileStat = document.getElementById("punchProfileStat");
+                if (punchProfileStat) punchProfileStat.textContent = window.punches;
+                updatePunchDisplay();
             }
-
-            const punchProfileStat = document.getElementById("punchProfileStat");
-            if (punchProfileStat) {
-                punchProfileStat.textContent = window.punches;
-            }
-
-            updatePunchDisplay();
         })
         .catch(err => console.error("Error fetching profile data:", err));
 }
@@ -249,7 +243,7 @@ function closeProfile() {
     if (profile) profile.remove();
 
     window.activeTab = "game";
-    updatePunchDisplay(); // ✅ Restore punchBar
+    updatePunchDisplay();
 }
 
 function styleGameButton(button, bg, hoverBg) {
