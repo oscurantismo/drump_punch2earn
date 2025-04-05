@@ -75,19 +75,19 @@ function handlePunch() {
                 if (typeof data.punches === "number") {
                     // Only update if backend is higher (never overwrite local)
                     if (data.punches > window.punches) {
-                    window.punches = data.punches;
+                        window.punches = data.punches;
 
-                    const gamePunchEl = document.getElementById("punch-count");
-                    if (gamePunchEl) gamePunchEl.textContent = window.punches;
+                        const gamePunchEl = document.getElementById("punch-count");
+                        if (gamePunchEl) gamePunchEl.textContent = window.punches;
 
-                    const profilePunchEl = document.querySelector("#profile-container #punchProfileStat");
-                    if (profilePunchEl) profilePunchEl.textContent = window.punches;
+                        const profilePunchEl = document.querySelector("#profile-container #punchProfileStat");
+                        if (profilePunchEl) profilePunchEl.textContent = window.punches;
 
-                    updatePunchDisplay();
+                        updatePunchDisplay();
                     } else {
-                    console.log("⏩ Skipped punch overwrite: local is newer or equal");
-                    console.log("Local:", window.punches, "Backend:", data.punches);
-
+                        console.log("⏩ Skipped punch overwrite: local is newer or equal");
+                        console.log("Local:", window.punches, "Backend:", data.punches);
+                    }
                 }
             })
             .catch(err => console.error("❌ Failed to sync punches from server:", err));
