@@ -10,6 +10,7 @@ function initPunchModule(config) {
     drump = config.drump;
     punchSounds = config.punchSounds;
     loadeddrumpFrames = config.loadeddrumpFrames;
+    updatePunchDisplay(); // Initial call
 }
 
 function handlePunch() {
@@ -19,12 +20,22 @@ function handlePunch() {
     window.punches = (window.punches || 0) + 1;
     lastPunchTime = Date.now();
 
+    // Check if punch count hits a 100-punch milestone
+    if (window.punches % 100 === 0) {
+        const bonus = Math.floor(window.punches * 0.25);
+        window.punches += bonus;
+        animateFloatingText(`+${bonus} Bonus!`);
+    } else {
+        animateFloatingText("+1");
+    }
+
     updatePunchDisplay();
     localStorage.setItem(`score_${window.userId}`, window.punches);
 
     if (window.soundEnabled && punchSounds.length > 0) {
         const sound = Phaser.Math.RND.pick(punchSounds);
-        sound.play();
+        if (sound && sound.isPlaying) sound.stop();
+        if (sound) sound.play();
     }
 
     if (currentFrame < 30) currentFrame++;
@@ -43,7 +54,6 @@ function handlePunch() {
     }
 
     showPunchEffect();
-    animateFloatingText("+1");
 
     setTimeout(() => { hitCooldown = false; }, 200);
 
@@ -53,20 +63,16 @@ function handlePunch() {
     submitPunchScore();
 
     fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
-    .then(res => res.json())
-    .then(data => {
-        window.punches = data.punches ?? 0;
-
-        // Update main game UI counter
-        const gamePunchEl = document.getElementById("punch-count");
-        if (gamePunchEl) gamePunchEl.textContent = window.punches;
-
-        // Update profile UI counter (if visible)
-        const profilePunchEl = document.querySelector("#profile-container #punch-count");
-        if (profilePunchEl) profilePunchEl.textContent = window.punches;
-    })
-    .catch(err => console.error("❌ Failed to sync punches from server:", err));
-
+        .then(res => res.json())
+        .then(data => {
+            window.punches = data.punches ?? 0;
+            const gamePunchEl = document.getElementById("punch-count");
+            if (gamePunchEl) gamePunchEl.textContent = window.punches;
+            const profilePunchEl = document.querySelector("#profile-container #punch-count");
+            if (profilePunchEl) profilePunchEl.textContent = window.punches;
+            updatePunchDisplay();
+        })
+        .catch(err => console.error("❌ Failed to sync punches from server:", err));
 }
 
 function showPunchEffect() {
@@ -129,10 +135,20 @@ function startBackwardAnimation() {
 }
 
 function updatePunchDisplay() {
-    const bar = document.getElementById("punch-bar");
-    if (bar) {
-        bar.innerText = `🥊 Punches: ${window.punches}`;
-    }
+    const punchBar = document.getElementById("punch-bar");
+    if (!punchBar) return;
+
+    const nextBonusAt = Math.ceil((window.punches + 1) / 100) * 100;
+    const punchesLeft = nextBonusAt - window.punches;
+
+    punchBar.innerHTML = `
+        <div style="font-size: 16px; font-weight: bold;">
+            🥊 Punches: <span id="punch-count">${window.punches}</span>
+        </div>
+        <div style="font-size: 14px; color: #888; margin-top: 2px;">
+            ${window.punches} / ${nextBonusAt} <span style="font-size: 12px;">(${punchesLeft} to next bonus)</span>
+        </div>
+    `;
 }
 
 function submitPunchScore() {
