@@ -1,3 +1,5 @@
+import { updatePunchDisplay } from "./ui.js";
+
 let drump, punchSounds, loadeddrumpFrames;
 let hitCooldown = false;
 let currentFrame = 1;
@@ -10,7 +12,7 @@ function initPunchModule(config) {
     drump = config.drump;
     punchSounds = config.punchSounds;
     loadeddrumpFrames = config.loadeddrumpFrames;
-    updatePunchDisplay(); // Ensures punchBar and bonus bar show up on load
+    updatePunchDisplay(); // Initial sync
 }
 
 function handlePunch() {
@@ -18,18 +20,18 @@ function handlePunch() {
 
     hitCooldown = true;
 
-    const previousPunches = window.punches || 0;
-    const newPunches = previousPunches + 1;
-    window.punches = newPunches;
+    const previous = window.punches || 0;
+    const next = previous + 1;
+    let bonus = 0;
 
-    const isBonus = newPunches % 100 === 0;
-    const bonus = isBonus ? 25 : 0;
-    if (isBonus) {
-        window.punches += bonus;
+    if (next % 100 === 0) {
+        bonus = 25;
+        window.punches = next + bonus;
+    } else {
+        window.punches = next;
     }
 
     lastPunchTime = Date.now();
-
     updatePunchDisplay();
     localStorage.setItem(`score_${window.userId}`, window.punches);
 
@@ -45,7 +47,7 @@ function handlePunch() {
 
     if (!loadeddrumpFrames.has(key)) {
         scene.load.image(key, `drump-images/${key}`);
-        scene.load.once("complete", () => {
+        scene.load.once('complete', () => {
             loadeddrumpFrames.add(key);
             drump.setTexture(key);
         });
@@ -55,62 +57,31 @@ function handlePunch() {
     }
 
     showPunchEffect();
-    animateFloatingText(`+1${bonus ? ` 🎉 +${bonus}` : ""}`);
+    animateFloatingText(`+1${bonus ? ` 🎉 +${bonus}` : ''}`);
 
     setTimeout(() => {
         hitCooldown = false;
-    }, 150); // Responsive but throttled
+    }, 200);
 
     if (backwardInterval) clearInterval(backwardInterval);
     startBackwardAnimation();
 
     submitPunchScore();
-    syncFromBackend(); // Also refreshes punch UI state
-}
 
-function updatePunchDisplay() {
-    const count = window.punches || 0;
-    const nextMilestone = Math.ceil(count / 100) * 100;
-    const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
-    const remaining = showMilestone - count;
-
-    const bar = document.getElementById("punchBar");
-    const hint = document.getElementById("bonus-hint");
-    const profileStat = document.getElementById("punchProfileStat");
-
-    if (bar) bar.innerText = `🥊 Punches: ${count}`;
-    if (hint) hint.innerText = `${remaining} punches until +25 bonus`;
-    if (profileStat) profileStat.textContent = count;
-}
-
-function syncFromBackend() {
-    if (!window.userId) return;
-
+    // Sync with server
     fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
         .then(res => res.json())
         .then(data => {
             window.punches = data.punches ?? 0;
             updatePunchDisplay();
+
+            const gamePunchEl = document.getElementById("punch-count");
+            if (gamePunchEl) gamePunchEl.textContent = window.punches;
+
+            const profilePunchEl = document.querySelector("#profile-container #punch-count");
+            if (profilePunchEl) profilePunchEl.textContent = window.punches;
         })
         .catch(err => console.error("❌ Failed to sync punches from server:", err));
-}
-
-function submitPunchScore() {
-    fetch("https://drumpleaderboard-production.up.railway.app/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            username: window.storedUsername,
-            user_id: window.userId,
-            score: window.punches
-        })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-    })
-    .then(() => console.log("✅ Punch score submitted"))
-    .catch(err => console.error("❌ Punch submit failed:", err));
 }
 
 function showPunchEffect() {
@@ -158,8 +129,8 @@ function startBackwardAnimation() {
 
         currentFrame--;
         const key = `${currentFrame}a-min.png`;
-        const scene = game.scene.scenes[0];
 
+        const scene = game.scene.scenes[0];
         if (!loadeddrumpFrames.has(key)) {
             scene.load.image(key, `drump-images/${key}`);
             scene.load.once("complete", () => {
@@ -171,6 +142,24 @@ function startBackwardAnimation() {
             drump.setTexture(key);
         }
     }, adjustedSpeed);
+}
+
+function submitPunchScore() {
+    fetch("https://drumpleaderboard-production.up.railway.app/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: window.storedUsername,
+            user_id: window.userId,
+            score: window.punches
+        })
+    })
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+            return res.json();
+        })
+        .then(() => console.log("✅ Punch score submitted"))
+        .catch(err => console.error("❌ Punch submit failed:", err));
 }
 
 export { initPunchModule, handlePunch };
