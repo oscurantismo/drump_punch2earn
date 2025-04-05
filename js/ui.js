@@ -42,23 +42,13 @@ function renderTopBar() {
     punchBar.style.padding = "6px 0";
     punchBar.style.borderRadius = "8px";
     punchBar.style.zIndex = "999";
-    punchBar.innerText = "🥊 Punches";
+    punchBar.innerHTML = `
+        🥊 Punches: <span id="punch-count">${window.punches}</span><br>
+        <div id="punch-progress" style="font-size: 13px; color: #fff; margin-top: 4px;"></div>
+        <div id="bonus-hint" style="font-size: 12px; color: #ffebcd; margin-top: 2px;"></div>
+    `;
     document.body.appendChild(punchBar);
 
-    // Separate punch counter
-    const punchCount = document.createElement("div");
-    punchCount.id = "punch-count-display";
-    punchCount.style.position = "fixed";
-    punchCount.style.top = "85px";
-    punchCount.style.left = "1rem";
-    punchCount.style.right = "1rem";
-    punchCount.style.textAlign = "center";
-    punchCount.style.fontSize = "16px";
-    punchCount.style.fontFamily = "'Arial Black', sans-serif";
-    punchCount.style.color = "#0047ab";
-    punchCount.style.zIndex = "999";
-    punchCount.innerHTML = `Total: <span id="punch-count">${window.punches || 0}</span>`;
-    document.body.appendChild(punchCount);
 
     // Sound toggle
     const iconSize = 32;
@@ -81,24 +71,24 @@ function renderTopBar() {
     document.body.style.cursor = "default";
 }
 
-
 function updatePunchDisplay() {
     const count = window.punches || 0;
-    const next = Math.ceil(count / 100) * 100 + 100;
-    const remaining = next - count;
+    const nextMilestone = Math.ceil(count / 100) * 100;
+    const target = (nextMilestone === count) ? count + 100 : nextMilestone;
+    const remaining = target - count;
 
-    // Update main punch count
-    const punchCountEl = document.getElementById("punch-count");
-    if (punchCountEl) punchCountEl.textContent = count;
+    const bar = document.getElementById("punch-bar");
+    if (bar) {
+        bar.innerHTML = `🥊 Punches: <span id="punch-count">${count}</span>`;
+    }
 
-    // Update bonus progress counter
     const countEl = document.getElementById("punch-progress");
-    if (countEl) countEl.innerHTML = `🥊 ${count} / ${next}`;
-
-    // Update bonus hint
     const hintEl = document.getElementById("bonus-hint");
-    if (hintEl) hintEl.innerText = `${remaining} punches until +25% bonus`;
+
+    if (countEl) countEl.innerHTML = `+25 bonus every 100 punches`;
+    if (hintEl) hintEl.innerText = `${remaining} punches until bonus`;
 }
+
 
 
 function renderTabs() {
