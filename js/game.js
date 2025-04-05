@@ -27,7 +27,6 @@ function createGame() {
     window.game = game;
 }
 
-
 function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
     this.load.image("background", "drump-images/Background.png");
@@ -49,7 +48,6 @@ function create() {
     Telegram.WebApp.ready();
 
     const initUser = Telegram.WebApp.initDataUnsafe?.user;
-    
     if (initUser) {
         window.storedUsername = initUser.username || `${initUser.first_name}_${initUser.last_name || ""}`.trim();
         window.userId = initUser.id.toString();
@@ -63,14 +61,24 @@ function create() {
     }
 
     this.anims.create({
-        key: 'punchAnim',
-        frames: this.anims.generateFrameNumbers('punch', { start: 0, end: 7 }),
+        key: "punchAnim",
+        frames: this.anims.generateFrameNumbers("punch", { start: 0, end: 7 }),
         frameRate: 10,
         repeat: 0
     });
 
+    // Load punch sounds with fallback
+    punchSounds = [];
     for (let i = 1; i <= 4; i++) {
-        punchSounds.push(this.sound.add("punch" + i));
+        try {
+            const sound = this.sound.add("punch" + i, {
+                volume: 0.8,
+                loop: false
+            });
+            punchSounds.push(sound);
+        } catch (e) {
+            console.warn(`⚠️ Failed to load punch sound ${i}:`, e);
+        }
     }
 
     renderTopBar();
