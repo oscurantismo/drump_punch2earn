@@ -111,7 +111,7 @@ async def profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
         msg = (
             f"📄 <b>{data.get('username', 'Anonymous')}'s Profile</b>\n\n"
             f"🥇 <b>Punches:</b> {data.get('punches', 0)}\n"
-            f"🔗 <b>Referral Link:</b> <a href='https://t.me/TrumpToss_bot?start=referral_{user.id}'>Invite Friends</a>"
+            f"🔗 <b>Referral Link:</b> <a href='https://t.me/Drump_punch_bot?start=referral_{user.id}'>Invite Friends</a>"
         )
         await update.message.reply_text(msg, parse_mode="HTML", disable_web_page_preview=True)
 
