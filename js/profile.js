@@ -120,7 +120,7 @@ function renderProfilePage() {
     card.appendChild(referralMsg);
 
     const referralCondition = document.createElement("p");
-    referralCondition.innerText = "Your friend must punch at least 10 times for you to earn the reward.";
+    referralCondition.innerText = "Your friend must punch at least 20 times for you to earn the reward.";
     Object.assign(referralCondition.style, {
         fontSize: "12px",
         color: "#999",
