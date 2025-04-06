@@ -53,8 +53,16 @@ function showTab(tab, scene = null) {
             <p>Punch Drump. Score punches. Simple as that. From like-minded cryptonerds tired of unpredictability.</p>
             <h3>How to Play</h3>
             <p>Punch to earn. The more you punch, the higher the reward. Climb the leaderboard. Invite friends for extra bonuses.</p>
-            <p>🎁 <b>Referral Bonus:</b> Get +1000 punches when your referral scores 10+. Both sides get +1000 punches - it's a great way to start!</p>
+            <h3>🎁 <b>Referral Bonus:</b></h3>
+            <p> Get +1000 punches when your friend scores 20+ punches. Both sides get +1000 punches - it's a great way to start!</p>
             <p>🏗 <b>Upcoming:</b> Event drops, airdrops, collectibles. Stay tuned for more updates.</p>
+            <h4>Referral Rules:</h3>
+            <ul>A referral bonus is claimed after a referred user scores at least 20 punches in Drump.</ul>
+            <ul>Both sides receive 1000 punches, added to their current punch score. </ul>
+            <ul>The bonus is only issued if the referred user is new to Drump and has not been registered in the game yet.</ul>
+            <ul>The bonus cannot be claimed by referring an existing user.</ul>
+            <ul>Referral history can be viewed in the "Profile" tab, accessible by clicking on the username on the game screen.</ul>
+            
         `;
         document.body.appendChild(info);
     }
