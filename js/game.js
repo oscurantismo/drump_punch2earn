@@ -144,6 +144,39 @@ function drawDrump(scene, textureKey) {
     initPunchModule({ drump, punchSounds, loadeddrumpFrames });
 }
 
+function showPopupMessage(message) {
+    const popup = document.createElement("div");
+    popup.innerText = message;
+    popup.style.position = "fixed";
+    popup.style.top = "50%";
+    popup.style.left = "50%";
+    popup.style.transform = "translate(-50%, -50%)";
+    popup.style.background = "#fff";
+    popup.style.border = "2px solid #b22234";
+    popup.style.color = "#000";
+    popup.style.fontFamily = "'Arial Black', sans-serif";
+    popup.style.fontSize = "16px";
+    popup.style.padding = "20px 24px";
+    popup.style.borderRadius = "12px";
+    popup.style.boxShadow = "0 0 12px rgba(0,0,0,0.3)";
+    popup.style.zIndex = "3000";
+
+    const dismiss = document.createElement("button");
+    dismiss.innerText = "Got it!";
+    dismiss.style.marginTop = "12px";
+    dismiss.style.padding = "6px 14px";
+    dismiss.style.background = "#0047ab";
+    dismiss.style.color = "#fff";
+    dismiss.style.border = "none";
+    dismiss.style.borderRadius = "8px";
+    dismiss.style.fontWeight = "bold";
+    dismiss.onclick = () => popup.remove();
+
+    popup.appendChild(document.createElement("br"));
+    popup.appendChild(dismiss);
+    document.body.appendChild(popup);
+}
+
 function registerUser() {
     const url = "https://drumpleaderboard-production.up.railway.app/register";
     const referrerId = new URLSearchParams(window.location.search).get("start")?.replace("referral_", "");
@@ -158,10 +191,20 @@ function registerUser() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
-    }).then(res => res.json())
-      .then(res => console.log("User registration:", res))
-      .catch(console.error);
+    })
+    .then(res => res.json())
+    .then(res => console.log("User registration:", res))
+    .catch(console.error);
+
+    fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
+        .then(res => res.json())
+        .then(profile => {
+            if (profile.already_claimed_referral) {
+                showPopupMessage("Oops, seems like you already claimed a referral bonus. Read more about referral rules in the \"Info\" tab.");
+            }
+        });
 }
+
 
 function createLoader() {
     const loader = document.createElement("div");
