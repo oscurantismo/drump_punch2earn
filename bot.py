@@ -88,7 +88,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = query.from_user
 
     if query.data == "leaderboard":
-    try:
+        try:
         scores = await context.bot.get_game_high_scores(
             user_id=user.id,
             chat_id=query.message.chat_id,
