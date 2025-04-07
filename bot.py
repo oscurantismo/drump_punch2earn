@@ -57,7 +57,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # === Live leaderboard ===
-async def send_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id: str):
+async def send_custom_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id: str):
     try:
         res = requests.get("https://drumpleaderboard-production.up.railway.app/leaderboard")
         scores = res.json()
@@ -70,14 +70,14 @@ async def send_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id:
         return
 
     medals = ["🥇", "🥈", "🥉"]
-    msg = "🏆 <b>Drump | Punch2Earn Leaderboard</b>\n\n"
-    for i, entry in enumerate(scores):
+    msg = "🏆 <b>Top 10 Punchers</b>\n\n"
+    for i, entry in enumerate(scores[:10]):
         medal = medals[i] if i < 3 else f"{i+1}."
         name = entry['username']
         score = entry['score']
-        is_user = (entry.get("user_id") == user_id)
-        row = f"{medal} <b>{name}</b> — {score} punches" if is_user else f"{medal} {name} — {score} punches"
-        msg += row + "\n"
+        msg += f"{medal} {name} — {score} punches\n"
+
+    msg += "\n🔍 <i>See more in Drump | Punch2Earn</i>"
 
     await context.bot.send_message(chat_id, msg, parse_mode="HTML")
 
@@ -88,12 +88,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = query.from_user
 
     if query.data == "leaderboard":
-        try:
-            scores = await context.bot.get_game_high_scores(
-                user_id=user.id,
-                chat_id=query.message.chat_id,
-                message_id=query.message.message_id
-            )
+        await send_custom_leaderboard(query.message.chat_id, context, str(user.id))
 
             if not scores:
                 await query.message.reply_text("No high scores yet.")
