@@ -87,31 +87,30 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     user = query.from_user
 
-        if query.data == "leaderboard":
-        try:
-            scores = await context.bot.get_game_high_scores(
-                user_id=user.id,
-                chat_id=query.message.chat_id,
-                message_id=query.message.message_id
-            )
+    if query.data == "leaderboard":
+    try:
+        scores = await context.bot.get_game_high_scores(
+            user_id=user.id,
+            chat_id=query.message.chat_id,
+            message_id=query.message.message_id
+        )
 
-            if not scores:
-                await query.message.reply_text("No high scores yet.")
-                return
+        if not scores:
+            await query.message.reply_text("No high scores yet.")
+            return
 
-            msg = "🏆 <b>Telegram Leaderboard</b>\n\n"
-            for entry in scores:
-                rank = entry.position + 1
-                username = entry.user.full_name or "Anonymous"
-                score = entry.score
-                marker = "👉 " if entry.user.id == user.id else ""
-                msg += f"{marker}{rank}. {username} — {score} punches\n"
+        msg = "🏆 <b>Telegram Leaderboard</b>\n\n"
+        for entry in scores:
+            rank = entry.position + 1
+            username = entry.user.full_name or "Anonymous"
+            score = entry.score
+            marker = "👉 " if entry.user.id == user.id else ""
+            msg += f"{marker}{rank}. {username} — {score} punches\n"
 
-            await query.message.reply_text(msg, parse_mode="HTML")
-        except Exception as e:
-            logger.error(f"❌ Failed to load Telegram leaderboard: {e}")
-            await query.message.reply_text("❌ Failed to load Telegram leaderboard.")
-
+        await query.message.reply_text(msg, parse_mode="HTML")
+    except Exception as e:
+        logger.error(f"❌ Failed to load Telegram leaderboard: {e}")
+        await query.message.reply_text("❌ Failed to load Telegram leaderboard.")
 
 async def profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
