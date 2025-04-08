@@ -259,4 +259,9 @@ function createLoader() {
     }, 3000);
 }
 
+function update() {
+    // This function runs every frame. Useful for animations or input tracking.
+}
+
+
 export { game, showGameUI, drawDrump };
