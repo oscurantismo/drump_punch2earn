@@ -40,7 +40,6 @@ function preload() {
         frameHeight: 200,
         endFrame: 8
     });
-    this.load.image("shoe", "shoe.png");
     this.load.image("sound_on", "sound_on.svg");
     this.load.image("sound_off", "sound_off.svg");
     for (let i = 1; i <= 4; i++) {
