@@ -155,12 +155,16 @@ function drawDrump(scene, textureKey) {
         .setInteractive({ useHandCursor: true });
 
     drump.on("pointerdown", () => {
-        if (window.activeTab === "game" && !document.getElementById("profile-container")) {
+        const profileVisible = document.getElementById("profile-container");
+        const referralVisible = document.getElementById("referral-popup");
+
+        if (window.activeTab === "game" && !profileVisible && !referralVisible) {
             handlePunch();
         } else {
-            console.log("❌ Score submission blocked. User is not on the game screen.");
+            console.log("❌ Punch ignored: popup or profile is open.");
         }
     });
+
 
     // ✅ Pass reference to punch.js
     initPunchModule({ drump, punchSounds, loadeddrumpFrames });
