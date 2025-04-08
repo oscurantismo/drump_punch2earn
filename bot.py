@@ -36,7 +36,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         requests.post("https://drumpleaderboard-production.up.railway.app/register", json={
             "user_id": str(user.id),
-            "username": user.username or "Anonymous",
+            "username": user.username or user.first_name or user.last_name or "Anonymous",
             "referrer_id": referral_id
         })
     except Exception as e:
