@@ -2,30 +2,35 @@ import { handlePunch, initPunchModule } from "./punch.js";
 import { renderTopBar, renderTabs, renderShareButton, updatePunchDisplay } from "./ui.js";
 
 let game;
-let drump;
-let punchSounds = [];
+let punches = 0;
+let activeTab = "game";
+let storedUsername = "Anonymous";
+let userId = "";
 let loadeddrumpFrames = new Set(["drump-images/1a-min.png"]);
+let backwardInterval;
+let lastPunchTime = 0;
+let currentFrame = 1;
+let lastFrameBeforeBackwards = 1;
+const BACKWARD_DELAY = 2000;
+const BACKWARD_SPEED = 50;
+
+window.soundEnabled = true; // ✅ GLOBAL ACCESS
+let punchSounds = [];
+let drump, shoeCursor, soundButton;
+let hitCooldown = false;
 
 window.onload = () => {
     createLoader();
-    createGame();
-};
-
-function createGame() {
     const gameConfig = {
         type: Phaser.AUTO,
         width: window.innerWidth,
         height: window.innerHeight,
         backgroundColor: "#ffffff",
-        scene: { preload, create },
-        audio: {
-            disableWebAudio: false
-        }
+        scene: { preload, create, update },
+        audio: { disableWebAudio: false }
     };
-
     game = new Phaser.Game(gameConfig);
-    window.game = game;
-}
+};
 
 function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
@@ -35,61 +40,67 @@ function preload() {
         frameHeight: 200,
         endFrame: 8
     });
-
+    this.load.image("shoe", "shoe.png");
+    this.load.image("sound_on", "sound_on.svg");
+    this.load.image("sound_off", "sound_off.svg");
     for (let i = 1; i <= 4; i++) {
         this.load.audio("punch" + i, `punch${i}.mp3`);
     }
-
-    this.load.image("sound_on", "sound_on.svg");
-    this.load.image("sound_off", "sound_off.svg");
 }
 
 function create() {
     Telegram.WebApp.ready();
-
     const initUser = Telegram.WebApp.initDataUnsafe?.user;
     if (initUser) {
-        window.storedUsername = initUser.username || `${initUser.first_name}_${initUser.last_name || ""}`.trim();
-        window.userId = initUser.id.toString();
+        storedUsername = initUser.username || `${initUser.first_name}_${initUser.last_name || ""}`.trim();
+        userId = initUser.id.toString();
     }
 
-    window.activeTab = "game";
-
-    const cached = localStorage.getItem(`score_${window.userId}`);
-
-    if (cached !== null) {
-    window.punches = parseInt(cached);
-    }
-    updatePunchDisplay(); // ✅ Move this here after punches are loaded
-
+    const cached = localStorage.getItem(`score_${userId}`);
+    if (cached !== null) punches = parseInt(cached);
 
     this.anims.create({
-        key: "punchAnim",
-        frames: this.anims.generateFrameNumbers("punch", { start: 0, end: 7 }),
+        key: 'punchAnim',
+        frames: this.anims.generateFrameNumbers('punch', { start: 0, end: 7 }),
         frameRate: 10,
         repeat: 0
     });
 
-    // Load punch sounds with fallback
+    // ✅ Resume audio context if needed
+    if (this.sound.context.state === "suspended") {
+        this.sound.context.resume();
+    }
+
+    // ✅ Load punch sounds
     punchSounds = [];
     for (let i = 1; i <= 4; i++) {
         try {
-            const sound = this.sound.add("punch" + i, {
-                volume: 0.8,
-                loop: false
-            });
+            const sound = this.sound.add("punch" + i, { volume: 0.8 });
             punchSounds.push(sound);
         } catch (e) {
             console.warn(`⚠️ Failed to load punch sound ${i}:`, e);
         }
     }
 
-    renderTopBar();
-    renderTabs();
-    renderShareButton();
-
-    showGameUI(this);
-    registerUser();
+    fetch("https://drumpleaderboard-production.up.railway.app/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: storedUsername, user_id: userId })
+    })
+    .then(() => fetch("https://drumpleaderboard-production.up.railway.app/leaderboard"))
+    .then(res => res.json())
+    .then(scores => {
+        const entry = scores.find(u => u.user_id == userId);
+        if (entry && entry.score > punches) {
+            punches = entry.score;
+            localStorage.setItem(`score_${userId}`, punches);
+        }
+        removeLoader();
+        renderTopBar();
+        renderTabs();
+        renderShareButton();
+        showTab("game", this);
+    });
 }
 
 function showGameUI(scene) {
