@@ -32,11 +32,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         referral_id = context.args[0].replace("referral_", "")
         logger.info(f"🎁 {user.username} ({user.id}) joined via referral from {referral_id}")
 
-    # Register the user with the referral ID if available
+    # Register the user with full name and referral ID if available
     try:
         requests.post("https://drumpleaderboard-production.up.railway.app/register", json={
             "user_id": str(user.id),
             "username": user.username or user.first_name or user.last_name or "Anonymous",
+            "first_name": user.first_name or "",
+            "last_name": user.last_name or "",
             "referrer_id": referral_id
         })
     except Exception as e:
@@ -119,6 +121,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif query.data == "profile":
         await profile(update, context)
 
+# === /profile ===
 async def profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     logger.info(f"📄 /profile requested by {user.username} ({user.id})")
@@ -140,7 +143,6 @@ async def profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.error(f"❌ Failed to fetch profile: {e}")
         await update.message.reply_text("❌ Failed to load your profile. Please try again later.")
 
-
 # === Error Logger ===
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
     logger.error("❌ Exception occurred:", exc_info=context.error)
@@ -159,8 +161,6 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("profile", profile))
     app.add_handler(CallbackQueryHandler(button_callback, pattern="^(leaderboard|info|profile)$"))
     app.add_error_handler(error_handler)
-    app.add_handler(CommandHandler("start", start))
-
 
     print("🚀 Drump | Punch2Earn Mini App bot is running...")
     app.run_polling()
