@@ -47,6 +47,11 @@ function preload() {
     }
 }
 
+function removeLoader() {
+    const el = document.getElementById("loader");
+    if (el) el.remove();
+}
+
 function create() {
     Telegram.WebApp.ready();
     const initUser = Telegram.WebApp.initDataUnsafe?.user;
