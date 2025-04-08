@@ -49,10 +49,26 @@ function create() {
     Telegram.WebApp.ready();
 
     const initUser = Telegram.WebApp.initDataUnsafe?.user;
-    if (initUser) {
-        window.storedUsername = initUser.username || `${initUser.first_name}_${initUser.last_name || ""}`.trim();
-        window.userId = initUser.id.toString();
-    }
+        if (initUser) {
+            const fallbackUsername = initUser.username || "Anonymous";
+            const firstName = initUser.first_name || "";
+            const lastName = initUser.last_name || "";
+
+            // Display name logic
+            let displayName = "Anonymous";
+            if (firstName.trim()) {
+                displayName = firstName;
+            } else if (lastName.trim()) {
+                displayName = lastName;
+            } else {
+                displayName = fallbackUsername;
+            }
+
+            window.storedUsername = displayName; // For display
+            window.telegramUsername = fallbackUsername; // For logging / backend
+            window.userId = initUser.id.toString();
+        }
+
 
     window.activeTab = "game";
 
