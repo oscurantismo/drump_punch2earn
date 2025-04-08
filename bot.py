@@ -57,7 +57,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # === Live leaderboard ===
-async def send_custom_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id: str):
+async def send_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id: str):
     try:
         res = requests.get("https://drumpleaderboard-production.up.railway.app/leaderboard")
         scores = res.json()
@@ -70,12 +70,32 @@ async def send_custom_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, u
         return
 
     medals = ["🥇", "🥈", "🥉"]
-    msg = "🏆 <b>Top 10 Punchers</b>\n\n"
-    for i, entry in enumerate(scores[:10]):
+    msg = "🏆 <b>Drump | Punch2Earn Leaderboard</b>\n\n"
+
+    top_10 = scores[:10]
+    user_entry = None
+    user_rank = None
+
+    for i, entry in enumerate(scores):
+        if str(entry.get("user_id")) == str(user_id):
+            user_entry = entry
+            user_rank = i + 1
+            break
+
+    for i, entry in enumerate(top_10):
         medal = medals[i] if i < 3 else f"{i+1}."
         name = entry['username']
         score = entry['score']
         msg += f"{medal} {name} — {score} punches\n"
+
+    if user_entry and user_rank > 10:
+        msg += "\n🔻 <b>Your Rank</b>\n"
+        msg += f"👉 {user_rank}. <b>{user_entry['username']}</b> — {user_entry['score']} punches\n"
+
+        top_10_score = top_10[-1]['score']
+        if user_entry['score'] < top_10_score:
+            diff = top_10_score - user_entry['score'] + 1
+            msg += f"⚡️ <i>You need just {diff} more punch{'es' if diff != 1 else ''} to break into the top 10!</i>\n"
 
     msg += "\n🔍 <i>See more in Drump | Punch2Earn</i>"
 
@@ -88,30 +108,14 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = query.from_user
 
     if query.data == "leaderboard":
-        await send_custom_leaderboard(query.message.chat_id, context, str(user.id))
+        await send_leaderboard(query.message.chat_id, context, str(user.id))
 
-            if not scores:
-                await query.message.reply_text("No high scores yet.")
-                return
-
-            msg = "🏆 <b>Telegram Leaderboard</b>\n\n"
-            for entry in scores:
-                rank = entry.position + 1
-                username = entry.user.full_name or "Anonymous"
-                score = entry.score
-                marker = "👉 " if entry.user.id == user.id else ""
-                msg += f"{marker}{rank}. {username} — {score} punches\n"
-
-            await query.message.reply_text(msg, parse_mode="HTML")
-        except Exception as e:
-            logger.error(f"❌ Failed to load Telegram leaderboard: {e}")
-            await query.message.reply_text("❌ Failed to load Telegram leaderboard.")
-    
     elif query.data == "info":
         await query.message.reply_text(
-            "ℹ️ Drump | Punch2Earn is a Telegram Mini App where you throw shoes at Drump and climb the leaderboard.\n\n" +
+            "ℹ️ Drump | Punch2Earn is a Telegram Mini App where you throw shoes at Drump and climb the leaderboard.\n\n"
             "🏗 Upcoming: Airdrops, upgrades, and seasonal events."
         )
+
     elif query.data == "profile":
         await profile(update, context)
 
