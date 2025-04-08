@@ -2,35 +2,31 @@ import { handlePunch, initPunchModule } from "./punch.js";
 import { renderTopBar, renderTabs, renderShareButton, updatePunchDisplay } from "./ui.js";
 
 let game;
-let punches = 0;
-let activeTab = "game";
-let storedUsername = "Anonymous";
-let userId = "";
-let loadeddrumpFrames = new Set(["drump-images/1a-min.png"]);
-let backwardInterval;
-let lastPunchTime = 0;
-let currentFrame = 1;
-let lastFrameBeforeBackwards = 1;
-const BACKWARD_DELAY = 2000;
-const BACKWARD_SPEED = 50;
-
-window.soundEnabled = true; // ✅ GLOBAL ACCESS
+let drump;
 let punchSounds = [];
-let drump, shoeCursor, soundButton;
-let hitCooldown = false;
+let loadeddrumpFrames = new Set(["drump-images/1a-min.png"]);
+window.soundEnabled = true; // ✅ make globally accessible
 
 window.onload = () => {
     createLoader();
+    createGame();
+};
+
+function createGame() {
     const gameConfig = {
         type: Phaser.AUTO,
         width: window.innerWidth,
         height: window.innerHeight,
         backgroundColor: "#ffffff",
-        scene: { preload, create, update },
-        audio: { disableWebAudio: false }
+        scene: { preload, create },
+        audio: {
+            disableWebAudio: false
+        }
     };
+
     game = new Phaser.Game(gameConfig);
-};
+    window.game = game;
+}
 
 function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
@@ -40,32 +36,36 @@ function preload() {
         frameHeight: 200,
         endFrame: 8
     });
-    this.load.image("sound_on", "sound_on.svg");
-    this.load.image("sound_off", "sound_off.svg");
+
     for (let i = 1; i <= 4; i++) {
         this.load.audio("punch" + i, `punch${i}.mp3`);
     }
-}
 
-function removeLoader() {
-    const el = document.getElementById("loader");
-    if (el) el.remove();
+    this.load.image("sound_on", "sound_on.svg");
+    this.load.image("sound_off", "sound_off.svg");
 }
 
 function create() {
     Telegram.WebApp.ready();
+
     const initUser = Telegram.WebApp.initDataUnsafe?.user;
     if (initUser) {
-        storedUsername = initUser.username || `${initUser.first_name}_${initUser.last_name || ""}`.trim();
-        userId = initUser.id.toString();
+        window.storedUsername = initUser.username || `${initUser.first_name}_${initUser.last_name || ""}`.trim();
+        window.userId = initUser.id.toString();
     }
 
-    const cached = localStorage.getItem(`score_${userId}`);
-    if (cached !== null) punches = parseInt(cached);
+    window.activeTab = "game";
+
+    const cached = localStorage.getItem(`score_${window.userId}`);
+    if (cached !== null) {
+        window.punches = parseInt(cached);
+    }
+
+    updatePunchDisplay();
 
     this.anims.create({
-        key: 'punchAnim',
-        frames: this.anims.generateFrameNumbers('punch', { start: 0, end: 7 }),
+        key: "punchAnim",
+        frames: this.anims.generateFrameNumbers("punch", { start: 0, end: 7 }),
         frameRate: 10,
         repeat: 0
     });
@@ -75,36 +75,26 @@ function create() {
         this.sound.context.resume();
     }
 
-    // ✅ Load punch sounds
+    // ✅ Load punch sounds with fallback
     punchSounds = [];
     for (let i = 1; i <= 4; i++) {
         try {
-            const sound = this.sound.add("punch" + i, { volume: 0.8 });
+            const sound = this.sound.add("punch" + i, {
+                volume: 0.8,
+                loop: false
+            });
             punchSounds.push(sound);
         } catch (e) {
             console.warn(`⚠️ Failed to load punch sound ${i}:`, e);
         }
     }
 
-    fetch("https://drumpleaderboard-production.up.railway.app/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: storedUsername, user_id: userId })
-    })
-    .then(() => fetch("https://drumpleaderboard-production.up.railway.app/leaderboard"))
-    .then(res => res.json())
-    .then(scores => {
-        const entry = scores.find(u => u.user_id == userId);
-        if (entry && entry.score > punches) {
-            punches = entry.score;
-            localStorage.setItem(`score_${userId}`, punches);
-        }
-        removeLoader();
-        renderTopBar();
-        renderTabs();
-        renderShareButton();
-        showTab("game", this);
-    });
+    renderTopBar();
+    renderTabs();
+    renderShareButton();
+
+    showGameUI(this);
+    registerUser();
 }
 
 function showGameUI(scene) {
@@ -124,6 +114,23 @@ function showGameUI(scene) {
     } else {
         drawDrump(scene, textureKey);
     }
+
+    // ✅ Add sound toggle button
+    const iconSize = 32;
+    const soundButton = document.createElement("img");
+    soundButton.src = window.soundEnabled ? "sound_on.svg" : "sound_off.svg";
+    soundButton.style.position = "fixed";
+    soundButton.style.top = "12px";
+    soundButton.style.right = "12px";
+    soundButton.style.width = iconSize + "px";
+    soundButton.style.height = iconSize + "px";
+    soundButton.style.cursor = "pointer";
+    soundButton.style.zIndex = "1001";
+    soundButton.onclick = () => {
+        window.soundEnabled = !window.soundEnabled;
+        soundButton.src = window.soundEnabled ? "sound_on.svg" : "sound_off.svg";
+    };
+    document.body.appendChild(soundButton);
 }
 
 function drawDrump(scene, textureKey) {
@@ -155,7 +162,7 @@ function drawDrump(scene, textureKey) {
         }
     });
 
-    // Pass reference to punch.js
+    // ✅ Pass reference to punch.js
     initPunchModule({ drump, punchSounds, loadeddrumpFrames });
 }
 
@@ -220,7 +227,6 @@ function registerUser() {
         });
 }
 
-
 function createLoader() {
     const loader = document.createElement("div");
     loader.id = "loader";
@@ -262,10 +268,5 @@ function createLoader() {
         if (el) el.remove();
     }, 3000);
 }
-
-function update() {
-    // This function runs every frame. Useful for animations or input tracking.
-}
-
 
 export { game, showGameUI, drawDrump };
