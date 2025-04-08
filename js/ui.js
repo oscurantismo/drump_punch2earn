@@ -140,7 +140,7 @@ function renderTabs() {
 
 function renderShareButton() {
     const btn = document.createElement("button");
-    btn.innerText = "📣 Share Score";
+    btn.innerText = "🎁 Refer a Friend";
     btn.style.position = "fixed";
     btn.style.bottom = "60px";
     btn.style.right = "20px";
@@ -152,24 +152,99 @@ function renderShareButton() {
     btn.style.borderRadius = "8px";
     btn.style.fontFamily = "'Arial Black', sans-serif";
     btn.style.zIndex = "1001";
+    btn.style.display = "flex";
+    btn.style.alignItems = "center";
+    btn.style.justifyContent = "center";
 
-    btn.onclick = () => {
-        const botLink = "https://t.me/Drump_punch_bot";
-        const message = `I punched ${window.punches || 0} points in Drump | Punch2Earn. Wanna punch to earn?`;
+    const badge = document.createElement("span");
+    badge.innerText = "+1000";
+    badge.style.background = "#fff";
+    badge.style.color = "#0077cc";
+    badge.style.fontSize = "10px";
+    badge.style.fontWeight = "bold";
+    badge.style.borderRadius = "8px";
+    badge.style.padding = "2px 6px";
+    badge.style.marginLeft = "6px";
 
+    btn.appendChild(badge);
+
+    btn.onclick = showReferralPopup;
+    document.body.appendChild(btn);
+}
+function showReferralPopup() {
+    const popup = document.createElement("div");
+    popup.id = "referral-popup";
+    popup.style.position = "fixed";
+    popup.style.top = "0";
+    popup.style.left = "0";
+    popup.style.width = "100vw";
+    popup.style.height = "100vh";
+    popup.style.backgroundColor = "rgba(0,0,0,0.6)";
+    popup.style.display = "flex";
+    popup.style.alignItems = "center";
+    popup.style.justifyContent = "center";
+    popup.style.zIndex = "4000";
+
+    const card = document.createElement("div");
+    card.style.background = "#fff";
+    card.style.padding = "24px";
+    card.style.borderRadius = "14px";
+    card.style.maxWidth = "320px";
+    card.style.width = "90%";
+    card.style.position = "relative";
+    card.style.fontFamily = "'Arial Black', sans-serif";
+    card.style.textAlign = "center";
+    card.innerHTML = `
+        <h3>🎁 Refer a Friend</h3>
+        <p style="font-size: 14px; color: #333;">
+            Invite a friend and you both get <b>+1000 punches</b>!
+        </p>
+        <p style="font-size: 13px; color: #555;">Your unique referral link:</p>
+        <input id="referral-link" value="https://t.me/Drump_punch_bot?start=referral_${window.userId}" readonly style="width: 100%; font-size: 13px; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px;" />
+    `;
+
+    const copyBtn = document.createElement("button");
+    copyBtn.innerText = "📋 Copy Link";
+    copyBtn.style.marginTop = "4px";
+    copyBtn.style.marginRight = "6px";
+    copyBtn.style.padding = "8px 12px";
+    copyBtn.style.border = "none";
+    copyBtn.style.borderRadius = "8px";
+    copyBtn.style.background = "#0047ab";
+    copyBtn.style.color = "#fff";
+    copyBtn.style.cursor = "pointer";
+    copyBtn.onclick = () => {
+        const linkInput = document.getElementById("referral-link");
+        linkInput.select();
+        document.execCommand("copy");
+        copyBtn.innerText = "✅ Copied!";
+        setTimeout(() => copyBtn.innerText = "📋 Copy Link", 2000);
+    };
+
+    const shareBtn = document.createElement("button");
+    shareBtn.innerText = "📣 Share";
+    shareBtn.style.marginTop = "4px";
+    shareBtn.style.padding = "8px 12px";
+    shareBtn.style.border = "none";
+    shareBtn.style.borderRadius = "8px";
+    shareBtn.style.background = "#0077cc";
+    shareBtn.style.color = "#fff";
+    shareBtn.style.cursor = "pointer";
+    shareBtn.onclick = () => {
+        const msg = `Punch to earn! Start here ➡️ https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
         Telegram.WebApp.showPopup({
-            title: "Share your score",
-            message: `Choose where to share your ${window.punches} punches:`,
+            title: "Share referral link",
+            message: "Choose where to share your invite:",
             buttons: [
                 { id: "telegram", type: "default", text: "Telegram" },
                 { id: "x", type: "default", text: "X (Twitter)" },
-                { id: "whatsapp", type: "default", text: "WhatsApp" },
+                { id: "whatsapp", type: "default", text: "WhatsApp" }
             ]
         }, (btnId) => {
             const links = {
-                telegram: `https://t.me/share/url?url=${encodeURIComponent(botLink)}&text=${encodeURIComponent(message)}`,
-                whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(message + ' ' + botLink)}`,
-                x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(message + ' ' + botLink)}`
+                telegram: `https://t.me/share/url?url=${encodeURIComponent(msg)}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`,
+                x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(msg)}`
             };
             if (btnId && links[btnId]) {
                 window.open(links[btnId], "_blank");
@@ -177,8 +252,28 @@ function renderShareButton() {
         });
     };
 
-    document.body.appendChild(btn);
+    const btnGroup = document.createElement("div");
+    btnGroup.style.display = "flex";
+    btnGroup.style.justifyContent = "center";
+    btnGroup.appendChild(copyBtn);
+    btnGroup.appendChild(shareBtn);
+    card.appendChild(btnGroup);
+
+    const close = document.createElement("div");
+    close.innerText = "❌";
+    close.style.position = "absolute";
+    close.style.top = "10px";
+    close.style.right = "14px";
+    close.style.fontSize = "18px";
+    close.style.cursor = "pointer";
+    close.style.color = "#999";
+    close.onclick = () => popup.remove();
+    card.appendChild(close);
+
+    popup.appendChild(card);
+    document.body.appendChild(popup);
 }
+
 
 export {
     renderTopBar,
