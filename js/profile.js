@@ -1,5 +1,6 @@
 import { fetchReferralHistory, renderReferralHistory } from "./referral.js";
 import { updatePunchDisplay } from "./ui.js";
+import { createLeaderboardPopup } from "./ui.js";
 
 function renderProfilePage() {
     const existingProfile = document.getElementById("profile-container");
@@ -7,6 +8,7 @@ function renderProfilePage() {
 
     window.activeTab = "profile";
     updatePunchDisplay();
+    createLeaderboardPopup(); // ensures the popup exists
 
     const container = document.createElement("div");
     container.id = "profile-container";
