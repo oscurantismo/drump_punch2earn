@@ -249,12 +249,12 @@ function drawDrump(scene, textureKey) {
     const image = scene.textures.get(textureKey).getSourceImage();
     if (!image) return;
 
-    const maxWidth = window.innerWidth * 0.7;
+    const maxWidth = window.innerWidth * 0.6;
     const scale = Math.min(maxWidth / image.width, window.innerHeight / image.height);
 
     if (drump) drump.destroy();
 
-    const yPosition = scene.scale.height / 2 + (scene.scale.height * 0.15);
+    const yPosition = scene.scale.height / 2.6 + (scene.scale.height * 0.15);
 
     drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
         .setScale(scale)
