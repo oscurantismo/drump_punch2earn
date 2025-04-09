@@ -31,11 +31,9 @@ function createGame() {
 function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
     this.load.image("background", "drump-images/Background.png");
-    this.load.spritesheet("punch", "drump-images/punch.png", {
-        frameWidth: 200,
-        frameHeight: 200,
-        endFrame: 8
-    });
+    this.load.spritesheet("punch", "drump-images/punch.png", 
+    this.load.audio("laugh", "laugh1.mp3");
+    this.load.audio("oof", "oof1.mp3");
 
     for (let i = 1; i <= 4; i++) {
         this.load.audio("punch" + i, `punch${i}.mp3`);
