@@ -240,24 +240,22 @@ function showOnboarding() {
 
 function drawDrump(scene, textureKey) {
     const image = scene.textures.get(textureKey).getSourceImage();
-    if (!image) {
-        console.error(`Failed to retrieve image: ${textureKey}`);
-        return;
-    }
+    if (!image) return;
 
-    const scale = Math.min(
-        (window.innerWidth * 0.7) / image.width,
-        window.innerHeight / image.height
-    );
-
-    const yPosition = scene.scale.height / 2.3 + (scene.scale.height * 0.15);
+    const maxWidth = window.innerWidth * 0.7;
+    const scale = Math.min(maxWidth / image.width, window.innerHeight / image.height);
 
     if (drump) drump.destroy();
+
+    const yPosition = scene.scale.height / 2.3 + (scene.scale.height * 0.15);
 
     drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
         .setScale(scale)
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
+
+    drump.originalScale = scale; // ✅ store for movement logic
+
 
     drump.on("pointerdown", (pointer) => {
         const profileVisible = document.getElementById("profile-container");
