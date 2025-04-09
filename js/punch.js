@@ -8,6 +8,9 @@ let backwardInterval;
 let punchCountSinceLastMove = 0;
 let moveTriggerPunchCount = Phaser.Math.Between(5, 10);
 let originalPosition = null;
+let lastOofTime = 0;
+let recentPunches = []; // Store timestamps of recent punches
+const OOF_MIN_INTERVAL = 12000; // Minimum 12 seconds between oofs
 const BACKWARD_DELAY = 2000;
 const BACKWARD_SPEED = 50;
 
@@ -33,6 +36,21 @@ function handlePunch() {
     } else {
         window.punches = newPunches;
     }
+
+    // Track punch time for oof logic
+    const now = Date.now();
+    recentPunches = recentPunches.filter(ts => now - ts < 10000); // Keep only last 10 sec
+    recentPunches.push(now);
+
+    // Check if we should play "oof" sound
+    if (recentPunches.length >= 8 && now - lastOofTime >= OOF_MIN_INTERVAL) {
+        lastOofTime = now;
+            if (window.soundEnabled && game.scene.scenes[0].sound) {
+                const oofSound = game.scene.scenes[0].sound.add("oof");
+                oofSound.play({ volume: 0.75 });
+            }
+    }
+
 
     lastPunchTime = Date.now();
     updatePunchDisplay();
@@ -138,16 +156,21 @@ function showPunchEffect() {
     });
 }
 
-function moveDrumpRandomly() {
-    if (!drump || !drump.scene) return;
-
+function moveDrumpRandomly(originalPos) {
     const scene = drump.scene;
     const margin = 50;
-    const minScale = 0.7, maxScale = 1.3;
 
-    const newX = Phaser.Math.Between(margin, scene.scale.width - margin);
-    const newY = Phaser.Math.Between(scene.scale.height * 0.3, scene.scale.height * 0.75);
-    const newScale = Phaser.Math.FloatBetween(minScale, maxScale);
+    const minX = margin;
+    const maxX = scene.scale.width - margin;
+    const minY = scene.scale.height * 0.3;
+    const maxY = scene.scale.height * 0.75;
+
+    const minShrink = 0.45;
+    const maxShrink = 0.65;
+
+    const newX = Phaser.Math.Between(minX, maxX);
+    const newY = Phaser.Math.Between(minY, maxY);
+    const newScale = Phaser.Math.FloatBetween(minShrink, maxShrink);
 
     scene.tweens.add({
         targets: drump,
@@ -156,22 +179,26 @@ function moveDrumpRandomly() {
         scale: newScale,
         ease: "Sine.easeInOut",
         duration: 800,
+        hold: 1500,
         yoyo: true,
-        hold: 2000,
-        onComplete: () => {
-            if (originalPosition) {
-                scene.tweens.add({
-                    targets: drump,
-                    x: originalPosition.x,
-                    y: originalPosition.y,
-                    scale: originalPosition.scale,
-                    duration: 600
-                });
-            }
-        }
+        onYoyo: () => {
+            // Return to original position after wiggle
+            scene.tweens.add({
+                targets: drump,
+                x: originalPos.x,
+                y: originalPos.y,
+                scale: originalPos.scale,
+                duration: 600
+            });
+        },
+        onYoyoParams: []
+    });
+
+    // Add wiggle (laugh/tease) during the hold
+    scene.time.delayedCall(900, () => {
+        wiggleDrump(scene);
     });
 }
-
 
 function animateFloatingText(text) {
     const scene = game.scene.scenes[0];
@@ -239,5 +266,22 @@ function submitPunchScore() {
         .then(() => console.log("✅ Punch score submitted"))
         .catch(err => console.error("❌ Punch submit failed:", err));
 }
+
+function wiggleDrump(scene) {
+    if (!drump || !scene) return;
+
+    scene.tweens.add({
+        targets: drump,
+        angle: { from: -10, to: 10 },
+        duration: 80,
+        yoyo: true,
+        repeat: 4,
+        ease: "Sine.easeInOut",
+        onComplete: () => {
+            drump.setAngle(0); // reset angle
+        }
+    });
+}
+
 
 export { initPunchModule, handlePunch };
