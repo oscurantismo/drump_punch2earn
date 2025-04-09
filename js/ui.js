@@ -4,6 +4,58 @@ import { showTab } from "./tabs.js";
 let soundButton;
 let soundEnabled = true;
 
+function createLeaderboardPopup() {
+    if (document.getElementById("leaderboard-reward-popup")) return; // already exists
+
+    const popup = document.createElement("div");
+    popup.id = "leaderboard-reward-popup";
+    popup.style.position = "fixed";
+    popup.style.top = "0";
+    popup.style.left = "0";
+    popup.style.width = "100vw";
+    popup.style.height = "100vh";
+    popup.style.backgroundColor = "rgba(0,0,0,0.6)";
+    popup.style.display = "none";
+    popup.style.alignItems = "center";
+    popup.style.justifyContent = "center";
+    popup.style.zIndex = "4000";
+
+    popup.innerHTML = `
+      <div style="
+          background: #fff;
+          padding: 24px;
+          border-radius: 14px;
+          max-width: 340px;
+          width: 90%;
+          font-family: 'Segoe UI', sans-serif;
+          text-align: left;
+          box-shadow: 0 0 16px rgba(0,0,0,0.3);
+          position: relative;
+      ">
+        <h3 style="text-align:center; color:#0047ab;">🏆 Leaderboard Rewards</h3>
+        <ul style="font-size:14px; line-height:1.6; padding-left:18px; margin-top: 12px;">
+          <li><b>Top-25</b>: +250 punches (once)</li>
+          <li><b>Top-10</b>: +550 punches (once)</li>
+          <li><b>Top-3</b>: +1000 | <b>Top-2</b>: +2000 | <b>Top-1</b>: +4000</li>
+          <li><b>Drops:</b></li>
+          <li>Left Top-10: -200</li>
+          <li>Left Top-3/2/1: -600</li>
+          <li>Left Top-25: -100</li>
+        </ul>
+        <div style="text-align:center; margin-top: 16px;">
+          <button onclick="document.getElementById('leaderboard-reward-popup').style.display='none';"
+            style="background:#0047ab; color:white; border:none; padding:10px 16px; border-radius:8px; font-weight:bold;">
+            Close
+          </button>
+        </div>
+        <div style="position:absolute; top:8px; right:12px; cursor:pointer; color:#888;" onclick="document.getElementById('leaderboard-reward-popup').style.display='none';">❌</div>
+      </div>
+    `;
+
+    document.body.appendChild(popup);
+}
+
+
 function renderTopBar() {
     const top = document.createElement("div");
     top.style.position = "fixed";
@@ -170,7 +222,38 @@ function renderShareButton() {
 
     btn.onclick = showReferralPopup;
     document.body.appendChild(btn);
+
+    document.body.appendChild(btn); // this appends the refer button
+
+    // 👇 Add this block below it
+    const rewardsBtn = document.createElement("button");
+    rewardsBtn.innerText = "🏆 Leaderboard Rewards";
+    rewardsBtn.style.position = "fixed";
+    rewardsBtn.style.bottom = "20px";
+    rewardsBtn.style.right = "20px";
+    rewardsBtn.style.padding = "10px 14px";
+    rewardsBtn.style.fontSize = "14px";
+    rewardsBtn.style.background = "#0047ab";
+    rewardsBtn.style.color = "#fff";
+    rewardsBtn.style.border = "none";
+    rewardsBtn.style.borderRadius = "8px";
+    rewardsBtn.style.fontFamily = "'Arial Black', sans-serif";
+    rewardsBtn.style.zIndex = "1001";
+    rewardsBtn.style.display = "flex";
+    rewardsBtn.style.alignItems = "center";
+    rewardsBtn.style.justifyContent = "center";
+
+    rewardsBtn.onclick = () => {
+        const popup = document.getElementById("leaderboard-reward-popup");
+        if (popup) popup.style.display = "flex";
+    };
+    
+    document.body.appendChild(rewardsBtn);
+
+    createLeaderboardPopup();
+
 }
+
 function showReferralPopup() {
     const popup = document.createElement("div");
     popup.id = "referral-popup";
@@ -274,10 +357,11 @@ function showReferralPopup() {
     document.body.appendChild(popup);
 }
 
-
 export {
     renderTopBar,
     updatePunchDisplay,
     renderTabs,
-    renderShareButton
+    renderShareButton,
+    createLeaderboardPopup
 };
+
