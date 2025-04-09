@@ -194,7 +194,7 @@ function renderShareButton() {
     const btn = document.createElement("button");
     btn.innerText = "🎁 Refer a Friend";
     btn.style.position = "fixed";
-    btn.style.bottom = "60px";
+    btn.style.bottom = "100px"; // 👈 moves both buttons above bottom nav
     btn.style.right = "20px";
     btn.style.padding = "10px 14px";
     btn.style.fontSize = "14px";
@@ -229,7 +229,7 @@ function renderShareButton() {
     const rewardsBtn = document.createElement("button");
     rewardsBtn.innerText = "🏆 Leaderboard Rewards";
     rewardsBtn.style.position = "fixed";
-    rewardsBtn.style.bottom = "20px";
+    rewardsBtn.style.bottom = "60px"; // 👈 spacing above Refer button
     rewardsBtn.style.right = "20px";
     rewardsBtn.style.padding = "10px 14px";
     rewardsBtn.style.fontSize = "14px";
