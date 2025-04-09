@@ -1,5 +1,6 @@
 import { handlePunch, initPunchModule } from "./punch.js";
-import { renderTopBar, renderTabs, renderShareButton, updatePunchDisplay } from "./ui.js";
+import { renderTopBar, renderTabs, updatePunchDisplay } from "./ui.js";
+import { createReferralAndRewardsButtons } from "./buttons.js";
 
 let game;
 let drump;
@@ -115,6 +116,8 @@ function create() {
 
     showGameUI(this);
     registerUser();
+
+    createReferralAndRewardsButtons(window.userId);
 
     if (!localStorage.getItem("onboarding_complete")) {
         setTimeout(() => showOnboarding(), 300); // Give UI time to render
