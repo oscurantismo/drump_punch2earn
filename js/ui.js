@@ -296,6 +296,7 @@ export {
     renderTopBar,
     updatePunchDisplay,
     renderTabs,
-    createLeaderboardPopup
+    createLeaderboardPopup,
+    showReferralPopup
 };
 
