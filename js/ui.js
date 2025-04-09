@@ -43,10 +43,9 @@ function createLeaderboardPopup() {
           <li>Left Top-25: -100</li>
         </ul>
         <div style="text-align:center; margin-top: 16px;">
-          <button onclick="document.getElementById('leaderboard-reward-popup').style.display='none';"
-            style="background:#0047ab; color:white; border:none; padding:10px 16px; border-radius:8px; font-weight:bold;">
-            Close
-          </button>
+            <div class="leaderboard-popup-close" style="position:absolute; top:8px; right:12px; cursor:pointer; color:#888;">
+            ❌
+            </div>
         </div>
         <div style="position:absolute; top:8px; right:12px; cursor:pointer; color:#888;" onclick="document.getElementById('leaderboard-reward-popup').style.display='none';">❌</div>
       </div>
@@ -224,34 +223,95 @@ function renderShareButton() {
     document.body.appendChild(btn);
 
     document.body.appendChild(btn); // this appends the refer button
-
-    // 👇 Add this block below it
+    
+    let rewardsState = "hidden";
+    let hasPressed = false;
+    let wiggleInterval;
+    
     const rewardsBtn = document.createElement("button");
-    rewardsBtn.innerText = "🏆 Leaderboard Rewards";
+    rewardsBtn.id = "leaderboard-rewards-button";
+    rewardsBtn.innerText = "🎁";
     rewardsBtn.style.position = "fixed";
-    rewardsBtn.style.bottom = "60px"; // 👈 spacing above Refer button
+    rewardsBtn.style.bottom = "60px";
     rewardsBtn.style.right = "20px";
-    rewardsBtn.style.padding = "10px 14px";
-    rewardsBtn.style.fontSize = "14px";
+    rewardsBtn.style.padding = "10px 12px";
+    rewardsBtn.style.fontSize = "16px";
     rewardsBtn.style.background = "#0047ab";
     rewardsBtn.style.color = "#fff";
     rewardsBtn.style.border = "none";
     rewardsBtn.style.borderRadius = "8px";
     rewardsBtn.style.fontFamily = "'Arial Black', sans-serif";
     rewardsBtn.style.zIndex = "1001";
-    rewardsBtn.style.display = "flex";
-    rewardsBtn.style.alignItems = "center";
-    rewardsBtn.style.justifyContent = "center";
+    rewardsBtn.style.cursor = "pointer";
+    rewardsBtn.style.transition = "all 0.3s ease";
 
     rewardsBtn.onclick = () => {
-        const popup = document.getElementById("leaderboard-reward-popup");
-        if (popup) popup.style.display = "flex";
+        if (rewardsState === "hidden") {
+            expandRewardsButton();
+        } else if (rewardsState === "expanded") {
+            openLeaderboardPopup();
+        }
     };
-    
+
+    function expandRewardsButton() {
+        rewardsBtn.innerText = "🎁 Leaderboard Rewards";
+        rewardsState = "expanded";
+        hasPressed = true;
+        stopWiggle();
+    }
+
+    function resetToHidden() {
+        rewardsBtn.innerText = "🎁";
+        rewardsState = "hidden";
+        startWiggle(); // start again after going hidden
+    }
+
+    function openLeaderboardPopup() {
+        const popup = document.getElementById("leaderboard-reward-popup");
+        if (popup) {
+            popup.style.display = "flex";
+            rewardsState = "popup";
+
+            // When popup closes, go to expanded then auto-hide
+            const closePopup = () => {
+                popup.style.display = "none";
+                rewardsState = "expanded";
+                rewardsBtn.innerText = "🎁 Leaderboard Rewards";
+                setTimeout(() => {
+                    if (rewardsState === "expanded") resetToHidden();
+                }, 5000); // 5s delay before hiding again
+            };
+
+            // Inject one-time close listener (handles both close button and outside)
+            const closeBtn = popup.querySelector(".leaderboard-popup-close");
+            if (closeBtn) {
+                closeBtn.onclick = closePopup;
+            }
+        }
+    }
+
+    function startWiggle() {
+        if (hasPressed) return;
+        wiggleInterval = setInterval(() => {
+            rewardsBtn.animate([
+                { transform: 'rotate(0deg)' },
+                { transform: 'rotate(-10deg)' },
+                { transform: 'rotate(10deg)' },
+                { transform: 'rotate(0deg)' }
+            ], {
+                duration: 500,
+                iterations: 1
+            });
+        }, 15000);
+    }
+
+    function stopWiggle() {
+        clearInterval(wiggleInterval);
+    }
+
     document.body.appendChild(rewardsBtn);
-
-    createLeaderboardPopup();
-
+    startWiggle();
+    createLeaderboardPopup(); // ensure popup exists
 }
 
 function showReferralPopup() {
