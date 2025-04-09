@@ -111,6 +111,11 @@ function create() {
 
     showGameUI(this);
     registerUser();
+
+    if (!localStorage.getItem("onboarding_complete")) {
+        setTimeout(() => showOnboarding(), 300); // Give UI time to render
+    }
+
 }
 
 function showGameUI(scene) {
@@ -148,6 +153,91 @@ function showGameUI(scene) {
     };
     document.body.appendChild(soundButton);
 }
+
+function showOnboarding() {
+    const steps = [
+        {
+            title: "👋 Welcome to Drump | Punch2Earn",
+            message: "Tap Drump as many times as you can. Each punch earns points!"
+        },
+        {
+            title: "👊 How it works",
+            message: "Tap directly on Drump to punch. The more you punch, the redder he gets!"
+        },
+        {
+            title: "🏆 Why it matters",
+            message: "Climb the leaderboard, earn rewards, and unlock daily tasks soon!"
+        }
+    ];
+
+    let step = 0;
+
+    const overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100vw";
+    overlay.style.height = "100vh";
+    overlay.style.background = "rgba(0, 0, 0, 0.75)";
+    overlay.style.zIndex = "4000";
+    overlay.style.display = "flex";
+    overlay.style.flexDirection = "column";
+    overlay.style.justifyContent = "center";
+    overlay.style.alignItems = "center";
+    overlay.style.color = "#fff";
+    overlay.style.fontFamily = "'Arial Black', sans-serif";
+    overlay.style.textAlign = "center";
+    overlay.style.padding = "20px";
+
+    const box = document.createElement("div");
+    box.style.background = "#fff";
+    box.style.color = "#000";
+    box.style.padding = "24px";
+    box.style.borderRadius = "16px";
+    box.style.maxWidth = "90vw";
+    box.style.boxShadow = "0 0 12px rgba(0,0,0,0.4)";
+
+    const title = document.createElement("h2");
+    const message = document.createElement("p");
+    const button = document.createElement("button");
+
+    button.innerText = "Next";
+    button.style.marginTop = "12px";
+    button.style.padding = "10px 18px";
+    button.style.background = "#0047ab";
+    button.style.color = "#fff";
+    button.style.border = "none";
+    button.style.borderRadius = "10px";
+    button.style.fontWeight = "bold";
+    button.style.fontSize = "16px";
+
+    function renderStep(index) {
+        title.innerText = steps[index].title;
+        message.innerText = steps[index].message;
+        if (index === steps.length - 1) {
+            button.innerText = "Let’s go!";
+        }
+    }
+
+    button.onclick = () => {
+        step++;
+        if (step >= steps.length) {
+            localStorage.setItem("onboarding_complete", "true");
+            overlay.remove();
+        } else {
+            renderStep(step);
+        }
+    };
+
+    box.appendChild(title);
+    box.appendChild(message);
+    box.appendChild(button);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    renderStep(step);
+}
+
 
 function drawDrump(scene, textureKey) {
     const image = scene.textures.get(textureKey).getSourceImage();
