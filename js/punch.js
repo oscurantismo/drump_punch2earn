@@ -5,6 +5,9 @@ let hitCooldown = false;
 let currentFrame = 1;
 let lastPunchTime = 0;
 let backwardInterval;
+let punchCountSinceLastMove = 0;
+let moveTriggerPunchCount = Phaser.Math.Between(5, 10);
+let originalPosition = null;
 const BACKWARD_DELAY = 2000;
 const BACKWARD_SPEED = 50;
 
@@ -14,10 +17,6 @@ function initPunchModule(config) {
     loadeddrumpFrames = config.loadeddrumpFrames;
     updatePunchDisplay(); // Initial sync
 }
-
-let punchCountSinceLastMove = 0;
-let moveTriggerPunchCount = Phaser.Math.Between(5, 10);
-let originalPosition = null;
 
 function handlePunch() {
     if (!drump || hitCooldown || window.activeTab !== "game") return;
@@ -138,10 +137,6 @@ function showPunchEffect() {
         }
     });
 }
-
-let punchCountSinceLastMove = 0;
-let moveTriggerPunchCount = Phaser.Math.Between(5, 10);
-let originalPosition = null;
 
 function moveDrumpRandomly() {
     if (!drump || !drump.scene) return;
