@@ -1,4 +1,5 @@
 import { showGameUI } from "./game.js";
+import { createLeaderboardPopup } from "./ui.js";
 
 function showTab(tab, scene = null) {
     // Remove all tab containers
@@ -33,6 +34,7 @@ function showTab(tab, scene = null) {
 
         container.appendChild(iframe);
         document.body.appendChild(container);
+        createLeaderboardPopup(); // ensures the popup exists
     } else if (tab === "info") {
         const info = document.createElement("div");
         info.id = "info-container";
