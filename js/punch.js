@@ -97,7 +97,6 @@ function handlePunch() {
 
     // 🧾 Save punch to backend
     pendingPunches++;
-    const now = Date.now();
 
     if (pendingPunches >= PUNCH_THRESHOLD || now - lastSubmitTime >= SUBMIT_INTERVAL) {
         submitPunchScore();
