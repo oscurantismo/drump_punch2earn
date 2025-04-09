@@ -354,4 +354,4 @@ function wiggleDrump(scene) {
 }
 
 
-export { initPunchModule, handlePunch };
+export { initPunchModule, handlePunch, wiggleDrump };
