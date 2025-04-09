@@ -254,7 +254,7 @@ function drawDrump(scene, textureKey) {
 
     if (drump) drump.destroy();
 
-    const yPosition = scene.scale.height / 2.3 + (scene.scale.height * 0.15);
+    const yPosition = scene.scale.height / 2 + (scene.scale.height * 0.15);
 
     drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
         .setScale(scale)
