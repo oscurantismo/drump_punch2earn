@@ -1,3 +1,5 @@
+import { showReferralPopup } from "./ui.js"; // adjust path if needed
+
 let rewardsBtn, referralBtn;
 let rewardsState = "hidden";
 let wiggleInterval;
@@ -107,10 +109,6 @@ function startWiggle() {
             iterations: 1
         });
     }, 15000);
-}
-
-function showReferralPopup(userId) {
-    alert(`Referral popup for user ${userId}`);
 }
 
 function createLeaderboardPopup() {
