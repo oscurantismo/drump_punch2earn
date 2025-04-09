@@ -7,6 +7,11 @@ let punchSounds = [];
 let loadeddrumpFrames = new Set(["drump-images/1a-min.png"]);
 window.soundEnabled = true; // ✅ make globally accessible
 
+let pendingPunches = 0;
+let lastSubmitTime = 0;
+const SUBMIT_INTERVAL = 15000; // 15 seconds
+const PUNCH_THRESHOLD = 10;    // Punches per sync
+
 window.onload = () => {
     createLoader();
     createGame();
@@ -385,5 +390,19 @@ function createLoader() {
         if (el) el.remove();
     }, 3000);
 }
+
+window.onbeforeunload = () => {
+    if (window.punches && pendingPunches > 0) {
+        navigator.sendBeacon(
+            "https://drumpleaderboard-production.up.railway.app/submit",
+            new Blob([JSON.stringify({
+                username: window.storedUsername,
+                user_id: window.userId,
+                score: window.punches
+            })], { type: "application/json" })
+        );
+    }
+};
+
 
 export { game, showGameUI, drawDrump };
