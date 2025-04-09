@@ -10,7 +10,14 @@ function createReferralAndRewardsButtons(userId) {
     referralBtn = document.createElement("button");
     referralBtn.id = "referral-button";
     referralBtn.innerHTML = `👥 Refer a Friend <span style="background:#fff; color:#0077cc; font-size:10px; font-weight:bold; border-radius:8px; padding:2px 6px; margin-left:6px;">+1000</span>`;
-    referralBtn.style.cssText = sharedStyle + "bottom: 120px;";
+    rewardsBtn.style.cssText = sharedStyle + `
+        bottom: 70px;
+        min-width: 42px;
+        white-space: nowrap;
+        overflow: hidden;
+        transition: all 0.3s ease, min-width 0.3s ease;
+    `;
+
     referralBtn.onclick = () => showReferralPopup(userId);
     document.body.appendChild(referralBtn);
 
@@ -41,8 +48,8 @@ const sharedStyle = `
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
 `;
+
 
 function onRewardsBtnClick() {
     if (rewardsState === "hidden") {
@@ -53,14 +60,21 @@ function onRewardsBtnClick() {
 }
 
 function expandRewardsButton() {
-    rewardsBtn.innerText = "🏆 Leaderboard Rewards";
-    rewardsState = "expanded";
+    rewardsBtn.style.minWidth = "190px";
+    setTimeout(() => {
+        if (rewardsState === "expanded") {
+            rewardsBtn.innerText = "🏆 Leaderboard Rewards";
+        }
+    }, 200);
 }
+
 
 function resetRewardsToHidden() {
     rewardsBtn.innerText = "🏆";
+    rewardsBtn.style.minWidth = "42px"; // Shrinks to emoji width
     rewardsState = "hidden";
 }
+
 
 function openLeaderboardPopup() {
     const popup = document.getElementById("leaderboard-reward-popup");
