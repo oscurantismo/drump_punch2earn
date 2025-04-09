@@ -112,7 +112,6 @@ function create() {
 
     renderTopBar();
     renderTabs();
-    renderShareButton();
 
     showGameUI(this);
     registerUser();
