@@ -1,4 +1,4 @@
-import { handlePunch, initPunchModule } from "./punch.js";
+import { handlePunch, initPunchModule, wiggleDrump } from "./punch.js";
 import { renderTopBar, renderTabs, updatePunchDisplay } from "./ui.js";
 import { createReferralAndRewardsButtons } from "./buttons.js";
 
