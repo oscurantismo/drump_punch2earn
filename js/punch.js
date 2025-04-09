@@ -158,39 +158,47 @@ function showPunchEffect() {
 
 function moveDrumpRandomly(originalPos) {
     const scene = drump.scene;
-    const margin = 50;
+    const margin = 40;
 
     const minX = margin;
     const maxX = scene.scale.width - margin;
-    const minY = scene.scale.height * 0.3;
+    const minY = scene.scale.height * 0.25;
     const maxY = scene.scale.height * 0.75;
 
-    const shrinkFactor = Phaser.Math.FloatBetween(0.4, 0.85); // 40% to 85% of original
+    const shrinkFactor = Phaser.Math.FloatBetween(0.25, 0.6); // 🎯 More challenging range
     const newScale = originalPos.scale * shrinkFactor;
 
     const newX = Phaser.Math.Between(minX, maxX);
     const newY = Phaser.Math.Between(minY, maxY);
 
+    // ⏩ Faster, teasing movement
     scene.tweens.add({
         targets: drump,
         x: newX,
         y: newY,
         scale: newScale,
-        ease: "Sine.easeInOut",
-        duration: 800,
-        hold: 1500,
+        ease: "Expo.easeOut",
+        duration: 500,  // faster move
         yoyo: true,
+        hold: 500,      // less time before coming back
         onYoyo: () => {
             scene.tweens.add({
                 targets: drump,
                 x: originalPos.x,
                 y: originalPos.y,
                 scale: originalPos.scale,
-                duration: 600
+                duration: 500,
+                ease: "Expo.easeOut"
             });
         }
     });
+
+    // Optional wiggle during movement
+    scene.time.delayedCall(300, () => {
+        wiggleDrump(scene);
+    });
 }
+
 
 function animateFloatingText(text) {
     const scene = game.scene.scenes[0];
