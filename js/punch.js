@@ -165,12 +165,11 @@ function moveDrumpRandomly(originalPos) {
     const minY = scene.scale.height * 0.3;
     const maxY = scene.scale.height * 0.75;
 
-    const minShrink = 0.45;
-    const maxShrink = 0.65;
+    const shrinkFactor = Phaser.Math.FloatBetween(0.4, 0.85); // 40% to 85% of original
+    const newScale = originalPos.scale * shrinkFactor;
 
     const newX = Phaser.Math.Between(minX, maxX);
     const newY = Phaser.Math.Between(minY, maxY);
-    const newScale = Phaser.Math.FloatBetween(minShrink, maxShrink);
 
     scene.tweens.add({
         targets: drump,
@@ -182,7 +181,6 @@ function moveDrumpRandomly(originalPos) {
         hold: 1500,
         yoyo: true,
         onYoyo: () => {
-            // Return to original position after wiggle
             scene.tweens.add({
                 targets: drump,
                 x: originalPos.x,
@@ -190,13 +188,7 @@ function moveDrumpRandomly(originalPos) {
                 scale: originalPos.scale,
                 duration: 600
             });
-        },
-        onYoyoParams: []
-    });
-
-    // Add wiggle (laugh/tease) during the hold
-    scene.time.delayedCall(900, () => {
-        wiggleDrump(scene);
+        }
     });
 }
 
