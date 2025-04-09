@@ -258,16 +258,26 @@ function drawDrump(scene, textureKey) {
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
 
-    drump.on("pointerdown", () => {
+    drump.on("pointerdown", (pointer) => {
         const profileVisible = document.getElementById("profile-container");
         const referralVisible = document.getElementById("referral-popup");
 
-        if (window.activeTab === "game" && !profileVisible && !referralVisible) {
-            handlePunch();
+        if (window.activeTab !== "game" || profileVisible || referralVisible) return;
+
+        const bounds = drump.getBounds();
+        if (Phaser.Geom.Rectangle.Contains(bounds, pointer.x, pointer.y)) {
+            handlePunch(); // ✅ Successful hit
         } else {
-            console.log("❌ Punch ignored: popup or profile is open.");
+            // ❌ Missed hit
+            wiggleDrump(drump.scene);
+
+            if (window.soundEnabled && drump.scene.sound) {
+                const laugh = drump.scene.sound.add("laugh");
+                laugh.play({ volume: 0.6 });
+            }
         }
     });
+
 
 
     // ✅ Pass reference to punch.js
