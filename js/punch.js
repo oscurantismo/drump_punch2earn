@@ -119,6 +119,7 @@ function handlePunch() {
         }
 
         moveDrumpRandomly(originalPosition);
+        resetDrumpReturnTimer(originalPosition);
     }
 
     // 🔁 Sync from backend every 20 punches
@@ -167,6 +168,25 @@ function showPunchEffect() {
     });
 }
 
+let returnToOriginalTimeout;
+
+function resetDrumpReturnTimer(originalPos) {
+    if (returnToOriginalTimeout) clearTimeout(returnToOriginalTimeout);
+
+    returnToOriginalTimeout = setTimeout(() => {
+        const scene = drump.scene;
+        scene.tweens.add({
+            targets: drump,
+            x: originalPos.x,
+            y: originalPos.y,
+            scale: originalPos.scale,
+            duration: 700,
+            ease: "Sine.easeOut"
+        });
+    }, 10000); // 🕒 10 seconds of inactivity
+}
+
+
 function moveDrumpRandomly(originalPos) {
     const scene = drump.scene;
     const margin = 40;
@@ -192,16 +212,16 @@ function moveDrumpRandomly(originalPos) {
         duration: 500,  // faster move
         yoyo: true,
         hold: 500,      // less time before coming back
-        onYoyo: () => {
-            scene.tweens.add({
-                targets: drump,
-                x: originalPos.x,
-                y: originalPos.y,
-                scale: originalPos.scale,
-                duration: 500,
-                ease: "Expo.easeOut"
-            });
-        }
+        // onYoyo: () => {
+           // scene.tweens.add({
+             //   targets: drump,
+             //   x: originalPos.x,
+             //   y: originalPos.y,
+             //   scale: originalPos.scale,
+             //   duration: 500,
+            //    ease: "Expo.easeOut"
+         //   });
+      //  }
     });
 
     // Optional wiggle during movement
