@@ -259,6 +259,8 @@ function drawDrump(scene, textureKey) {
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
 
+    drump.setInteractive(new Phaser.Geom.Rectangle(0, 0, drump.width, drump.height), Phaser.Geom.Rectangle.Contains);
+
     drump.originalScale = scale; // ✅ store for movement logic
 
 
