@@ -14,6 +14,11 @@ const OOF_MIN_INTERVAL = 12000; // Minimum 12 seconds between oofs
 const BACKWARD_DELAY = 2000;
 const BACKWARD_SPEED = 50;
 
+let pendingPunches = 0;
+let lastSubmitTime = 0;
+const SUBMIT_INTERVAL = 15000; // 15 seconds
+const PUNCH_THRESHOLD = 10;    // every 10 punches
+
 function initPunchModule(config) {
     drump = config.drump;
     punchSounds = config.punchSounds;
@@ -91,7 +96,13 @@ function handlePunch() {
     startBackwardAnimation();
 
     // 🧾 Save punch to backend
-    submitPunchScore();
+    pendingPunches++;
+    const now = Date.now();
+
+    if (pendingPunches >= PUNCH_THRESHOLD || now - lastSubmitTime >= SUBMIT_INTERVAL) {
+        submitPunchScore();
+    }
+
 
     // 🕹 Movement logic
     punchCountSinceLastMove++;
@@ -249,7 +260,10 @@ function startBackwardAnimation() {
     }, adjustedSpeed);
 }
 
-function submitPunchScore() {
+function submitPunchScore(retry = false) {
+    lastSubmitTime = Date.now();
+    pendingPunches = 0;
+
     fetch("https://drumpleaderboard-production.up.railway.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -259,12 +273,19 @@ function submitPunchScore() {
             score: window.punches
         })
     })
-        .then(res => {
-            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-            return res.json();
-        })
-        .then(() => console.log("✅ Punch score submitted"))
-        .catch(err => console.error("❌ Punch submit failed:", err));
+    .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return res.json();
+    })
+    .then(() => console.log("✅ Punch score submitted"))
+    .catch(err => {
+        console.error("❌ Punch submit failed:", err);
+
+        // Retry once after delay
+        if (!retry) {
+            setTimeout(() => submitPunchScore(true), 2000);
+        }
+    });
 }
 
 function wiggleDrump(scene) {
