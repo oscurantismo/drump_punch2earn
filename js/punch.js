@@ -26,6 +26,42 @@ function initPunchModule(config) {
     updatePunchDisplay(); // Initial sync
 }
 
+function showPunchZapEffect() {
+    const scene = game.scene.scenes[0];
+
+    // Create zap lines around Drump's head
+    const zapGroup = scene.add.group();
+    const numZaps = 5;
+    const radius = drump.displayWidth * 0.6;
+    const zapLength = 20;
+    const centerX = drump.x;
+    const centerY = drump.y - drump.displayHeight * 0.4; // top of head
+
+    for (let i = 0; i < numZaps; i++) {
+        const angle = (360 / numZaps) * i;
+        const radians = Phaser.Math.DegToRad(angle);
+        const x1 = centerX + Math.cos(radians) * (radius - zapLength);
+        const y1 = centerY + Math.sin(radians) * (radius - zapLength);
+        const x2 = centerX + Math.cos(radians) * radius;
+        const y2 = centerY + Math.sin(radians) * radius;
+
+        const zap = scene.add.line(0, 0, x1, y1, x2, y2, 0xffdd00)
+            .setLineWidth(3)
+            .setAlpha(1)
+            .setDepth(10000);
+        zapGroup.add(zap);
+    }
+
+    // Animate fade-out
+    scene.tweens.add({
+        targets: zapGroup.getChildren(),
+        alpha: 0,
+        duration: 300,
+        onComplete: () => zapGroup.clear(true, true)
+    });
+}
+
+
 function handlePunch() {
     if (!drump || hitCooldown || window.activeTab !== "game") return;
 
@@ -84,6 +120,8 @@ function handlePunch() {
 
     // 👊 Show new punch effect
     showPunchEffect();
+
+    showPunchZapEffect();
 
     // ✨ Floating punch text
     animateFloatingText(`+1${bonus ? ` 🎉 +${bonus}` : ''}`);
@@ -195,36 +233,28 @@ function moveDrumpRandomly(originalPos) {
     const minY = scene.scale.height * 0.25;
     const maxY = scene.scale.height * 0.75;
 
-    const shrinkFactor = Phaser.Math.FloatBetween(0.25, 0.6); // 🎯 More challenging range
+    const shrinkFactor = Phaser.Math.FloatBetween(0.25, 0.6); // stays small
     const newScale = originalPos.scale * shrinkFactor;
 
     const newX = Phaser.Math.Between(minX, maxX);
     const newY = Phaser.Math.Between(minY, maxY);
 
-    // ⏩ Faster, teasing movement
     scene.tweens.add({
         targets: drump,
         x: newX,
         y: newY,
         scale: newScale,
-        ease: "Expo.easeOut",
-        duration: 500,  // faster move
-        yoyo: true,
-        hold: 500,      // less time before coming back
-        // onYoyo: () => {
-           // scene.tweens.add({
-             //   targets: drump,
-             //   x: originalPos.x,
-             //   y: originalPos.y,
-             //   scale: originalPos.scale,
-             //   duration: 500,
-            //    ease: "Expo.easeOut"
-         //   });
-      //  }
+        ease: "Power2",          // smoother but still fast
+        duration: 350,           // ⏩ fast transition
+        hold: 300,               // short pause before next movement
+        yoyo: false,             // no automatic return
     });
 
-    // Optional wiggle during movement
-    scene.time.delayedCall(300, () => {
+    // Optionally reset idle timer to bring him back after 10s
+    resetDrumpReturnTimer(originalPos);
+
+    // Small wiggle for personality
+    scene.time.delayedCall(200, () => {
         wiggleDrump(scene);
     });
 }
