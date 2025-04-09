@@ -3,21 +3,13 @@ let rewardsState = "hidden";
 let wiggleInterval;
 
 function createReferralAndRewardsButtons(userId) {
-    // Clean up duplicates
     if (document.getElementById("referral-button")) return;
 
     // === Refer a Friend Button ===
     referralBtn = document.createElement("button");
     referralBtn.id = "referral-button";
     referralBtn.innerHTML = `👥 Refer a Friend <span style="background:#fff; color:#0077cc; font-size:10px; font-weight:bold; border-radius:8px; padding:2px 6px; margin-left:6px;">+1000</span>`;
-    rewardsBtn.style.cssText = sharedStyle + `
-        bottom: 70px;
-        min-width: 42px;
-        white-space: nowrap;
-        overflow: hidden;
-        transition: all 0.3s ease, min-width 0.3s ease;
-    `;
-
+    referralBtn.style.cssText = sharedStyle + "bottom: 120px;";
     referralBtn.onclick = () => showReferralPopup(userId);
     document.body.appendChild(referralBtn);
 
@@ -25,7 +17,13 @@ function createReferralAndRewardsButtons(userId) {
     rewardsBtn = document.createElement("button");
     rewardsBtn.id = "leaderboard-rewards-button";
     rewardsBtn.innerText = "🏆";
-    rewardsBtn.style.cssText = sharedStyle + "bottom: 70px;";
+    rewardsBtn.style.cssText = sharedStyle + `
+        bottom: 70px;
+        min-width: 42px;
+        white-space: nowrap;
+        overflow: hidden;
+        transition: all 0.3s ease, min-width 0.3s ease;
+    `;
     rewardsBtn.onclick = onRewardsBtnClick;
     document.body.appendChild(rewardsBtn);
 
@@ -33,7 +31,6 @@ function createReferralAndRewardsButtons(userId) {
     startWiggle();
 }
 
-// Shared style for both buttons
 const sharedStyle = `
     position: fixed;
     right: 20px;
@@ -50,16 +47,16 @@ const sharedStyle = `
     justify-content: center;
 `;
 
-
 function onRewardsBtnClick() {
     if (rewardsState === "hidden") {
         expandRewardsButton();
-    } else {
+    } else if (rewardsState === "expanded") {
         openLeaderboardPopup();
     }
 }
 
 function expandRewardsButton() {
+    rewardsState = "expanded";
     rewardsBtn.style.minWidth = "190px";
     setTimeout(() => {
         if (rewardsState === "expanded") {
@@ -68,13 +65,11 @@ function expandRewardsButton() {
     }, 200);
 }
 
-
 function resetRewardsToHidden() {
     rewardsBtn.innerText = "🏆";
-    rewardsBtn.style.minWidth = "42px"; // Shrinks to emoji width
+    rewardsBtn.style.minWidth = "42px";
     rewardsState = "hidden";
 }
-
 
 function openLeaderboardPopup() {
     const popup = document.getElementById("leaderboard-reward-popup");
@@ -86,9 +81,11 @@ function openLeaderboardPopup() {
         if (closeBtn) {
             closeBtn.onclick = () => {
                 popup.style.display = "none";
-                expandRewardsButton();
+                rewardsState = "expanded";
+                rewardsBtn.innerText = "🏆 Leaderboard Rewards";
+                rewardsBtn.style.minWidth = "190px";
                 setTimeout(() => {
-                    resetRewardsToHidden();
+                    if (rewardsState === "expanded") resetRewardsToHidden();
                 }, 5000);
             };
         }
@@ -112,9 +109,7 @@ function startWiggle() {
     }, 15000);
 }
 
-// You should call this when user is registered
 function showReferralPopup(userId) {
-    // You can keep your existing referral popup here or import it
     alert(`Referral popup for user ${userId}`);
 }
 
@@ -167,6 +162,7 @@ function createLeaderboardPopup() {
         <div class="leaderboard-popup-close" style="position:absolute; top:8px; right:12px; cursor:pointer; color:#888;">❌</div>
       </div>
     `;
+
     document.body.appendChild(popup);
 }
 
