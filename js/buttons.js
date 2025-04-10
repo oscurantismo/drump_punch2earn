@@ -143,13 +143,11 @@ function createLeaderboardPopup() {
       ">
         <h3 style="text-align:center; color:#0047ab;">🏆 Leaderboard Rewards</h3>
         <ul style="font-size:14px; line-height:1.6; padding-left:18px; margin-top: 12px;">
-          <li><b>Top-25</b>: +250 punches (once)</li>
-          <li><b>Top-10</b>: +550 punches (once)</li>
-          <li><b>Top-3</b>: +1000 | <b>Top-2</b>: +2000 | <b>Top-1</b>: +4000</li>
-          <li><b>Drops:</b></li>
-          <li>Left Top-10: -200</li>
-          <li>Left Top-3/2/1: -600</li>
-          <li>Left Top-25: -100</li>
+            <li>:🥇First place: <b>+4000</b> punches one-time</li>
+            <li>:🥈Second place: <b>+2000</b> punches one-time</li>
+            <li>:🥉Third place: <b>+1000</b> punches one-time</li>
+            <li>Entering top-10: <b>+550</b> punches one-time</li>
+            <li>Entering top-25: <b>+250</b> punches one-time</li>
         </ul>
         <div style="text-align:center; margin-top: 16px;">
           <button class="leaderboard-popup-close"
