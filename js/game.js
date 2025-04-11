@@ -256,7 +256,7 @@ function drawDrump(scene, textureKey) {
 
     const yPosition = scene.scale.height / 2.6 + (scene.scale.height * 0.15);
 
-    drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
+    drump = scene.add.image(scene.scale.width / 2.3, yPosition, textureKey)
         .setScale(scale)
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
