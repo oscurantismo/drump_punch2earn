@@ -192,6 +192,9 @@ function showInfoPage() {
             answer.classList.toggle("open");
         };
     });
-}
+};
 
-export { showTab, showInfoPage };
+export {
+    showTab,
+    showInfoPage
+};
