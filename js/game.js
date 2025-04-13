@@ -84,6 +84,22 @@ function create() {
 
     updatePunchDisplay();
 
+    fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
+    .then(res => res.json())
+    .then(profile => {
+        if (typeof profile.punches === "number") {
+            // Update only if backend score is higher
+            if (profile.punches > window.punches) {
+                window.punches = profile.punches;
+                updatePunchDisplay();
+                const punchEl = document.getElementById("punch-count");
+                if (punchEl) punchEl.textContent = window.punches;
+            }
+        }
+    })
+    .catch(err => console.error("❌ Failed to sync punches from server:", err));
+
+
     // ✅ Resume audio context if needed
     if (this.sound.context.state === "suspended") {
         this.sound.context.resume();
