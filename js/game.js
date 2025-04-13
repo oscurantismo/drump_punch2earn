@@ -167,7 +167,7 @@ function showGameUI(scene) {
     soundButton.src = window.soundEnabled ? "sound_on.svg" : "sound_off.svg";
     soundButton.style.position = "fixed";
     soundButton.style.top = "12px";
-    soundButton.style.right = "12px";
+    soundButton.style.right = "56px";
     soundButton.style.width = iconSize + "px";
     soundButton.style.height = iconSize + "px";
     soundButton.style.cursor = "pointer";
