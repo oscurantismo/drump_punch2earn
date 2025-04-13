@@ -1,5 +1,5 @@
 import { showGameUI } from "./game.js";
-import { createLeaderboardPopup } from "./ui.js";
+import { createLeaderboardPopup } from "./popups.js";
 
 function showTab(tab, scene = null) {
     // Remove all tab containers
