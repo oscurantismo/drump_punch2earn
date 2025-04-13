@@ -168,9 +168,13 @@ function renderTabs() {
     tabBar.style.background = "#002868";
     tabBar.style.zIndex = "1000";
 
-    ["game", "leaderboard", "info"].forEach(tab => {
+    ["game", "leaderboard", "tasks"].forEach(tab => {
         const btn = document.createElement("button");
-        btn.innerText = tab.toUpperCase();
+
+        let label = tab.toUpperCase();
+        if (tab === "tasks") label = "💥 TASKS"; // ✅ Drump-style badge
+
+        btn.innerText = label;
         btn.style.flex = "1";
         btn.style.padding = "12px";
         btn.style.fontSize = "14px";
@@ -183,10 +187,12 @@ function renderTabs() {
             document.querySelectorAll("#tab-container button").forEach(b => b.style.background = "#002868");
             btn.style.background = "#003f8a";
         };
+
         tabBar.appendChild(btn);
     });
 
     document.body.appendChild(tabBar);
+
 }
 
 function showReferralPopup() {
