@@ -3,7 +3,7 @@ import { createLeaderboardPopup } from "./ui.js";
 
 function showTab(tab, scene = null) {
     // Remove all tab containers
-    ["game-container", "leaderboard-container", "tasks-container", "profile-container", "info-container"].forEach(id => {
+    ["game-container", "leaderboard-container", "tasks-container", "profile-container"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.remove();
     });
@@ -85,4 +85,4 @@ function showTab(tab, scene = null) {
     document.body.appendChild(container);
 }
 
-export { showTab, showInfoPage };
+export { showTab };
