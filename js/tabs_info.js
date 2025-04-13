@@ -3,7 +3,7 @@ import { createLeaderboardPopup } from "./ui.js";
 
 function showTab(tab, scene = null) {
     // Remove all tab containers
-    ["game-container", "leaderboard-container", "tasks-container", "profile-container"].forEach(id => {
+    ["game-container", "leaderboard-container", "tasks-container", "profile-container", "info-container"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.remove();
     });
@@ -192,6 +192,6 @@ function showInfoPage() {
             answer.classList.toggle("open");
         };
     });
-};
+}
 
 export { showTab, showInfoPage };
