@@ -244,7 +244,7 @@ function wiggleDrump(scene) {
 
     scene.tweens.add({
         targets: drump,
-        angle: { from: -10, to: 10 },
+        angle: { from: -5, to: 5 },
         duration: 80,
         yoyo: true,
         repeat: 4,
