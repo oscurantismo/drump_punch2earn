@@ -156,7 +156,7 @@ function showGameUI(scene) {
     // ✅ Add sound toggle button
     const iconSize = 32;
     const soundButton = document.createElement("img");
-    soundButton.src = window.soundEnabled ? "sound_on" : "sound_off";
+    soundButton.src = window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off.svg";
     soundButton.style.position = "fixed";
     soundButton.style.top = "12px";
     soundButton.style.right = "56px";
@@ -166,7 +166,7 @@ function showGameUI(scene) {
     soundButton.style.zIndex = "1001";
     soundButton.onclick = () => {
         window.soundEnabled = !window.soundEnabled;
-        soundButton.src = window.soundEnabled ? "sound_on" : "sound_off";
+        soundButton.src = window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off,svg";
     };
     document.body.appendChild(soundButton);
 
