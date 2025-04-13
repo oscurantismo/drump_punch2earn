@@ -194,7 +194,4 @@ function showInfoPage() {
     });
 };
 
-export {
-    showTab,
-    showInfoPage
-};
+export { showTab, showInfoPage };
