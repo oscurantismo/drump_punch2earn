@@ -84,13 +84,6 @@ function create() {
 
     updatePunchDisplay();
 
-    this.anims.create({
-        key: "punchAnim",
-        frames: this.anims.generateFrameNumbers("punch", { start: 0, end: 7 }),
-        frameRate: 10,
-        repeat: 0
-    });
-
     // ✅ Resume audio context if needed
     if (this.sound.context.state === "suspended") {
         this.sound.context.resume();
@@ -249,7 +242,7 @@ function drawDrump(scene, textureKey) {
     const image = scene.textures.get(textureKey).getSourceImage();
     if (!image) return;
 
-    const maxWidth = window.innerWidth * 0.95;
+    const maxWidth = window.innerWidth * 0.85;
     const scale = Math.min(maxWidth / image.width, window.innerHeight / image.height);
 
     if (drump) drump.destroy();
