@@ -180,7 +180,7 @@ function showGameUI(scene) {
 
     // Info button
     const infoButton = document.createElement("img");
-    infoButton.src = "info_icon.svg"; // use an actual info icon you have
+    infoButton.src = "drump-images/info_icon.svg"; // use an actual info icon you have
     infoButton.style.position = "fixed";
     infoButton.style.top = "12px";
     infoButton.style.right = "12px";
