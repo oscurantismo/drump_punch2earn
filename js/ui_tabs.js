@@ -16,7 +16,7 @@ function showTab(tab, scene = null) {
         container.style.position = "fixed";
         container.style.top = "100px";
         container.style.bottom = "0";
-        container.style.marginBottom = "280px";// Add space for nav tabs
+        container.style.marginBottom = "280px"; // Add space for nav tabs
         container.style.paddingBottom = "180px";
         container.style.left = "0";
         container.style.right = "0";
@@ -38,51 +38,62 @@ function showTab(tab, scene = null) {
     } else if (tab === "tasks") {
         const container = document.createElement("div");
         container.id = "tasks-container";
-        container.style.position = "fixed";
-        container.style.top = "100px";
-        container.style.bottom = "100px";
-        container.style.left = "0";
-        container.style.right = "0";
-        container.style.width = "100vw";
-        container.style.height = "calc(100vh - 100px)";
-        container.style.padding = "20px";
-        container.style.background = "#ffffff";
-        container.style.fontFamily = "'Arial', sans-serif";
-        container.style.overflowY = "auto";
-        container.style.zIndex = "999";
-        container.style.boxSizing = "border-box";
+        Object.assign(container.style, {
+            position: "fixed",
+            top: "100px",
+            bottom: "100px",
+            left: "0",
+            right: "0",
+            width: "100vw",
+            height: "calc(100vh - 100px)",
+            padding: "24px",
+            background: "#ffffff",
+            fontFamily: "'Arial', sans-serif",
+            overflowY: "auto",
+            zIndex: "999",
+            boxSizing: "border-box"
+        });
 
         container.innerHTML = `
-            <h2 style="color:#0047ab; font-size:24px; font-family:'Arial Black', sans-serif;">🎯 Tasks & Leaderboard Rewards</h2>
-            <p style="margin-top:6px; font-size:14px;">Welcome to your task tracker! New leaderboard tasks launch every <b>15 days</b>. This page will help you follow your progress and check what rewards are available.</p>
-        
-            <div style="margin-top:20px; background:#f0f4ff; border-left:5px solid #0047ab; padding:14px; border-radius:10px;">
-                <h3 style="margin-top:0;">🎁 Current Rewards</h3>
-                <ul style="line-height:1.6; font-size:14px; padding-left:20px;">
+            <h2 style="color:#0047ab; font-size:24px; font-family:'Arial Black', sans-serif;">🎯 Tasks & Rewards</h2>
+            <p style="font-size:14px; color:#333; line-height:1.5; margin-top:6px;">
+                Welcome to your task center! Here you can track your leaderboard progress, understand the reward structure, and discover upcoming challenges.
+            </p>
+
+            <div style="margin-top:24px; background:#f0f4ff; border-left:5px solid #0047ab; padding:16px; border-radius:10px;">
+                <h3 style="margin-top:0;">🎁 Leaderboard Rewards</h3>
+                <ul style="font-size:14px; line-height:1.6; padding-left:20px;">
                     <li><b>Top-25:</b> +250 punches</li>
                     <li><b>Top-10:</b> +550 punches</li>
                     <li><b>Top-3:</b> +1000 🥉</li>
                     <li><b>Top-2:</b> +2000 🥈</li>
                     <li><b>Top-1:</b> +4000 🥇</li>
-               </ul>
+                </ul>
             </div>
 
-            <div style="margin-top:30px; background:#fff8e1; border-left:5px solid #ffcc00; padding:14px; border-radius:10px;">
-                <h3 style="margin-top:0;">📆 What’s Coming</h3>
-                <ul style="line-height:1.6; font-size:14px; padding-left:20px;">
-                    <li>New tasks launch every 15 days — stay active!</li>
-                    <li>Expect exciting new ways to earn punches 🥊</li>
-                    <li>Special challenges, badges, and airdrops are on the roadmap 🚀</li>
+            <div style="margin-top:30px; background:#fff8e1; border-left:5px solid #ffcc00; padding:16px; border-radius:10px;">
+                <h3 style="margin-top:0;">📆 Upcoming Challenges</h3>
+                <ul style="font-size:14px; line-height:1.6; padding-left:20px;">
+                    <li>Leaderboard tasks refresh every <b>15 days</b>.</li>
+                    <li>Expect special daily/weekly punch challenges in upcoming updates.</li>
+                    <li>Collect badges 🏅 and earn access to limited airdrops 🚀</li>
                 </ul>
             </div>
 
             <div style="margin-top:30px;">
                 <h3 style="color:#0047ab;">📊 Your Progress</h3>
-                <p style="font-size:14px;">Check your referral and punch progress in the <b>Profile</b> tab. Task-specific progress tracking will appear here in future updates!</p>
+                <p style="font-size:14px; color:#333;">
+                    Visit your <b>Profile</b> to check how many punches you've collected and how many referrals you've invited. Soon, this page will track your live task completions!
+                </p>
+            </div>
+
+            <div style="margin-top:30px; text-align:center;">
+                <span style="font-size:12px; color:#999;">Last updated: April 2025</span>
             </div>
         `;
 
-    document.body.appendChild(container);
+        document.body.appendChild(container);
+    }
 }
 
 export { showTab };
