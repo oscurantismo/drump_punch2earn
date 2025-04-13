@@ -5,62 +5,23 @@ let hitCooldown = false;
 let currentFrame = 1;
 let lastPunchTime = 0;
 let backwardInterval;
-let punchCountSinceLastMove = 0;
-let moveTriggerPunchCount = Phaser.Math.Between(5, 10);
-let originalPosition = null;
 let lastOofTime = 0;
-let recentPunches = []; // Store timestamps of recent punches
-const OOF_MIN_INTERVAL = 12000; // Minimum 12 seconds between oofs
+let recentPunches = [];
+const OOF_MIN_INTERVAL = 12000;
 const BACKWARD_DELAY = 2000;
 const BACKWARD_SPEED = 50;
 
 let pendingPunches = 0;
 let lastSubmitTime = 0;
-const SUBMIT_INTERVAL = 15000; // 15 seconds
-const PUNCH_THRESHOLD = 10;    // every 10 punches
+const SUBMIT_INTERVAL = 15000;
+const PUNCH_THRESHOLD = 10;
 
 function initPunchModule(config) {
     drump = config.drump;
     punchSounds = config.punchSounds;
     loadeddrumpFrames = config.loadeddrumpFrames;
-    updatePunchDisplay(); // Initial sync
+    updatePunchDisplay();
 }
-
-function showPunchZapEffect() {
-    const scene = game.scene.scenes[0];
-
-    // Create zap lines around Drump's head
-    const zapGroup = scene.add.group();
-    const numZaps = 5;
-    const radius = drump.displayWidth * 0.6;
-    const zapLength = 20;
-    const centerX = drump.x;
-    const centerY = drump.y - drump.displayHeight * 0.4; // top of head
-
-    for (let i = 0; i < numZaps; i++) {
-        const angle = (360 / numZaps) * i;
-        const radians = Phaser.Math.DegToRad(angle);
-        const x1 = centerX + Math.cos(radians) * (radius - zapLength);
-        const y1 = centerY + Math.sin(radians) * (radius - zapLength);
-        const x2 = centerX + Math.cos(radians) * radius;
-        const y2 = centerY + Math.sin(radians) * radius;
-
-        const zap = scene.add.line(0, 0, x1, y1, x2, y2, 0xffdd00)
-            .setLineWidth(3)
-            .setAlpha(1)
-            .setDepth(10000);
-        zapGroup.add(zap);
-    }
-
-    // Animate fade-out
-    scene.tweens.add({
-        targets: zapGroup.getChildren(),
-        alpha: 0,
-        duration: 300,
-        onComplete: () => zapGroup.clear(true, true)
-    });
-}
-
 
 function handlePunch() {
     if (!drump || hitCooldown || window.activeTab !== "game") return;
@@ -78,22 +39,19 @@ function handlePunch() {
         window.punches = newPunches;
     }
 
-    // Track punch time for oof logic
     const now = Date.now();
-    recentPunches = recentPunches.filter(ts => now - ts < 10000); // Keep only last 10 sec
+    recentPunches = recentPunches.filter(ts => now - ts < 10000);
     recentPunches.push(now);
 
-    // Check if we should play "oof" sound
     if (recentPunches.length >= 8 && now - lastOofTime >= OOF_MIN_INTERVAL) {
         lastOofTime = now;
-            if (window.soundEnabled && game.scene.scenes[0].sound) {
-                const oofSound = game.scene.scenes[0].sound.add("oof");
-                oofSound.play({ volume: 0.75 });
-            }
+        if (window.soundEnabled && game.scene.scenes[0].sound) {
+            const oofSound = game.scene.scenes[0].sound.add("oof");
+            oofSound.play({ volume: 0.75 });
+        }
     }
 
-
-    lastPunchTime = Date.now();
+    lastPunchTime = now;
     updatePunchDisplay();
     localStorage.setItem(`score_${window.userId}`, window.punches);
 
@@ -102,7 +60,6 @@ function handlePunch() {
         sound.play();
     }
 
-    // 🔴 Drump face redness progression
     if (currentFrame < 30) currentFrame++;
     const key = `${currentFrame}a-min.png`;
     const scene = game.scene.scenes[0];
@@ -118,48 +75,21 @@ function handlePunch() {
         drump.setTexture(key);
     }
 
-    // 👊 Show new punch effect
     showPunchEffect();
-
     showPunchZapEffect();
-
-    // ✨ Floating punch text
     animateFloatingText(`+1${bonus ? ` 🎉 +${bonus}` : ''}`);
+    wiggleDrump(scene);
 
-    // ⏱ Hit cooldown
     setTimeout(() => { hitCooldown = false; }, 200);
 
-    // 🔄 Begin backward animation if needed
     if (backwardInterval) clearInterval(backwardInterval);
     startBackwardAnimation();
 
-    // 🧾 Save punch to backend
     pendingPunches++;
-
     if (pendingPunches >= PUNCH_THRESHOLD || now - lastSubmitTime >= SUBMIT_INTERVAL) {
         submitPunchScore();
     }
 
-
-    // 🕹 Movement logic
-    punchCountSinceLastMove++;
-    if (punchCountSinceLastMove >= moveTriggerPunchCount) {
-        punchCountSinceLastMove = 0;
-        moveTriggerPunchCount = Phaser.Math.Between(5, 10);
-
-        if (!originalPosition) {
-            originalPosition = {
-                x: drump.x,
-                y: drump.y,
-                scale: drump.scale
-            };
-        }
-
-        moveDrumpRandomly(originalPosition);
-        resetDrumpReturnTimer(originalPosition);
-    }
-
-    // 🔁 Sync from backend every 20 punches
     if (window.punches % 20 === 0) {
         fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
             .then(res => res.json())
@@ -178,7 +108,6 @@ function handlePunch() {
             .catch(err => console.error("❌ Failed to sync punches from server:", err));
     }
 }
-
 
 function showPunchEffect() {
     const scene = game.scene.scenes[0];
@@ -205,60 +134,37 @@ function showPunchEffect() {
     });
 }
 
-let returnToOriginalTimeout;
+function showPunchZapEffect() {
+    const scene = game.scene.scenes[0];
+    const zapGroup = scene.add.group();
+    const numZaps = 5;
+    const radius = drump.displayWidth * 0.6;
+    const zapLength = 20;
+    const centerX = drump.x;
+    const centerY = drump.y - drump.displayHeight * 0.4;
 
-function resetDrumpReturnTimer(originalPos) {
-    if (returnToOriginalTimeout) clearTimeout(returnToOriginalTimeout);
+    for (let i = 0; i < numZaps; i++) {
+        const angle = (360 / numZaps) * i;
+        const radians = Phaser.Math.DegToRad(angle);
+        const x1 = centerX + Math.cos(radians) * (radius - zapLength);
+        const y1 = centerY + Math.sin(radians) * (radius - zapLength);
+        const x2 = centerX + Math.cos(radians) * radius;
+        const y2 = centerY + Math.sin(radians) * radius;
 
-    returnToOriginalTimeout = setTimeout(() => {
-        const scene = drump.scene;
-        scene.tweens.add({
-            targets: drump,
-            x: originalPos.x,
-            y: originalPos.y,
-            scale: originalPos.scale,
-            duration: 700,
-            ease: "Sine.easeOut"
-        });
-    }, 10000); // 🕒 10 seconds of inactivity
-}
-
-
-function moveDrumpRandomly(originalPos) {
-    const scene = drump.scene;
-    const margin = 40;
-
-    const minX = margin;
-    const maxX = scene.scale.width - margin;
-    const minY = scene.scale.height * 0.25;
-    const maxY = scene.scale.height * 0.75;
-
-    const shrinkFactor = Phaser.Math.FloatBetween(0.25, 0.6); // stays small
-    const newScale = originalPos.scale * shrinkFactor;
-
-    const newX = Phaser.Math.Between(minX, maxX);
-    const newY = Phaser.Math.Between(minY, maxY);
+        const zap = scene.add.line(0, 0, x1, y1, x2, y2, 0xffdd00)
+            .setLineWidth(3)
+            .setAlpha(1)
+            .setDepth(10000);
+        zapGroup.add(zap);
+    }
 
     scene.tweens.add({
-        targets: drump,
-        x: newX,
-        y: newY,
-        scale: newScale,
-        ease: "Power2",          // smoother but still fast
-        duration: 350,           // ⏩ fast transition
-        hold: 300,               // short pause before next movement
-        yoyo: false,             // no automatic return
-    });
-
-    // Optionally reset idle timer to bring him back after 10s
-    resetDrumpReturnTimer(originalPos);
-
-    // Small wiggle for personality
-    scene.time.delayedCall(200, () => {
-        wiggleDrump(scene);
+        targets: zapGroup.getChildren(),
+        alpha: 0,
+        duration: 300,
+        onComplete: () => zapGroup.clear(true, true)
     });
 }
-
 
 function animateFloatingText(text) {
     const scene = game.scene.scenes[0];
@@ -329,11 +235,7 @@ function submitPunchScore(retry = false) {
     .then(() => console.log("✅ Punch score submitted"))
     .catch(err => {
         console.error("❌ Punch submit failed:", err);
-
-        // Retry once after delay
-        if (!retry) {
-            setTimeout(() => submitPunchScore(true), 2000);
-        }
+        if (!retry) setTimeout(() => submitPunchScore(true), 2000);
     });
 }
 
@@ -347,11 +249,8 @@ function wiggleDrump(scene) {
         yoyo: true,
         repeat: 4,
         ease: "Sine.easeInOut",
-        onComplete: () => {
-            drump.setAngle(0); // reset angle
-        }
+        onComplete: () => drump.setAngle(0)
     });
 }
-
 
 export { initPunchModule, handlePunch, wiggleDrump };
