@@ -95,13 +95,4 @@ function showTab(tab, scene = null) {
     document.body.appendChild(container);
 }
 
-function faqItem(question, answer) {
-    return `
-        <div class="faq-item">
-            <div class="faq-question">${question}</div>
-            <div class="faq-answer">${answer}</div>
-        </div>
-    `;
-}
-
 export { showTab };
