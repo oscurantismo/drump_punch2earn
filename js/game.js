@@ -1,6 +1,7 @@
 import { handlePunch, initPunchModule, wiggleDrump } from "./punch.js";
 import { renderTopBar, renderTabs, updatePunchDisplay } from "./ui.js";
 import { createReferralAndRewardsButtons } from "./buttons.js";
+import { showInfoPage } from "./tabs.js";
 
 let game;
 let drump;
@@ -131,6 +132,15 @@ function create() {
         setTimeout(() => showOnboarding(), 300); // Give UI time to render
     }
 
+}
+
+function faqItem(question, answer) {
+    return `
+        <div class="faq-item">
+            <div class="faq-question">${question}</div>
+            <div class="faq-answer">${answer}</div>
+        </div>
+    `;
 }
 
 function showGameUI(scene) {
