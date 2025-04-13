@@ -258,7 +258,7 @@ function drawDrump(scene, textureKey) {
     const image = scene.textures.get(textureKey).getSourceImage();
     if (!image) return;
 
-    const maxWidth = window.innerWidth * 0.85;
+    const maxWidth = window.innerWidth * 0.75;
     const scale = Math.min(maxWidth / image.width, window.innerHeight / image.height);
 
     if (drump) drump.destroy();
