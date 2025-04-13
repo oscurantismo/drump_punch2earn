@@ -167,6 +167,19 @@ function showGameUI(scene) {
         soundButton.src = window.soundEnabled ? "sound_on.svg" : "sound_off.svg";
     };
     document.body.appendChild(soundButton);
+
+    // Info button
+    const infoButton = document.createElement("img");
+    infoButton.src = "info_icon.svg"; // use an actual info icon you have
+    infoButton.style.position = "fixed";
+    infoButton.style.top = "12px";
+    infoButton.style.right = "12px";
+    infoButton.style.width = iconSize + "px";
+    infoButton.style.height = iconSize + "px";
+    infoButton.style.cursor = "pointer";
+    infoButton.style.zIndex = "1001";
+    infoButton.onclick = () => showInfoPage();
+    document.body.appendChild(infoButton);
 }
 
 function showOnboarding() {
@@ -191,8 +204,8 @@ function showOnboarding() {
     overlay.style.position = "fixed";
     overlay.style.top = "0";
     overlay.style.left = "0";
-    overlay.style.width = "100vw";
-    overlay.style.height = "100vh";
+    overlay.style.width = "80vw";
+    overlay.style.height = "80vh";
     overlay.style.background = "rgba(0, 0, 0, 0.75)";
     overlay.style.zIndex = "4000";
     overlay.style.display = "flex";
