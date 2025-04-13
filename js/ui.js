@@ -172,8 +172,9 @@ function renderTabs() {
         const btn = document.createElement("button");
 
         let label = tab.toUpperCase();
-        if (tab === "tasks") label = "💥 Earn"; // ✅ Drump-style badge
-        if (tab === "game") label = "Punch"; // ✅ Drump-style badge
+        if (tab === "leaderboard") label = "🏆 LEADERBOARD";
+        if (tab === "tasks") label = "💥 EARN"; 
+        if (tab === "game") label = "🥊PUNCH"; 
 
         btn.innerText = label;
         btn.style.flex = "1";
