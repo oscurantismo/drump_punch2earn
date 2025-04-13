@@ -1,7 +1,7 @@
 import { handlePunch, initPunchModule, wiggleDrump } from "./punch.js";
 import { renderTopBar, renderTabs, updatePunchDisplay } from "./ui.js";
 import { createReferralAndRewardsButtons } from "./buttons.js";
-import { showInfoPage } from "./tabs_info.js";
+import { showInfoPage } from "./popups.js";
 
 
 let game;
