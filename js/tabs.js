@@ -3,7 +3,7 @@ import { createLeaderboardPopup } from "./ui.js";
 
 function showTab(tab, scene = null) {
     // Remove all tab containers
-    ["game-container", "leaderboard-container", "info-container", "profile-container"].forEach(id => {
+    ["game-container", "leaderboard-container", "tasks-container", "profile-container"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.remove();
     });
@@ -35,41 +35,64 @@ function showTab(tab, scene = null) {
         container.appendChild(iframe);
         document.body.appendChild(container);
         createLeaderboardPopup(); // ensures the popup exists
-    } else if (tab === "info") {
-        const info = document.createElement("div");
-        info.id = "info-container";
-        info.style.position = "fixed";
-        info.style.top = "100px";
-        info.style.bottom = "100px";
-        info.style.left = "0";
-        info.style.right = "0";
-        info.style.width = "100vw";
-        info.style.height = "calc(100vh - 100px)";
-        info.style.padding = "20px";
-        info.style.paddingBottom = "60px";
-        info.style.background = "#ffffff";
-        info.style.fontFamily = "Arial, sans-serif";
-        info.style.overflowY = "auto";
-        info.style.boxSizing = "border-box";
-        info.style.zIndex = "999";
-        info.innerHTML = `
-            <h2>🥊 Drump | Punch2Earn</h2>
-            <p>Punch Drump. Score punches. Simple as that. From like-minded cryptonerds tired of unpredictability.</p>
-            <h3>How to Play</h3>
-            <p>Punch to earn. The more you punch, the higher the reward. Climb the leaderboard. Invite friends for extra bonuses.</p>
-            <h3>🎁 <b>Referral Bonus:</b></h3>
-            <p> Get +1000 punches when your friend scores 20+ punches. Both sides get +1000 punches - it's a great way to start!</p>
-            <p>🏗 <b>Upcoming:</b> Event drops, airdrops, collectibles. Stay tuned for more updates.</p>
-            <h4>Referral Rules:</h3>
-            <ul>A referral bonus is claimed after a referred user scores at least 20 punches in Drump.</ul>
-            <ul>Both sides receive 1000 punches, added to their current punch score. </ul>
-            <ul>The bonus is only issued if the referred user is new to Drump and has not been registered in the game yet.</ul>
-            <ul>The bonus cannot be claimed by referring an existing user.</ul>
-            <ul>Referral history can be viewed in the "Profile" tab, accessible by clicking on the username on the game screen.</ul>
-            
+    } else if (tab === "tasks") {
+        const container = document.createElement("div");
+        container.id = "tasks-container";
+        container.style.position = "fixed";
+        container.style.top = "100px";
+        container.style.bottom = "100px";
+        container.style.left = "0";
+        container.style.right = "0";
+        container.style.width = "100vw";
+        container.style.height = "calc(100vh - 100px)";
+        container.style.padding = "20px";
+        container.style.background = "#ffffff";
+        container.style.fontFamily = "'Arial', sans-serif";
+        container.style.overflowY = "auto";
+        container.style.zIndex = "999";
+        container.style.boxSizing = "border-box";
+
+        container.innerHTML = `
+            <h2 style="color:#0047ab; font-size:24px; font-family:'Arial Black', sans-serif;">🎯 Tasks & Leaderboard Rewards</h2>
+            <p style="margin-top:6px; font-size:14px;">Welcome to your task tracker! New leaderboard tasks launch every <b>15 days</b>. This page will help you follow your progress and check what rewards are available.</p>
+        
+            <div style="margin-top:20px; background:#f0f4ff; border-left:5px solid #0047ab; padding:14px; border-radius:10px;">
+                <h3 style="margin-top:0;">🎁 Current Rewards</h3>
+                <ul style="line-height:1.6; font-size:14px; padding-left:20px;">
+                    <li><b>Top-25:</b> +250 punches</li>
+                    <li><b>Top-10:</b> +550 punches</li>
+                    <li><b>Top-3:</b> +1000 🥉</li>
+                    <li><b>Top-2:</b> +2000 🥈</li>
+                    <li><b>Top-1:</b> +4000 🥇</li>
+               </ul>
+                <h4 style="margin:12px 0 4px 0;">🚨 Penalties</h4>
+                <ul style="line-height:1.6; font-size:14px; padding-left:20px; color:#a33;">
+                    <li>Leaving Top-25: -100</li>
+                   <li>Leaving Top-10: -200</li>
+                    <li>Leaving Top-3 / Top-2 / Top-1: -600</li>
+                </ul>
+            </div>
+
+            <div style="margin-top:30px; background:#fff8e1; border-left:5px solid #ffcc00; padding:14px; border-radius:10px;">
+                <h3 style="margin-top:0;">📆 What’s Coming</h3>
+                <ul style="line-height:1.6; font-size:14px; padding-left:20px;">
+                    <li>New tasks launch every 15 days — stay active!</li>
+                    <li>Expect exciting new ways to earn punches 🥊</li>
+                    <li>Special challenges, badges, and airdrops are on the roadmap 🚀</li>
+                </ul>
+            </div>
+
+            <div style="margin-top:30px;">
+                <h3 style="color:#0047ab;">📊 Your Progress</h3>
+                <p style="font-size:14px;">Check your referral and punch progress in the <b>Profile</b> tab. Task-specific progress tracking will appear here in future updates!</p>
+            </div>
+
+            <div style="margin-top:20px; text-align:center;">
+                <span style="font-size:12px; color:#999;">Last updated: April 2025</span>
+            </div>
         `;
-        document.body.appendChild(info);
-    }
+
+    document.body.appendChild(container);
 }
 
 function showInfoPage() {
