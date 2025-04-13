@@ -134,15 +134,6 @@ function create() {
 
 }
 
-function faqItem(question, answer) {
-    return `
-        <div class="faq-item">
-            <div class="faq-question">${question}</div>
-            <div class="faq-answer">${answer}</div>
-        </div>
-    `;
-}
-
 function showGameUI(scene) {
     scene.add.image(scene.scale.width / 2, scene.scale.height / 2, "background")
         .setOrigin(0.5)
