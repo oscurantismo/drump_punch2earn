@@ -65,12 +65,6 @@ function showTab(tab, scene = null) {
                     <li><b>Top-2:</b> +2000 🥈</li>
                     <li><b>Top-1:</b> +4000 🥇</li>
                </ul>
-                <h4 style="margin:12px 0 4px 0;">🚨 Penalties</h4>
-                <ul style="line-height:1.6; font-size:14px; padding-left:20px; color:#a33;">
-                    <li>Leaving Top-25: -100</li>
-                   <li>Leaving Top-10: -200</li>
-                    <li>Leaving Top-3 / Top-2 / Top-1: -600</li>
-                </ul>
             </div>
 
             <div style="margin-top:30px; background:#fff8e1; border-left:5px solid #ffcc00; padding:14px; border-radius:10px;">
@@ -85,10 +79,6 @@ function showTab(tab, scene = null) {
             <div style="margin-top:30px;">
                 <h3 style="color:#0047ab;">📊 Your Progress</h3>
                 <p style="font-size:14px;">Check your referral and punch progress in the <b>Profile</b> tab. Task-specific progress tracking will appear here in future updates!</p>
-            </div>
-
-            <div style="margin-top:20px; text-align:center;">
-                <span style="font-size:12px; color:#999;">Last updated: April 2025</span>
             </div>
         `;
 
