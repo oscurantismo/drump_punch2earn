@@ -1,4 +1,4 @@
-import { showReferralPopup } from "./ui.js"; // adjust path if needed
+import { showReferralPopup } from "./popups.js"; // adjust path if needed
 
 let rewardsBtn, referralBtn;
 let rewardsState = "hidden";
