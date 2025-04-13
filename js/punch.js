@@ -138,32 +138,40 @@ function showPunchZapEffect() {
     const scene = game.scene.scenes[0];
     const zapGroup = scene.add.group();
     const numZaps = 5;
-    const radius = drump.displayWidth * 0.6;
-    const zapLength = 20;
+
     const centerX = drump.x;
-    const centerY = drump.y - drump.displayHeight * 0.4;
+    const centerY = drump.y - drump.displayHeight * 0.38; // 👈 closer to the top of Drump’s head
+    const radius = drump.displayWidth * 0.4; // smaller radius so it hugs the head
 
     for (let i = 0; i < numZaps; i++) {
         const angle = (360 / numZaps) * i;
         const radians = Phaser.Math.DegToRad(angle);
-        const x1 = centerX + Math.cos(radians) * (radius - zapLength);
-        const y1 = centerY + Math.sin(radians) * (radius - zapLength);
-        const x2 = centerX + Math.cos(radians) * radius;
-        const y2 = centerY + Math.sin(radians) * radius;
 
-        const zap = scene.add.line(0, 0, x1, y1, x2, y2, 0xffdd00)
-            .setLineWidth(3)
-            .setAlpha(1)
-            .setDepth(10000);
+        const x = centerX + Math.cos(radians) * radius;
+        const y = centerY + Math.sin(radians) * radius;
+
+        const zap = scene.add.text(x, y, "⚡", {
+            font: "24px Arial Black",
+            fill: "#ffea00",
+            stroke: "#000",
+            strokeThickness: 4
+        })
+        .setOrigin(0.5)
+        .setDepth(10000)
+        .setAlpha(1);
+
         zapGroup.add(zap);
-    }
 
-    scene.tweens.add({
-        targets: zapGroup.getChildren(),
-        alpha: 0,
-        duration: 300,
-        onComplete: () => zapGroup.clear(true, true)
-    });
+        // Animate each zap upward + fade
+        scene.tweens.add({
+            targets: zap,
+            y: y - 10,
+            alpha: 0,
+            duration: 400,
+            ease: "Cubic.easeOut",
+            onComplete: () => zap.destroy()
+        });
+    }
 }
 
 function animateFloatingText(text) {
