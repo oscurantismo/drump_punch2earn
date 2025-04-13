@@ -1,5 +1,5 @@
 import { renderProfilePage } from "./profile.js";
-import { showTab } from "./tabs.js";
+import { showTab } from "./ui_tabs.js";
 
 let soundButton;
 let soundEnabled = true;
