@@ -1,4 +1,4 @@
-import { handlePunch, initPunchModule, wiggleDrump } from "./punch.js";
+fimport { handlePunch, initPunchModule, wiggleDrump } from "./punch.js";
 import { renderTopBar, renderTabs, updatePunchDisplay } from "./ui.js";
 import { createReferralAndRewardsButtons } from "./buttons.js";
 import { showInfoPage } from "./popups.js";
@@ -156,7 +156,7 @@ function showGameUI(scene) {
     // ✅ Add sound toggle button
     const iconSize = 32;
     const soundButton = document.createElement("img");
-    soundButton.src = window.soundEnabled ? "sound_on.svg" : "sound_off.svg";
+    soundButton.src = window.soundEnabled ? "sound_on" : "sound_off";
     soundButton.style.position = "fixed";
     soundButton.style.top = "12px";
     soundButton.style.right = "56px";
@@ -166,7 +166,7 @@ function showGameUI(scene) {
     soundButton.style.zIndex = "1001";
     soundButton.onclick = () => {
         window.soundEnabled = !window.soundEnabled;
-        soundButton.src = window.soundEnabled ? "sound_on.svg" : "sound_off.svg";
+        soundButton.src = window.soundEnabled ? "sound_on" : "sound_off";
     };
     document.body.appendChild(soundButton);
 
