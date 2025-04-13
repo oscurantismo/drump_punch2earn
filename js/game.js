@@ -48,8 +48,8 @@ function preload() {
         this.load.audio("punch" + i, `punch${i}.mp3`);
     }
 
-    this.load.image("sound_on", "drump-images/sound_on.svg");
-    this.load.image("sound_off", "drump-images/sound_off.svg");
+    this.load.image("drump-images/sound_on.svg");
+    this.load.image("drump-images/sound_off.svg");
 }
 
 function create() {
@@ -166,7 +166,7 @@ function showGameUI(scene) {
     soundButton.style.zIndex = "1001";
     soundButton.onclick = () => {
         window.soundEnabled = !window.soundEnabled;
-        soundButton.src = window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off,svg";
+        soundButton.src = window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off.svg";
     };
     document.body.appendChild(soundButton);
 
