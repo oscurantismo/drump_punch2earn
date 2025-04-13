@@ -95,6 +95,15 @@ function showTab(tab, scene = null) {
     document.body.appendChild(container);
 }
 
+function faqItem(question, answer) {
+    return `
+        <div class="faq-item">
+            <div class="faq-question">${question}</div>
+            <div class="faq-answer">${answer}</div>
+        </div>
+    `;
+}
+
 function showInfoPage() {
     const existing = document.getElementById("info-container");
     if (existing) existing.remove();
