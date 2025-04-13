@@ -48,8 +48,8 @@ function preload() {
         this.load.audio("punch" + i, `punch${i}.mp3`);
     }
 
-    this.load.image("sound_on", "sound_on.svg");
-    this.load.image("sound_off", "sound_off.svg");
+    this.load.image("sound_on", "drump-images/sound_on.svg");
+    this.load.image("sound_off", "drump-images/sound_off.svg");
 }
 
 function create() {
