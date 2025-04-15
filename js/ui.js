@@ -11,10 +11,23 @@ if (!document.getElementById("punchbar-animation-style")) {
     const style = document.createElement("style");
     style.id = "punchbar-animation-style";
     style.innerHTML = `
-        @keyframes drumpEnergyPulse {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes stripeAnim {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 0; }
+        }
+        @keyframes floatStars {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-30px) scale(1.3); opacity: 0; }
+        }
+        .floating-star {
+            position: absolute;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: gold;
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatStars 2s ease-out infinite;
         }
     `;
     document.head.appendChild(style);
@@ -61,19 +74,21 @@ function renderTopBar() {
 
     const punchBar = document.createElement("div");
     punchBar.id = "punch-bar";
-    punchBar.style.position = "fixed";
-    punchBar.style.top = "50px";
-    punchBar.style.left = "1rem";
-    punchBar.style.right = "1rem";
-    punchBar.style.background = COLORS.deepRed;
-    punchBar.style.color = COLORS.badgeBg;
-    punchBar.style.textAlign = "center";
-    punchBar.style.fontFamily = FONT.body;
-    punchBar.style.fontSize = "18px";
-    punchBar.style.padding = "6px 0";
-    punchBar.style.borderRadius = "8px";
-    punchBar.style.zIndex = ZINDEX.punchBar;
-    punchBar.style.overflow = "hidden";
+    Object.assign(punchBar.style, {
+        position: "fixed",
+        top: "50px",
+        left: "1rem",
+        right: "1rem",
+        background: COLORS.deepRed,
+        color: COLORS.badgeBg,
+        textAlign: "center",
+        fontFamily: FONT.body,
+        fontSize: "18px",
+        padding: "6px 0",
+        borderRadius: "8px",
+        zIndex: ZINDEX.punchBar,
+        overflow: "hidden"
+    });
 
     const punchText = document.createElement("div");
     punchText.id = "punch-text";
@@ -85,52 +100,68 @@ function renderTopBar() {
 
     const progressFill = document.createElement("div");
     progressFill.id = "punch-fill";
-    progressFill.style.height = "100%";
-    progressFill.style.position = "absolute";
-    progressFill.style.left = "0";
-    progressFill.style.top = "0";
-    progressFill.style.zIndex = "1";
-    progressFill.style.borderRadius = "8px 0 0 8px";
-    progressFill.style.background = `linear-gradient(270deg, ${COLORS.primary}, ${COLORS.badgeBg}, ${COLORS.primary})`;
-    progressFill.style.backgroundSize = "300% 100%";
-    progressFill.style.animation = "drumpEnergyPulse 3s ease-in-out infinite";
-    progressFill.style.transition = "width 0.4s ease";
-    progressFill.style.width = "0%";
+    Object.assign(progressFill.style, {
+        height: "100%",
+        position: "absolute",
+        left: "0",
+        top: "0",
+        zIndex: "1",
+        borderRadius: "8px 0 0 8px",
+        width: "0%",
+        background: `repeating-linear-gradient(
+            45deg,
+            ${COLORS.badgeBg},
+            ${COLORS.badgeBg} 10px,
+            ${COLORS.primary} 10px,
+            ${COLORS.primary} 20px
+        )`,
+        backgroundSize: "40px 40px",
+        animation: "stripeAnim 1.2s linear infinite",
+        transition: "width 0.4s ease"
+    });
     punchBar.appendChild(progressFill);
     document.body.appendChild(punchBar);
 
+    // Add floating stars
+    for (let i = 0; i < 5; i++) {
+        const star = document.createElement("div");
+        star.className = "floating-star";
+        star.style.left = `${10 + i * 20}%`;
+        star.style.animationDelay = `${i * 0.4}s`;
+        punchBar.appendChild(star);
+    }
+
     const punchProgress = document.createElement("div");
     punchProgress.id = "punch-progress";
-    punchProgress.style.position = "fixed";
-    punchProgress.style.top = "88px";
-    punchProgress.style.left = "50%";
-    punchProgress.style.transform = "translateX(-50%)";
-    punchProgress.style.fontFamily = FONT.body;
-    punchProgress.style.fontSize = "16px";
-    punchProgress.style.color = COLORS.primary;
-    punchProgress.style.zIndex = ZINDEX.punchBar;
+    Object.assign(punchProgress.style, {
+        position: "fixed",
+        top: "88px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        fontFamily: FONT.body,
+        fontSize: "16px",
+        color: COLORS.primary,
+        zIndex: ZINDEX.punchBar
+    });
     document.body.appendChild(punchProgress);
 
     const bonusHint = document.createElement("div");
     bonusHint.id = "bonus-hint";
-    bonusHint.style.position = "fixed";
-    bonusHint.style.top = "112px";
-    bonusHint.style.left = "50%";
-    bonusHint.style.transform = "translateX(-50%)";
-    bonusHint.style.fontSize = "13px";
-    bonusHint.style.color = COLORS.primary;
-    bonusHint.style.zIndex = ZINDEX.punchBar;
-    bonusHint.style.fontFamily = FONT.body;
-    bonusHint.style.transition = "opacity 0.3s ease, transform 0.3s ease";
-    bonusHint.style.opacity = "1";
+    Object.assign(bonusHint.style, {
+        position: "fixed",
+        top: "112px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        fontSize: "13px",
+        color: COLORS.primary,
+        zIndex: ZINDEX.punchBar,
+        fontFamily: FONT.body,
+        transition: "opacity 0.3s ease, transform 0.3s ease",
+        opacity: "1"
+    });
     document.body.appendChild(bonusHint);
 
     updatePunchDisplay = function () {
-        const punchText = document.getElementById("punch-text");
-        const punchFill = document.getElementById("punch-fill");
-        const punchProgress = document.getElementById("punch-progress");
-        const bonusHint = document.getElementById("bonus-hint");
-
         const punches = window.punches || 0;
         const nextMilestone = Math.ceil(punches / 100) * 100;
         const base = nextMilestone - 100;
@@ -138,14 +169,13 @@ function renderTopBar() {
         const percent = Math.min(100, (progress / 100) * 100);
         const remaining = 100 - progress;
 
-        punchText.innerHTML = `🥊 Punches: ${punches}`;
-        punchFill.style.width = `${percent}%`;
-
-        punchProgress.innerText = `${punches} / ${nextMilestone}`;
-        bonusHint.innerText = `${remaining} punches left until bonus 🏅`;
-
-        bonusHint.style.transform = `translateX(-50%) scale(${percent < 5 ? 1.2 : 1})`;
-        bonusHint.style.opacity = percent < 5 ? "0.6" : "1";
+        document.getElementById("punch-text").innerHTML = `🥊 Punches: ${punches}`;
+        document.getElementById("punch-fill").style.width = `${percent}%`;
+        document.getElementById("punch-progress").innerText = `${punches} / ${nextMilestone}`;
+        const hint = document.getElementById("bonus-hint");
+        hint.innerText = `${remaining} punches left until bonus 🏅`;
+        hint.style.transform = `translateX(-50%) scale(${percent < 5 ? 1.2 : 1})`;
+        hint.style.opacity = percent < 5 ? "0.6" : "1";
     };
 
     updatePunchDisplay();
@@ -153,13 +183,15 @@ function renderTopBar() {
     const iconSize = 32;
     soundButton = document.createElement("img");
     soundButton.src = "sound_on.svg";
-    soundButton.style.position = "fixed";
-    soundButton.style.top = "calc(0.5rem + 4px)";
-    soundButton.style.right = "12px";
-    soundButton.style.width = iconSize + "px";
-    soundButton.style.height = iconSize + "px";
-    soundButton.style.cursor = "pointer";
-    soundButton.style.zIndex = ZINDEX.soundIcon;
+    Object.assign(soundButton.style, {
+        position: "fixed",
+        top: "calc(0.5rem + 4px)",
+        right: "12px",
+        width: iconSize + "px",
+        height: iconSize + "px",
+        cursor: "pointer",
+        zIndex: ZINDEX.soundIcon
+    });
     soundButton.onclick = () => {
         soundEnabled = !soundEnabled;
         soundButton.src = soundEnabled ? "sound_on.svg" : "sound_off.svg";
@@ -169,6 +201,7 @@ function renderTopBar() {
 
     document.body.style.cursor = "default";
 }
+
 
 function updatePunchDisplay() {
     const count = window.punches || 0;
@@ -190,46 +223,52 @@ function updatePunchDisplay() {
 function renderTabs() {
     const tabBar = document.createElement("div");
     tabBar.id = "tab-container";
-    tabBar.style.position = "fixed";
-    tabBar.style.bottom = "0";
-    tabBar.style.left = "0";
-    tabBar.style.width = "100%";
-    tabBar.style.display = "flex";
-    tabBar.style.fontFamily = FONT.body;
-    tabBar.style.color = COLORS.primary;
-    tabBar.style.justifyContent = "space-around";
-    tabBar.style.background = COLORS.badgeBg;
-    tabBar.style.zIndex = "1000";
+    Object.assign(tabBar.style, {
+        position: "fixed",
+        bottom: "0",
+        left: "0",
+        width: "100%",
+        display: "flex",
+        fontFamily: FONT.body,
+        background: COLORS.primary,
+        zIndex: ZINDEX.tabBar,
+        boxShadow: "0 -4px 10px rgba(0, 0, 0, 0.2)"
+    });
 
     ["game", "leaderboard", "tasks"].forEach(tab => {
         const btn = document.createElement("button");
 
         let label = tab.toUpperCase();
         if (tab === "leaderboard") label = "LEADERBOARD";
-        if (tab === "tasks") label = "💥 EARN"; 
-        if (tab === "game") label = "PUNCH"; 
+        if (tab === "tasks") label = "💥 EARN";
+        if (tab === "game") label = "PUNCH";
 
         btn.innerText = label;
         btn.style.flex = "1";
-        btn.style.padding = "12px";
-        btn.style.fontSize = "14px";
+        btn.style.padding = "14px 8px";
+        btn.style.fontSize = "13px";
         btn.style.border = "none";
-        btn.style.color = "#fff";
         btn.style.background = (tab === window.activeTab) ? COLORS.badgeBg : COLORS.primary;
+        btn.style.color = COLORS.textLight;
+        btn.style.transition = "background 0.3s ease, transform 0.2s ease";
+        btn.style.letterSpacing = "1px";
+        btn.style.cursor = "pointer";
+
+        btn.onmouseenter = () => btn.style.transform = "scale(1.05)";
+        btn.onmouseleave = () => btn.style.transform = "scale(1)";
+
         btn.onclick = () => {
             window.activeTab = tab;
             showTab(tab);
-            document.querySelectorAll("#tab-container button").forEach(b => b.style.background = COLORS.badgeBg);
-            btn.style.background = COLORS.primary;
+            document.querySelectorAll("#tab-container button").forEach(b => b.style.background = COLORS.primary);
+            btn.style.background = COLORS.badgeBg;
         };
 
         tabBar.appendChild(btn);
     });
 
     document.body.appendChild(tabBar);
-
 }
-
 export {
     renderTopBar,
     updatePunchDisplay,
