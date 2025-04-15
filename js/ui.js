@@ -18,6 +18,19 @@ if (!document.getElementById("lavaflow-style")) {
     document.head.appendChild(style);
 }
 
+if (!document.getElementById("punchbar-animation-style")) {
+    const style = document.createElement("style");
+    style.id = "punchbar-animation-style";
+    style.innerHTML = `
+        @keyframes drumpEnergyPulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 function renderTopBar() {
     const top = document.createElement("div");
     top.style.position = "fixed";
@@ -72,7 +85,6 @@ function renderTopBar() {
     punchBar.style.borderRadius = "8px";
     punchBar.style.zIndex = ZINDEX.punchBar;
     punchBar.style.overflow = "hidden";
-    punchBar.style.position = "fixed";
 
     const punchText = document.createElement("div");
     punchText.id = "punch-text";
@@ -91,8 +103,8 @@ function renderTopBar() {
     progressFill.style.zIndex = "1";
     progressFill.style.borderRadius = "8px 0 0 8px";
     progressFill.style.background = `linear-gradient(270deg, ${COLORS.primary}, ${COLORS.badgeBg}, ${COLORS.primary})`;
-    progressFill.style.backgroundSize = "400% 100%";
-    progressFill.style.animation = "lavaflow 2s linear infinite";
+    progressFill.style.backgroundSize = "300% 100%";
+    progressFill.style.animation = "drumpEnergyPulse 3s ease-in-out infinite";
     progressFill.style.transition = "width 0.4s ease";
     progressFill.style.width = "0%";
     punchBar.appendChild(progressFill);
