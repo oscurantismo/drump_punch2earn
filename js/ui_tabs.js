@@ -2,8 +2,23 @@ import { showGameUI } from "./game.js";
 import { createLeaderboardPopup } from "./popups.js";
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 
+if (!document.getElementById("badge-anim-style")) {
+    const style = document.createElement("style");
+    style.id = "badge-anim-style";
+    style.innerHTML = `
+        @keyframes bounceBadge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 function showTab(tab, scene = null) {
-    // Remove all tab containers
     ["game-container", "leaderboard-container", "tasks-container", "profile-container"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.remove();
@@ -14,28 +29,33 @@ function showTab(tab, scene = null) {
     } else if (tab === "leaderboard") {
         const container = document.createElement("div");
         container.id = "leaderboard-container";
-        container.style.position = "fixed";
-        container.style.top = "100px";
-        container.style.bottom = "0";
-        container.style.marginBottom = "280px"; // Add space for nav tabs
-        container.style.paddingBottom = "180px";
-        container.style.left = "0";
-        container.style.right = "0";
-        container.style.width = "100vw";
-        container.style.height = "calc(100vh - 100px)";
-        container.style.background = COLORS.deepRed;
-        container.style.zIndex = "999";
-        container.style.overflowY = "auto";
+        Object.assign(container.style, {
+            position: "fixed",
+            top: "100px",
+            bottom: "0",
+            marginBottom: "280px",
+            paddingBottom: "180px",
+            left: "0",
+            right: "0",
+            width: "100vw",
+            height: "calc(100vh - 100px)",
+            background: COLORS.deepRed,
+            zIndex: "999",
+            overflowY: "auto",
+            animation: "fadeSlideIn 0.4s ease-out"
+        });
 
         const iframe = document.createElement("iframe");
         iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`;
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.style.border = "none";
+        Object.assign(iframe.style, {
+            width: "100%",
+            height: "100%",
+            border: "none"
+        });
 
         container.appendChild(iframe);
         document.body.appendChild(container);
-        createLeaderboardPopup(); // ensures the popup exists
+        createLeaderboardPopup();
     } else if (tab === "tasks") {
         const container = document.createElement("div");
         container.id = "tasks-container";
@@ -52,7 +72,9 @@ function showTab(tab, scene = null) {
             fontFamily: FONT.body,
             overflowY: "auto",
             zIndex: "999",
-            boxSizing: "border-box"
+            boxSizing: "border-box",
+            color: COLORS.textLight,
+            animation: "fadeSlideIn 0.4s ease-out"
         });
 
         container.innerHTML = `
@@ -61,8 +83,8 @@ function showTab(tab, scene = null) {
                 Welcome to your task center! Here you can track your leaderboard progress, understand the reward structure, and discover upcoming challenges.
             </p>
 
-            <div style="margin-top:24px; background:${COLORS.primary}; border-left:5px solid ${COLORS.badgeBg}; padding:16px; border-radius:10px;">
-                <h3 style="margin-top:0; color:${COLORS.offWhite};">🎁 Leaderboard Rewards</h3>
+            <div style="margin-top:24px; background:${COLORS.primary}; border-left:5px solid ${COLORS.badgeBg}; padding:16px; border-radius:10px; animation: bounceBadge 2s infinite ease-in-out;">
+                <h3 style="margin-top:0; color:${COLORS.textLight}; font-family:${FONT.body}">🎁 Leaderboard Rewards</h3>
                 <ul style="font-size:14px; line-height:1.6; padding-left:20px;">
                     <li><b>Top-25:</b> +250 punches</li>
                     <li><b>Top-10:</b> +550 punches</li>
@@ -72,8 +94,8 @@ function showTab(tab, scene = null) {
                 </ul>
             </div>
 
-            <div style="margin-top:30px; background:#fff8e1; border-left:5px solid #ffcc00; padding:16px; border-radius:10px;">
-                <h3 style="margin-top:0;">📆 Upcoming Challenges</h3>
+            <div style="margin-top:30px; background:${COLORS.offWhite}; border-left:5px solid ${COLORS.badgeBg}; padding:16px; border-radius:10px; color:${COLORS.primary}; animation: bounceBadge 2s 0.5s infinite ease-in-out;">
+                <h3 style="margin-top:0; font-family:${FONT.body}">📆 Upcoming Challenges</h3>
                 <ul style="font-size:14px; line-height:1.6; padding-left:20px;">
                     <li>Leaderboard tasks refresh every <b>15 days</b>.</li>
                     <li>Expect special daily/weekly punch challenges in upcoming updates.</li>
@@ -81,15 +103,15 @@ function showTab(tab, scene = null) {
                 </ul>
             </div>
 
-            <div style="margin-top:30px;">
-                <h3 style="color:#0047ab;">📊 Your Progress</h3>
-                <p style="font-size:14px; color:#333;">
+            <div style="margin-top:30px; animation: fadeSlideIn 0.5s ease-out;">
+                <h3 style="color:${COLORS.badgeBg}; font-family:${FONT.body}">📊 Your Progress</h3>
+                <p style="font-size:14px; color:${COLORS.textLight}; font-family:${FONT.body}">
                     Visit your <b>Profile</b> to check how many punches you've collected and how many referrals you've invited. Soon, this page will track your live task completions!
                 </p>
             </div>
 
-            <div style="margin-top:30px; text-align:center;">
-                <span style="font-size:12px; color:#999;">Last updated: April 2025</span>
+            <div style="margin-top:30px; text-align:center; animation: fadeSlideIn 0.8s ease-out;">
+                <span style="font-size:12px; color:#ccc;">Last updated: April 2025</span>
             </div>
         `;
 
