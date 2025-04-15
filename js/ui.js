@@ -12,7 +12,7 @@ function renderTopBar() {
     top.style.top = "0.5rem";
     top.style.left = "1rem";
     top.style.background = COLORS.offWhite;
-    top.style.color = COLORS.deepRed;
+    top.style.color = COLORS.badgeBg;
     top.style.border = `2px solid ${COLORS.deepRed}`;
     top.style.borderRadius = BORDER.radius;
     top.style.fontFamily = FONT.heading;
@@ -22,7 +22,7 @@ function renderTopBar() {
     top.style.alignItems = "center";
     top.style.gap = "8px";
     top.style.cursor = "pointer";
-    top.title = "Tap to open profile";
+    top.title = "Tap to open your profile";
 
     const usernameElement = document.createElement("div");
     usernameElement.innerHTML = `${window.storedUsername}`;
@@ -59,15 +59,29 @@ function renderTopBar() {
     punchBar.style.padding = "6px 0";
     punchBar.style.borderRadius = "8px";
     punchBar.style.zIndex = ZINDEX.punchBar;
-    punchBar.innerHTML = `🥊 Punches: ${window.punches || 0}`;
+    punchBar.style.overflow = "hidden";
+    punchBar.style.position = "relative";
+
+    const punchText = document.createElement("div");
+    punchText.id = "punch-text";
+    punchText.style.top = "30px";
+    punchText.innerHTML = `🥊 Punches: ${window.punches || 0}`;
+    punchText.style.position = "relative";
+    punchText.style.zIndex = "2";
+    punchText.style.pointerEvents = "none";
+    punchBar.appendChild(punchText);
 
     const progressFill = document.createElement("div");
     progressFill.id = "punch-fill";
-    progressFill.style.height = "6px";
-    progressFill.style.marginTop = "6px";
-    progressFill.style.borderRadius = "4px";
-    progressFill.style.background = COLORS.badgeBg;
-    progressFill.style.transition = "width 0.3s ease";
+    progressFill.style.height = "100%";
+    progressFill.style.position = "absolute";
+    progressFill.style.left = "0";
+    progressFill.style.top = "0";
+    progressFill.style.zIndex = "1";
+    progressFill.style.borderRadius = "8px 0 0 8px";
+    progressFill.style.background = `linear-gradient(90deg, ${COLORS.badgeBg}, ${COLORS.primary})`;
+    progressFill.style.transition = "width 0.4s ease";
+    progressFill.style.width = "0%";
     punchBar.appendChild(progressFill);
     document.body.appendChild(punchBar);
 
@@ -90,7 +104,7 @@ function renderTopBar() {
     bonusHint.style.left = "50%";
     bonusHint.style.transform = "translateX(-50%)";
     bonusHint.style.fontSize = "13px";
-    bonusHint.style.color = COLORS.primary;
+    bonusHint.style.color = COLORS.badgeBg;
     bonusHint.style.zIndex = ZINDEX.punchBar;
     bonusHint.style.fontFamily = FONT.body;
     bonusHint.style.transition = "opacity 0.3s ease, transform 0.3s ease";
@@ -98,7 +112,7 @@ function renderTopBar() {
     document.body.appendChild(bonusHint);
 
     updatePunchDisplay = function () {
-        const punchBarText = document.getElementById("punch-bar");
+        const punchText = document.getElementById("punch-text");
         const punchFill = document.getElementById("punch-fill");
         const punchProgress = document.getElementById("punch-progress");
         const bonusHint = document.getElementById("bonus-hint");
@@ -110,8 +124,7 @@ function renderTopBar() {
         const percent = Math.min(100, (progress / 100) * 100);
         const remaining = 100 - progress;
 
-        punchBarText.innerHTML = `🥊 Punches: ${punches}`;
-        punchBarText.appendChild(punchFill);
+        punchText.innerHTML = `🥊 Punches: ${punches}`;
         punchFill.style.width = `${percent}%`;
 
         punchProgress.innerText = `${punches} / ${nextMilestone}`;
