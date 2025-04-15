@@ -397,7 +397,7 @@ function createLoader() {
         <style>
         .spinner {
             border: 6px solid ${COLORS.primary};
-            border-top: 6px solid ${COLORS.primary};
+            border-top: 6px solid ${COLORS.badgeBg};
             border-radius: 50%;
             width: 40px;
             height: 40px;
