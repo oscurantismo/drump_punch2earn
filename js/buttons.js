@@ -2,7 +2,7 @@ import { showReferralPopup } from "./popups.js"; // adjust path if needed
 
 let rewardsBtn, referralBtn;
 let rewardsState = "hidden";
-let wiggleInterval;
+let pulseTimeout;
 
 function createReferralAndRewardsButtons(userId) {
     if (document.getElementById("referral-button")) return;
@@ -10,8 +10,8 @@ function createReferralAndRewardsButtons(userId) {
     // === Refer a Friend Button ===
     referralBtn = document.createElement("button");
     referralBtn.id = "referral-button";
-    referralBtn.innerHTML = `👥 Refer a Friend <span style="background:#fff; color:#0077cc; font-size:10px; font-weight:bold; border-radius:8px; padding:2px 6px; margin-left:6px;">+1000</span>`;
-    referralBtn.style.cssText = sharedStyle + "bottom: 120px;";
+    referralBtn.innerHTML = `👥 Refer a Friend <span style="background:${COLORS.primary}; color:#fff; font-size:10px; font-weight:bold; border-radius:8px; padding:2px 6px; margin-left:6px;">+1000</span>`;
+    referralBtn.style.cssText = sharedStyle + "bottom: 120px; background: #f8f9fe; color: #2a3493;";
     referralBtn.onclick = () => showReferralPopup(userId);
     document.body.appendChild(referralBtn);
 
@@ -25,12 +25,14 @@ function createReferralAndRewardsButtons(userId) {
         white-space: nowrap;
         overflow: hidden;
         transition: all 0.3s ease, min-width 0.3s ease;
+        background: #f8f9fe;
+        color: #2a3493;
     `;
     rewardsBtn.onclick = onRewardsBtnClick;
     document.body.appendChild(rewardsBtn);
 
     createLeaderboardPopup();
-    startWiggle();
+    startPulse();
 }
 
 const sharedStyle = `
@@ -38,8 +40,6 @@ const sharedStyle = `
     right: 20px;
     padding: 10px 14px;
     font-size: 14px;
-    background: #0047ab;
-    color: #fff;
     border: none;
     border-radius: 8px;
     font-family: 'Arial Black', sans-serif;
@@ -47,6 +47,7 @@ const sharedStyle = `
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 `;
 
 function onRewardsBtnClick() {
@@ -94,21 +95,23 @@ function openLeaderboardPopup() {
     }
 }
 
-function startWiggle() {
-    if (wiggleInterval) clearInterval(wiggleInterval);
+function startPulse() {
+    if (pulseTimeout) clearTimeout(pulseTimeout);
 
-    wiggleInterval = setInterval(() => {
+    const pulse = () => {
         if (!rewardsBtn || rewardsState === "popup") return;
         rewardsBtn.animate([
-            { transform: 'rotate(0deg)' },
-            { transform: 'rotate(-10deg)' },
-            { transform: 'rotate(10deg)' },
-            { transform: 'rotate(0deg)' }
+            { transform: 'scale(1)', boxShadow: '0 0 0 rgba(0,0,0,0)' },
+            { transform: 'scale(1.05)', boxShadow: '0 0 10px rgba(255,255,255,0.5)' },
+            { transform: 'scale(1)', boxShadow: '0 0 0 rgba(0,0,0,0)' }
         ], {
-            duration: 500,
+            duration: 600,
             iterations: 1
         });
-    }, 15000);
+        pulseTimeout = setTimeout(pulse, 25000); // every 25 seconds
+    };
+
+    pulseTimeout = setTimeout(pulse, 10000); // initial delay
 }
 
 function createLeaderboardPopup() {
