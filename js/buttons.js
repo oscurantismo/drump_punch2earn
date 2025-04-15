@@ -1,4 +1,5 @@
 import { showReferralPopup } from "./popups.js"; // adjust path if needed
+import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 
 let rewardsBtn, referralBtn;
 let rewardsState = "hidden";
