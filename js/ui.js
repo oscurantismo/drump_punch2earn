@@ -192,33 +192,8 @@ function renderTopBar() {
     });
     document.body.appendChild(bonusHint);
 
-        window.updatePunchDisplay = function () {
-        const count = window.punches || 0;
-
-        const punchTextEl = document.getElementById("punch-text");
-        const fillEl = document.getElementById("punch-fill");
-        const countEl = document.getElementById("punch-progress");
-        const hintEl = document.getElementById("bonus-hint");
-
-        if (punchTextEl) punchTextEl.innerHTML = `🥊 Punches: ${count}`;
-
-        const nextMilestone = Math.ceil(count / 100) * 100;
-        const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
-        const remaining = showMilestone - count;
-        const percent = Math.min(100, ((count - (showMilestone - 100)) / 100) * 100);
-
-        if (fillEl) fillEl.style.width = `${percent}%`;
-        if (countEl) countEl.innerText = `🥊 ${count} / ${showMilestone}`;
-        if (hintEl) {
-            hintEl.innerText = `${remaining} punches until +25 bonus`;
-            hintEl.style.transform = `translateX(-50%) scale(${percent < 5 ? 1.2 : 1})`;
-            hintEl.style.opacity = percent < 5 ? "0.6" : "1";
-        }
-    };
-
-    // ✅ Initial call
-    window.updatePunchDisplay();
-
+    updatePunchDisplay();
+    
     const iconSize = 32;
     soundButton = document.createElement("img");
     soundButton.src = "sound_on.svg";
@@ -239,6 +214,29 @@ function renderTopBar() {
     document.body.appendChild(soundButton);
 
     document.body.style.cursor = "default";
+}
+
+function updatePunchDisplay() {
+    const count = window.punches || 0;
+    const punchTextEl = document.getElementById("punch-text");
+    const fillEl = document.getElementById("punch-fill");
+    const countEl = document.getElementById("punch-progress");
+    const hintEl = document.getElementById("bonus-hint");
+
+    if (punchTextEl) punchTextEl.innerHTML = `🥊 Punches: ${count}`;
+
+    const nextMilestone = Math.ceil(count / 100) * 100;
+    const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
+    const remaining = showMilestone - count;
+    const percent = Math.min(100, ((count - (showMilestone - 100)) / 100) * 100);
+
+    if (fillEl) fillEl.style.width = `${percent}%`;
+    if (countEl) countEl.innerText = `🥊 ${count} / ${showMilestone}`;
+    if (hintEl) {
+        hintEl.innerText = `${remaining} punches until +25 bonus`;
+        hintEl.style.transform = `translateX(-50%) scale(${percent < 5 ? 1.2 : 1})`;
+        hintEl.style.opacity = percent < 5 ? "0.6" : "1";
+    }
 }
 
 function renderTabs() {
