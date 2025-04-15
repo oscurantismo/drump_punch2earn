@@ -119,10 +119,18 @@ function renderTopBar() {
     const punchText = document.createElement("div");
     punchText.id = "punch-text";
     punchText.innerHTML = `🥊 Punches: ${window.punches || 0}`;
-    punchText.style.position = "relative";
-    punchText.style.color = COLORS.badgeBg;
-    punchText.style.zIndex = "2";
-    punchText.style.pointerEvents = "none";
+    Object.assign(punchText.style, {
+        position: "relative",
+        zIndex: "2",
+        pointerEvents: "none",
+        background: COLORS.deepRed,
+        color: COLORS.badgeBg,
+        padding: "4px 10px",
+        borderRadius: "8px",
+        display: "inline-block",
+        margin: "0 auto",
+        fontWeight: "bold"
+    });
     punchBar.appendChild(punchText);
 
     const progressFill = document.createElement("div");
