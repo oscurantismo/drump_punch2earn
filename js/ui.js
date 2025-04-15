@@ -122,7 +122,6 @@ function renderTopBar() {
         position: "relative",
         zIndex: "4",
         pointerEvents: "none",
-        background: COLORS.offWhite,
         color: COLORS.badgeBg,
         padding: "4px 10px",
         borderRadius: "8px",
@@ -232,7 +231,7 @@ function updatePunchDisplay() {
     const percent = Math.min(100, ((count - (showMilestone - 100)) / 100) * 100);
 
     if (fillEl) fillEl.style.width = `${percent}%`;
-    if (countEl) countEl.innerText = `🥊 ${count} / ${showMilestone}`;
+    if (countEl) countEl.innerText = `${count} / ${showMilestone}`;
     if (hintEl) {
         hintEl.innerText = `${remaining} punches until +25 bonus`;
         hintEl.style.transform = `translateX(-50%) scale(${percent < 5 ? 1.2 : 1})`;
