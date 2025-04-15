@@ -1,3 +1,4 @@
+import { updatePunchDisplay } from "./ui.js";
 
 let drump, punchSounds, loadeddrumpFrames;
 let hitCooldown = false;
