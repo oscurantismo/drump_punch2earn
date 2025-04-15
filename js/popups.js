@@ -203,9 +203,6 @@ function faqItem(question, answer) {
     `;
 }
 
-import { COLORS, FONT, BORDER } from "./styles.js";
-import { faqItem } from "./popups.js"; // ✅ make sure faqItem is exported
-
 function showInfoPage() {
     const existing = document.getElementById("info-container");
     if (existing) existing.remove();
