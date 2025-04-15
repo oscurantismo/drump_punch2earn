@@ -7,73 +7,76 @@ let soundButton;
 let soundEnabled = true;
 
 
-// Add new CSS for punchbar pattern
-if (!document.getElementById("punchbar-stripe-style")) {
-    const style = document.createElement("style");
-    style.id = "punchbar-stripe-style";
-    style.innerHTML = `
-        @keyframes stripes {
-            from { background-position: 0 0; }
-            to { background-position: 30px 0; }
-        }
-        .punch-stripe-fill::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: linear-gradient(45deg,
-                rgba(0, 0, 0, .1) 25%,
-                transparent 25%,
-                transparent 50%,
-                rgba(0, 0, 0, .1) 50%,
-                rgba(0, 0, 0, .1) 75%,
-                transparent 75%,
-                transparent);
-            background-size: 30px 30px;
-            border-radius: 16px;
-            animation: stripes 1.2s linear infinite;
-            z-index: 1;
-            pointer-events: none;
-        }
-        @keyframes floatStars {
-            0% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-40px) scale(1.3);
-                opacity: 0;
-            }
-        }
-        .floating-star {
-            position: absolute;
-            bottom: 4px;
-            width: 12px;
-            height: 12px;
-            background: gold;
-            border-radius: 50%;
-            animation: floatStars 2s ease-out infinite;
-            pointer-events: none;
-        }
-    `;
-    document.head.appendChild(style);
-}
-
 function renderTopBar() {
+    // Inject punchbar animation CSS if not already present
+    if (!document.getElementById("punchbar-stripe-style")) {
+        const style = document.createElement("style");
+        style.id = "punchbar-stripe-style";
+        style.innerHTML = `
+            @keyframes stripes {
+                from { background-position: 0 0; }
+                to { background-position: 30px 0; }
+            }
+            .punch-stripe-fill::after {
+                content: "";
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-image: linear-gradient(45deg,
+                    rgba(0, 0, 0, .1) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    rgba(0, 0, 0, .1) 50%,
+                    rgba(0, 0, 0, .1) 75%,
+                    transparent 75%,
+                    transparent);
+                background-size: 30px 30px;
+                border-radius: 16px;
+                animation: stripes 1.2s linear infinite;
+                z-index: 1;
+                pointer-events: none;
+            }
+            @keyframes floatStars {
+                0% {
+                    transform: translateY(0) scale(1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-40px) scale(1.3);
+                    opacity: 0;
+                }
+            }
+            .floating-star {
+                position: absolute;
+                bottom: 4px;
+                width: 12px;
+                height: 12px;
+                background: gold;
+                border-radius: 50%;
+                animation: floatStars 2s ease-out infinite;
+                pointer-events: none;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Top bar with username
     const top = document.createElement("div");
-    top.style.position = "fixed";
-    top.style.top = "0.5rem";
-    top.style.left = "1rem";
-    top.style.background = COLORS.offWhite;
-    top.style.color = COLORS.badgeBg;
-    top.style.border = `2px solid ${COLORS.deepRed}`;
-    top.style.borderRadius = BORDER.radius;
-    top.style.fontFamily = FONT.heading;
-    top.style.padding = "6px 12px";
-    top.style.zIndex = ZINDEX.topBar;
-    top.style.display = "flex";
-    top.style.alignItems = "center";
-    top.style.gap = "8px";
-    top.style.cursor = "pointer";
+    Object.assign(top.style, {
+        position: "fixed",
+        top: "0.5rem",
+        left: "1rem",
+        background: COLORS.offWhite,
+        color: COLORS.badgeBg,
+        border: `2px solid ${COLORS.deepRed}`,
+        borderRadius: BORDER.radius,
+        fontFamily: FONT.heading,
+        padding: "6px 12px",
+        zIndex: ZINDEX.topBar,
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        cursor: "pointer"
+    });
     top.title = "Tap to open your profile";
 
     const usernameElement = document.createElement("div");
@@ -83,10 +86,12 @@ function renderTopBar() {
     const settingsIcon = document.createElement("img");
     settingsIcon.src = "drump-images/settings.svg";
     settingsIcon.alt = "Settings";
-    settingsIcon.style.width = "18px";
-    settingsIcon.style.height = "18px";
-    settingsIcon.style.marginLeft = "4px";
-    settingsIcon.style.opacity = "0.75";
+    Object.assign(settingsIcon.style, {
+        width: "18px",
+        height: "18px",
+        marginLeft: "4px",
+        opacity: "0.75"
+    });
 
     top.onclick = () => {
         window.activeTab = "profile";
@@ -97,6 +102,7 @@ function renderTopBar() {
     top.appendChild(settingsIcon);
     document.body.appendChild(top);
 
+    // Punch progress bar
     const punchBar = document.createElement("div");
     punchBar.id = "punch-bar";
     Object.assign(punchBar.style, {
@@ -133,7 +139,7 @@ function renderTopBar() {
     punchBar.appendChild(punchText);
 
     const progressFill = document.createElement("div");
-    progressFill.className = "punch-stripe-fill"; // ✅ Add the animated overlay
+    progressFill.className = "punch-stripe-fill";
     progressFill.id = "punch-fill";
     Object.assign(progressFill.style, {
         height: "100%",
@@ -156,7 +162,7 @@ function renderTopBar() {
     punchBar.appendChild(progressFill);
     document.body.appendChild(punchBar);
 
-    // Add floating stars
+    // Floating star particles
     for (let i = 0; i < 5; i++) {
         const star = document.createElement("div");
         star.className = "floating-star";
@@ -196,6 +202,7 @@ function renderTopBar() {
     });
     document.body.appendChild(bonusHint);
 
+    // Update logic
     updatePunchDisplay = function () {
         const punches = window.punches || 0;
         const nextMilestone = Math.ceil(punches / 100) * 100;
@@ -236,7 +243,6 @@ function renderTopBar() {
 
     document.body.style.cursor = "default";
 }
-
 
 function updatePunchDisplay() {
     const count = window.punches || 0;
