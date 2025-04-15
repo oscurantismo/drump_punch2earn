@@ -8,7 +8,6 @@ let soundEnabled = true;
 
 
 function renderTopBar() {
-    // Inject punchbar animation CSS if not already present
     if (!document.getElementById("punchbar-stripe-style")) {
         const style = document.createElement("style");
         style.id = "punchbar-stripe-style";
@@ -17,10 +16,12 @@ function renderTopBar() {
                 from { background-position: 0 0; }
                 to { background-position: 30px 0; }
             }
-            .punch-stripe-fill::after {
-                content: "";
+            .stripe-overlay {
                 position: absolute;
-                top: 0; left: 0; right: 0; bottom: 0;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 background-image: linear-gradient(45deg,
                     rgba(255, 255, 255, .2) 25%,
                     transparent 25%,
@@ -33,24 +34,9 @@ function renderTopBar() {
                 pointer-events: none;
                 z-index: 2;
             }
-            .punch-stripe-fill {
-                position: absolute;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                overflow: hidden;
-                z-index: 1;
-            }
-
             @keyframes floatStars {
-                0% {
-                    transform: translateY(0) scale(1);
-                    opacity: 1;
-                }
-                100% {
-                    transform: translateY(-40px) scale(1.3);
-                    opacity: 0;
-                }
+                0% { transform: translateY(0) scale(1); opacity: 1; }
+                100% { transform: translateY(-40px) scale(1.3); opacity: 0; }
             }
             .floating-star {
                 position: absolute;
@@ -61,12 +47,12 @@ function renderTopBar() {
                 border-radius: 50%;
                 animation: floatStars 2s ease-out infinite;
                 pointer-events: none;
+                z-index: 3;
             }
         `;
         document.head.appendChild(style);
     }
 
-    // Top bar with username
     const top = document.createElement("div");
     Object.assign(top.style, {
         position: "fixed",
@@ -109,7 +95,7 @@ function renderTopBar() {
     top.appendChild(settingsIcon);
     document.body.appendChild(top);
 
-    // Punch progress bar
+    // === PUNCH BAR ===
     const punchBar = document.createElement("div");
     punchBar.id = "punch-bar";
     Object.assign(punchBar.style, {
@@ -133,7 +119,7 @@ function renderTopBar() {
     punchText.innerHTML = `🥊 Punches: ${window.punches || 0}`;
     Object.assign(punchText.style, {
         position: "relative",
-        zIndex: "2",
+        zIndex: "4",
         pointerEvents: "none",
         background: COLORS.deepRed,
         color: COLORS.badgeBg,
@@ -146,7 +132,6 @@ function renderTopBar() {
     punchBar.appendChild(punchText);
 
     const progressFill = document.createElement("div");
-    progressFill.className = "punch-stripe-fill";
     progressFill.id = "punch-fill";
     Object.assign(progressFill.style, {
         height: "100%",
@@ -156,22 +141,26 @@ function renderTopBar() {
         zIndex: "1",
         borderRadius: "8px 0 0 8px",
         width: "0%",
-        overflow: "hidden", // ✅ NEW
-        background: COLORS.primary, // ✅ solid background underneath
+        overflow: "hidden",
+        background: COLORS.primary,
         transition: "width 0.4s ease"
     });
+
+    const stripeLayer = document.createElement("div");
+    stripeLayer.className = "stripe-overlay";
+    progressFill.appendChild(stripeLayer);
     punchBar.appendChild(progressFill);
 
-
-    // Floating star particles
+    // Add floating stars
     for (let i = 0; i < 5; i++) {
         const star = document.createElement("div");
         star.className = "floating-star";
         star.style.left = `${10 + i * 20}%`;
-        star.style.bottom = "4px";
         star.style.animationDelay = `${i * 0.4}s`;
         punchBar.appendChild(star);
     }
+
+    document.body.appendChild(punchBar);
 
     const punchProgress = document.createElement("div");
     punchProgress.id = "punch-progress";
@@ -203,25 +192,31 @@ function renderTopBar() {
     });
     document.body.appendChild(bonusHint);
 
-    // Update logic
-    updatePunchDisplay = function () {
-        const punches = window.punches || 0;
-        const nextMilestone = Math.ceil(punches / 100) * 100;
-        const base = nextMilestone - 100;
-        const progress = punches - base;
-        const percent = Math.min(100, (progress / 100) * 100);
-        const remaining = 100 - progress;
+    window.updatePunchDisplay = function () {
+        const count = window.punches || 0;
 
-        document.getElementById("punch-text").innerHTML = `🥊 Punches: ${punches}`;
-        document.getElementById("punch-fill").style.width = `${percent}%`;
-        document.getElementById("punch-progress").innerText = `${punches} / ${nextMilestone}`;
-        const hint = document.getElementById("bonus-hint");
-        hint.innerText = `${remaining} punches left until bonus 🏅`;
-        hint.style.transform = `translateX(-50%) scale(${percent < 5 ? 1.2 : 1})`;
-        hint.style.opacity = percent < 5 ? "0.6" : "1";
+        const punchTextEl = document.getElementById("punch-text");
+        const fillEl = document.getElementById("punch-fill");
+        const countEl = document.getElementById("punch-progress");
+        const hintEl = document.getElementById("bonus-hint");
+
+        if (punchTextEl) punchTextEl.innerHTML = `🥊 Punches: ${count}`;
+
+        const nextMilestone = Math.ceil(count / 100) * 100;
+        const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
+        const remaining = showMilestone - count;
+        const percent = Math.min(100, ((count - (showMilestone - 100)) / 100) * 100);
+
+        if (fillEl) fillEl.style.width = `${percent}%`;
+        if (countEl) countEl.innerText = `🥊 ${count} / ${showMilestone}`;
+        if (hintEl) {
+            hintEl.innerText = `${remaining} punches until +25 bonus`;
+            hintEl.style.transform = `translateX(-50%) scale(${percent < 5 ? 1.2 : 1})`;
+            hintEl.style.opacity = percent < 5 ? "0.6" : "1";
+        }
     };
 
-    updatePunchDisplay();
+    window.updatePunchDisplay();
 
     const iconSize = 32;
     soundButton = document.createElement("img");
@@ -243,23 +238,6 @@ function renderTopBar() {
     document.body.appendChild(soundButton);
 
     document.body.style.cursor = "default";
-}
-
-function updatePunchDisplay() {
-    const count = window.punches || 0;
-
-    const punchBar = document.getElementById("punch-bar");
-    if (punchBar) punchBar.innerHTML = `🥊 Punches: ${count}`;
-
-    const nextMilestone = Math.ceil(count / 100) * 100;
-    const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
-    const remaining = showMilestone - count;
-
-    const countEl = document.getElementById("punch-progress");
-    const hintEl = document.getElementById("bonus-hint");
-
-    if (countEl) countEl.innerHTML = `🥊 ${count} / ${showMilestone}`;
-    if (hintEl) hintEl.innerText = `${remaining} punches until +25 bonus`;
 }
 
 function renderTabs() {
