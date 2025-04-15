@@ -1,5 +1,6 @@
 import { fetchReferralHistory, renderReferralHistory } from "./referral.js";
 import { createLeaderboardPopup } from "./popups.js";
+import { updatePunchDisplay } from "./ui.js";
 
 function renderProfilePage() {
     const existingProfile = document.getElementById("profile-container");
