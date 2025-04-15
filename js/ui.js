@@ -7,27 +7,32 @@ let soundButton;
 let soundEnabled = true;
 
 
+// Add new CSS for punchbar pattern
 if (!document.getElementById("punchbar-animation-style")) {
     const style = document.createElement("style");
     style.id = "punchbar-animation-style";
     style.innerHTML = `
-        @keyframes stripeAnim {
-            0% { background-position: 0 0; }
-            100% { background-position: 40px 0; }
+        @keyframes stripes {
+            from { background-position: 0 0; }
+            to { background-position: 30px 0; }
         }
-        @keyframes floatStars {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-30px) scale(1.3); opacity: 0; }
-        }
-        .floating-star {
+        .punch-stripe-fill::after {
+            content: "";
             position: absolute;
-            top: 0;
-            width: 12px;
-            height: 12px;
-            background: gold;
-            border-radius: 50%;
-            opacity: 0;
-            animation: floatStars 2s ease-out infinite;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(45deg,
+                rgba(0, 0, 0, .1) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(0, 0, 0, .1) 50%,
+                rgba(0, 0, 0, .1) 75%,
+                transparent 75%,
+                transparent);
+            background-size: 30px 30px;
+            border-radius: 16px;
+            animation: stripes 2s linear infinite;
+            z-index: 1;
+            pointer-events: none;
         }
     `;
     document.head.appendChild(style);
@@ -94,6 +99,7 @@ function renderTopBar() {
     punchText.id = "punch-text";
     punchText.innerHTML = `🥊 Punches: ${window.punches || 0}`;
     punchText.style.position = "relative";
+    punchText.style.color = COLORS.badgeBg;
     punchText.style.zIndex = "2";
     punchText.style.pointerEvents = "none";
     punchBar.appendChild(punchText);
@@ -153,7 +159,7 @@ function renderTopBar() {
         left: "50%",
         transform: "translateX(-50%)",
         fontSize: "13px",
-        color: COLORS.primary,
+        color: COLORS.badgeBg,
         zIndex: ZINDEX.punchBar,
         fontFamily: FONT.body,
         transition: "opacity 0.3s ease, transform 0.3s ease",
