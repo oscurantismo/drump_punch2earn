@@ -192,7 +192,7 @@ function renderTopBar() {
     });
     document.body.appendChild(bonusHint);
 
-    window.updatePunchDisplay = function () {
+        window.updatePunchDisplay = function () {
         const count = window.punches || 0;
 
         const punchTextEl = document.getElementById("punch-text");
@@ -216,6 +216,7 @@ function renderTopBar() {
         }
     };
 
+    // ✅ Initial call
     window.updatePunchDisplay();
 
     const iconSize = 32;
