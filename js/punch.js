@@ -24,7 +24,7 @@ function initPunchModule(config) {
 }
 
 function handlePunch() {
-    if (!drump || hitCooldown || window.activeTab !== "game") return;
+    if (!drump || hitCooldown || window.activeTab !== "game" || window.isPopupOpen?.()) return;
 
     hitCooldown = true;
 
