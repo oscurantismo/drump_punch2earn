@@ -215,12 +215,12 @@ function showOnboarding() {
     overlay.style.justifyContent = "center";
     overlay.style.alignItems = "center";
     overlay.style.color = "#fff";
-    overlay.style.fontFamily = ${FONT.body};
+    overlay.style.fontFamily = FONT.body;
     overlay.style.textAlign = "center";
     overlay.style.padding = "20px";
 
     const box = document.createElement("div");
-    box.style.background = ${COLORS.primary};
+    box.style.background = COLORS.primary;
     box.style.color = COLORS.offWhite;
     box.style.padding = "24px";
     box.style.borderRadius = "16px";
@@ -235,7 +235,7 @@ function showOnboarding() {
     button.style.marginTop = "12px";
     button.style.padding = "10px 18px";
     button.style.background = COLORS.offWhite;
-    button.style.color = ${COLORS.primary};
+    button.style.color = COLORS.primary;
     button.style.border = "none";
     button.style.borderRadius = "10px";
     button.style.fontSize = "16px";
@@ -324,8 +324,8 @@ function showPopupMessage(message) {
     popup.style.transform = "translate(-50%, -50%)";
     popup.style.background = COLORS.offWhite;
     popup.style.border = "2px solid COLORS.offWhite";
-    popup.style.color = ${COLORS.primary};
-    popup.style.fontFamily = ${FONT.body};
+    popup.style.color = COLORS.primary;
+    popup.style.fontFamily = FONT.body;
     popup.style.fontSize = "16px";
     popup.style.padding = "20px 24px";
     popup.style.borderRadius = "12px";
@@ -336,7 +336,7 @@ function showPopupMessage(message) {
     dismiss.innerText = "Got it!";
     dismiss.style.marginTop = "12px";
     dismiss.style.padding = "6px 14px";
-    dismiss.style.background = ${COLORS.primary};
+    dismiss.style.background = COLORS.primary;
     dismiss.style.color = COLORS.offWhite;
     dismiss.style.border = "none";
     dismiss.style.borderRadius = "8px";
@@ -391,7 +391,7 @@ function createLoader() {
     loader.style.zIndex = ZINDEX.modal;
     loader.innerHTML = `
         <div class="spinner"></div>
-        <p style="font-family: ${FONT.body}, sans-serif; font-size: 14px; color: ${COLORS.primary}; margin-top: 20px;">
+        <p style="font-family: FONT.body, sans-serif; font-size: 14px; color: COLORS.primary; margin-top: 20px;">
             Made with ❤️ and collaboration from 🇨🇦
         </p>
         <style>
