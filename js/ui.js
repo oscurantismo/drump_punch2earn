@@ -30,7 +30,7 @@ if (!document.getElementById("punchbar-stripe-style")) {
                 transparent);
             background-size: 30px 30px;
             border-radius: 16px;
-            animation: stripes 2s linear infinite;
+            animation: "stripes 1.2s linear infinite";
             z-index: 1;
             pointer-events: none;
         }
