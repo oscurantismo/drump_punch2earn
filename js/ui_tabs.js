@@ -12,19 +12,18 @@ if (!document.getElementById("badge-anim-style")) {
         to { opacity: 1; transform: translateY(0); }
       }
 
-      @keyframes borderRunner {
+      @keyframes borderPulse {
         0% {
-          border-image-source: linear-gradient(90deg, #FFCC68, #f8f9fe, #FFCC68);
+          box-shadow: 0 0 0 0 rgba(255, 204, 104, 0.7);
         }
-        50% {
-          border-image-source: linear-gradient(180deg, #f8f9fe, #FFCC68, #f8f9fe);
+        70% {
+          box-shadow: 0 0 0 6px rgba(255, 204, 104, 0);
         }
         100% {
-          border-image-source: linear-gradient(270deg, #FFCC68, #f8f9fe, #FFCC68);
+          box-shadow: 0 0 0 0 rgba(255, 204, 104, 0);
         }
       }
     `;
-
     document.head.appendChild(style);
 }
 
@@ -96,13 +95,10 @@ function showTab(tab, scene = null) {
             <div style="
                 margin-top:24px;
                 background:${COLORS.primary};
-                border-width: 3px;
-                border-style: solid;
-                border-image-slice: 1;
-                border-image-source: linear-gradient(90deg, #FFCC68, #f8f9fe, #FFCC68);
+                border: 2px solid #FFCC68;
                 border-radius: 10px;
                 padding: 16px;
-                animation: borderRunner 3s linear infinite;
+                animation: borderPulse 2.8s ease-out infinite;
             ">
                 <h3 style="margin-top:0; color:${COLORS.textLight}; font-family:${FONT.body}">🎁 Leaderboard Rewards</h3>
                 <ul style="font-size:14px; line-height:1.6; padding-left:20px;">
@@ -114,17 +110,14 @@ function showTab(tab, scene = null) {
                 </ul>
             </div>
 
-
             <div style="
-                border-width: 3px;
-                border-style: solid;
-                border-image-slice: 1;
-                border-image-source: linear-gradient(90deg, #FFCC68, #f8f9fe, #FFCC68);
-                border-radius: 10px;
-                padding: 16px;
-                animation: borderRunner 3s linear infinite;
+                margin-top:30px;
                 background:${COLORS.offWhite};
                 color:${COLORS.primary};
+                border: 2px solid #FFCC68;
+                border-radius: 10px;
+                padding: 16px;
+                animation: borderPulse 3s 0.4s ease-out infinite;
             ">
                 <h3 style="margin-top:0; font-family:${FONT.body}">📆 Upcoming Challenges</h3>
                 <ul style="font-size:14px; line-height:1.6; padding-left:20px;">
