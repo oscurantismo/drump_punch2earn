@@ -72,7 +72,7 @@ function renderTopBar() {
     punchBar.style.borderRadius = "8px";
     punchBar.style.zIndex = ZINDEX.punchBar;
     punchBar.style.overflow = "hidden";
-    punchBar.style.position = "relative";
+    punchBar.style.position = "fixed";
 
     const punchText = document.createElement("div");
     punchText.id = "punch-text";
