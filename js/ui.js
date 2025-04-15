@@ -8,9 +8,9 @@ let soundEnabled = true;
 
 
 // Add new CSS for punchbar pattern
-if (!document.getElementById("punchbar-animation-style")) {
+if (!document.getElementById("punchbar-stripe-style")) {
     const style = document.createElement("style");
-    style.id = "punchbar-animation-style";
+    style.id = "punchbar-stripe-style";
     style.innerHTML = `
         @keyframes stripes {
             from { background-position: 0 0; }
@@ -34,9 +34,30 @@ if (!document.getElementById("punchbar-animation-style")) {
             z-index: 1;
             pointer-events: none;
         }
+        @keyframes floatStars {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-40px) scale(1.3);
+                opacity: 0;
+            }
+        }
+        .floating-star {
+            position: absolute;
+            bottom: 4px;
+            width: 12px;
+            height: 12px;
+            background: gold;
+            border-radius: 50%;
+            animation: floatStars 2s ease-out infinite;
+            pointer-events: none;
+        }
     `;
     document.head.appendChild(style);
 }
+
 
 function renderTopBar() {
     const top = document.createElement("div");
@@ -133,6 +154,7 @@ function renderTopBar() {
         const star = document.createElement("div");
         star.className = "floating-star";
         star.style.left = `${10 + i * 20}%`;
+        star.style.bottom = "4px";
         star.style.animationDelay = `${i * 0.4}s`;
         punchBar.appendChild(star);
     }
