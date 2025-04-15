@@ -30,7 +30,7 @@ if (!document.getElementById("punchbar-stripe-style")) {
                 transparent);
             background-size: 30px 30px;
             border-radius: 16px;
-            animation: "stripes 1.2s linear infinite";
+            animation: stripes 1.2s linear infinite;
             z-index: 1;
             pointer-events: none;
         }
@@ -57,7 +57,6 @@ if (!document.getElementById("punchbar-stripe-style")) {
     `;
     document.head.appendChild(style);
 }
-
 
 function renderTopBar() {
     const top = document.createElement("div");
@@ -134,6 +133,7 @@ function renderTopBar() {
     punchBar.appendChild(punchText);
 
     const progressFill = document.createElement("div");
+    progressFill.className = "punch-stripe-fill"; // ✅ Add the animated overlay
     progressFill.id = "punch-fill";
     Object.assign(progressFill.style, {
         height: "100%",
@@ -151,7 +151,6 @@ function renderTopBar() {
             ${COLORS.primary} 20px
         )`,
         backgroundSize: "40px 40px",
-        animation: "stripeAnim 1.2s linear infinite",
         transition: "width 0.4s ease"
     });
     punchBar.appendChild(progressFill);
