@@ -122,7 +122,6 @@ function renderTopBar() {
         position: "relative",
         zIndex: "4",
         pointerEvents: "none",
-        background: none,
         color: COLORS.badgeBg,
         padding: "4px 10px",
         borderRadius: "8px",
