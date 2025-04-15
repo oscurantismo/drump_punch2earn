@@ -75,6 +75,7 @@ function renderTopBar() {
     const usernameElement = document.createElement("div");
     usernameElement.innerHTML = `${window.storedUsername}`;
     usernameElement.style.fontWeight = "bold";
+    usernameElement.style.color = COLORS.deepRed;
 
     const settingsIcon = document.createElement("img");
     settingsIcon.src = "drump-images/settings.svg";
@@ -121,7 +122,7 @@ function renderTopBar() {
         position: "relative",
         zIndex: "4",
         pointerEvents: "none",
-        background: COLORS.deepRed,
+        background: COLORS.offWhite,
         color: COLORS.badgeBg,
         padding: "4px 10px",
         borderRadius: "8px",
@@ -166,12 +167,12 @@ function renderTopBar() {
     punchProgress.id = "punch-progress";
     Object.assign(punchProgress.style, {
         position: "fixed",
-        top: "88px",
+        top: "105px",
         left: "50%",
         transform: "translateX(-50%)",
         fontFamily: FONT.body,
         fontSize: "16px",
-        color: COLORS.primary,
+        color: COLORS.badgeBg,
         zIndex: ZINDEX.punchBar
     });
     document.body.appendChild(punchProgress);
@@ -180,7 +181,7 @@ function renderTopBar() {
     bonusHint.id = "bonus-hint";
     Object.assign(bonusHint.style, {
         position: "fixed",
-        top: "112px",
+        top: "126px",
         left: "50%",
         transform: "translateX(-50%)",
         fontSize: "13px",
