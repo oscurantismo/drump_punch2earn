@@ -188,7 +188,7 @@ function renderTabs() {
         btn.style.fontSize = "14px";
         btn.style.border = "none";
         btn.style.color = "#fff";
-        btn.style.background = (tab === window.activeTab) ? COLORS.badgeBg; : COLORS.primary;
+        btn.style.background = (tab === window.activeTab) ? COLORS.badgeBg : COLORS.primary;
         btn.onclick = () => {
             window.activeTab = tab;
             showTab(tab);
