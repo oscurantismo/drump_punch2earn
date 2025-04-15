@@ -2,7 +2,7 @@ import { handlePunch, initPunchModule, wiggleDrump } from "./punch.js";
 import { renderTopBar, renderTabs, updatePunchDisplay } from "./ui.js";
 import { createReferralAndRewardsButtons } from "./buttons.js";
 import { showInfoPage } from "./popups.js";
-
+import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 
 let game;
 let drump;
@@ -215,16 +215,16 @@ function showOnboarding() {
     overlay.style.justifyContent = "center";
     overlay.style.alignItems = "center";
     overlay.style.color = "#fff";
-    overlay.style.fontFamily = "'Arial Black', sans-serif";
+    overlay.style.fontFamily = ${FONT.body};
     overlay.style.textAlign = "center";
     overlay.style.padding = "20px";
 
     const box = document.createElement("div");
-    box.style.background = "#fff";
-    box.style.color = "#000";
+    box.style.background = ${COLORS.primary};
+    box.style.color = COLORS.offWhite;
     box.style.padding = "24px";
     box.style.borderRadius = "16px";
-    box.style.maxWidth = "90vw";
+    box.style.maxWidth = "80vw";
     box.style.boxShadow = "0 0 12px rgba(0,0,0,0.4)";
 
     const title = document.createElement("h2");
@@ -234,11 +234,10 @@ function showOnboarding() {
     button.innerText = "Next";
     button.style.marginTop = "12px";
     button.style.padding = "10px 18px";
-    button.style.background = "#0047ab";
-    button.style.color = "#fff";
+    button.style.background = COLORS.offWhite;
+    button.style.color = ${COLORS.primary};
     button.style.border = "none";
     button.style.borderRadius = "10px";
-    button.style.fontWeight = "bold";
     button.style.fontSize = "16px";
 
     function renderStep(index) {
@@ -323,10 +322,10 @@ function showPopupMessage(message) {
     popup.style.top = "50%";
     popup.style.left = "50%";
     popup.style.transform = "translate(-50%, -50%)";
-    popup.style.background = "#fff";
-    popup.style.border = "2px solid #b22234";
-    popup.style.color = "#000";
-    popup.style.fontFamily = "'Arial Black', sans-serif";
+    popup.style.background = COLORS.offWhite;
+    popup.style.border = "2px solid COLORS.offWhite";
+    popup.style.color = ${COLORS.primary};
+    popup.style.fontFamily = ${FONT.body};
     popup.style.fontSize = "16px";
     popup.style.padding = "20px 24px";
     popup.style.borderRadius = "12px";
@@ -337,11 +336,10 @@ function showPopupMessage(message) {
     dismiss.innerText = "Got it!";
     dismiss.style.marginTop = "12px";
     dismiss.style.padding = "6px 14px";
-    dismiss.style.background = "#0047ab";
-    dismiss.style.color = "#fff";
+    dismiss.style.background = ${COLORS.primary};
+    dismiss.style.color = COLORS.offWhite;
     dismiss.style.border = "none";
     dismiss.style.borderRadius = "8px";
-    dismiss.style.fontWeight = "bold";
     dismiss.onclick = () => popup.remove();
 
     popup.appendChild(document.createElement("br"));
@@ -389,17 +387,17 @@ function createLoader() {
     loader.style.flexDirection = "column";
     loader.style.alignItems = "center";
     loader.style.justifyContent = "center";
-    loader.style.background = "#ffffff";
-    loader.style.zIndex = "2000";
+    loader.style.background = COLORS.offWhite;
+    loader.style.zIndex = ZINDEX.modal;
     loader.innerHTML = `
         <div class="spinner"></div>
-        <p style="font-family: 'Arial', sans-serif; font-size: 14px; color: #000; margin-top: 20px;">
+        <p style="font-family: ${FONT.body}, sans-serif; font-size: 14px; color: ${COLORS.primary}; margin-top: 20px;">
             Made with ❤️ and collaboration from 🇨🇦
         </p>
         <style>
         .spinner {
-            border: 6px solid #eee;
-            border-top: 6px solid #b22234;
+            border: 6px solid COLORS.primary;
+            border-top: 6px solid COLORS.primary;
             border-radius: 50%;
             width: 40px;
             height: 40px;
