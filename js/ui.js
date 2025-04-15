@@ -22,19 +22,26 @@ function renderTopBar() {
                 position: absolute;
                 top: 0; left: 0; right: 0; bottom: 0;
                 background-image: linear-gradient(45deg,
-                    rgba(0, 0, 0, .1) 25%,
+                    rgba(255, 255, 255, .2) 25%,
                     transparent 25%,
                     transparent 50%,
-                    rgba(0, 0, 0, .1) 50%,
-                    rgba(0, 0, 0, .1) 75%,
-                    transparent 75%,
-                    transparent);
+                    rgba(255, 255, 255, .2) 50%,
+                    rgba(255, 255, 255, .2) 75%,
+                    transparent 75%);
                 background-size: 30px 30px;
-                border-radius: 16px;
                 animation: stripes 1.2s linear infinite;
-                z-index: 1;
                 pointer-events: none;
+                z-index: 2;
             }
+            .punch-stripe-fill {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                overflow: hidden;
+                z-index: 1;
+            }
+
             @keyframes floatStars {
                 0% {
                     transform: translateY(0) scale(1);
@@ -149,18 +156,12 @@ function renderTopBar() {
         zIndex: "1",
         borderRadius: "8px 0 0 8px",
         width: "0%",
-        background: `repeating-linear-gradient(
-            45deg,
-            ${COLORS.badgeBg},
-            ${COLORS.badgeBg} 10px,
-            ${COLORS.primary} 10px,
-            ${COLORS.primary} 20px
-        )`,
-        backgroundSize: "40px 40px",
+        overflow: "hidden", // ✅ NEW
+        background: COLORS.primary, // ✅ solid background underneath
         transition: "width 0.4s ease"
     });
     punchBar.appendChild(progressFill);
-    document.body.appendChild(punchBar);
+
 
     // Floating star particles
     for (let i = 0; i < 5; i++) {
