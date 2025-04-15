@@ -6,17 +6,6 @@ import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 let soundButton;
 let soundEnabled = true;
 
-if (!document.getElementById("lavaflow-style")) {
-    const style = document.createElement("style");
-    style.id = "lavaflow-style";
-    style.innerHTML = `
-        @keyframes lavaflow {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 100% 0%; }
-        }
-    `;
-    document.head.appendChild(style);
-}
 
 if (!document.getElementById("punchbar-animation-style")) {
     const style = document.createElement("style");
