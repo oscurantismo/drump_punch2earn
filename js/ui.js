@@ -6,28 +6,43 @@ import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 let soundButton;
 let soundEnabled = true;
 
-
 function renderTopBar() {
     const top = document.createElement("div");
     top.style.position = "fixed";
     top.style.top = "0.5rem";
     top.style.left = "1rem";
     top.style.background = COLORS.offWhite;
-    top.style.color = COLORS.badgeBg;
-    top.style.border = "2px solid COLORS.deepRed";
-    top.style.borderRadius = "10px";
+    top.style.color = COLORS.deepRed;
+    top.style.border = `2px solid ${COLORS.deepRed}`;
+    top.style.borderRadius = BORDER.radius;
     top.style.fontFamily = FONT.heading;
     top.style.padding = "6px 12px";
-    top.style.zIndex = "1000";
+    top.style.zIndex = ZINDEX.topBar;
+    top.style.display = "flex";
+    top.style.alignItems = "center";
+    top.style.gap = "8px";
+    top.style.cursor = "pointer";
+    top.title = "Tap to open profile";
 
     const usernameElement = document.createElement("div");
     usernameElement.innerHTML = `${window.storedUsername}`;
-    usernameElement.style.cursor = "pointer";
-    usernameElement.onclick = () => {
+    usernameElement.style.fontWeight = "bold";
+
+    const settingsIcon = document.createElement("img");
+    settingsIcon.src = "drump-images/settings.svg";
+    settingsIcon.alt = "Settings";
+    settingsIcon.style.width = "18px";
+    settingsIcon.style.height = "18px";
+    settingsIcon.style.marginLeft = "4px";
+    settingsIcon.style.opacity = "0.75";
+
+    top.onclick = () => {
         window.activeTab = "profile";
         renderProfilePage();
     };
+
     top.appendChild(usernameElement);
+    top.appendChild(settingsIcon);
     document.body.appendChild(top);
 
     const punchBar = document.createElement("div");
@@ -43,31 +58,68 @@ function renderTopBar() {
     punchBar.style.fontSize = "18px";
     punchBar.style.padding = "6px 0";
     punchBar.style.borderRadius = "8px";
-    punchBar.style.zIndex = "999";
+    punchBar.style.zIndex = ZINDEX.punchBar;
     punchBar.innerHTML = `🥊 Punches: ${window.punches || 0}`;
+
+    const progressFill = document.createElement("div");
+    progressFill.id = "punch-fill";
+    progressFill.style.height = "6px";
+    progressFill.style.marginTop = "6px";
+    progressFill.style.borderRadius = "4px";
+    progressFill.style.background = COLORS.badgeBg;
+    progressFill.style.transition = "width 0.3s ease";
+    punchBar.appendChild(progressFill);
     document.body.appendChild(punchBar);
 
     const punchProgress = document.createElement("div");
     punchProgress.id = "punch-progress";
     punchProgress.style.position = "fixed";
     punchProgress.style.top = "88px";
-    punchProgress.style.left = "1rem";
+    punchProgress.style.left = "50%";
+    punchProgress.style.transform = "translateX(-50%)";
     punchProgress.style.fontFamily = FONT.body;
     punchProgress.style.fontSize = "16px";
-    punchProgress.style.color = "#002868";
-    punchProgress.style.zIndex = "999";
+    punchProgress.style.color = COLORS.primary;
+    punchProgress.style.zIndex = ZINDEX.punchBar;
     document.body.appendChild(punchProgress);
 
     const bonusHint = document.createElement("div");
     bonusHint.id = "bonus-hint";
     bonusHint.style.position = "fixed";
     bonusHint.style.top = "112px";
-    bonusHint.style.left = "1rem";
+    bonusHint.style.left = "50%";
+    bonusHint.style.transform = "translateX(-50%)";
     bonusHint.style.fontSize = "13px";
-    bonusHint.style.color = "#444";
-    bonusHint.style.zIndex = "999";
-    bonusHint.style.fontFamily = "Arial, sans-serif";
+    bonusHint.style.color = COLORS.primary;
+    bonusHint.style.zIndex = ZINDEX.punchBar;
+    bonusHint.style.fontFamily = FONT.body;
+    bonusHint.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+    bonusHint.style.opacity = "1";
     document.body.appendChild(bonusHint);
+
+    updatePunchDisplay = function () {
+        const punchBarText = document.getElementById("punch-bar");
+        const punchFill = document.getElementById("punch-fill");
+        const punchProgress = document.getElementById("punch-progress");
+        const bonusHint = document.getElementById("bonus-hint");
+
+        const punches = window.punches || 0;
+        const nextMilestone = Math.ceil(punches / 100) * 100;
+        const base = nextMilestone - 100;
+        const progress = punches - base;
+        const percent = Math.min(100, (progress / 100) * 100);
+        const remaining = 100 - progress;
+
+        punchBarText.innerHTML = `🥊 Punches: ${punches}`;
+        punchBarText.appendChild(punchFill);
+        punchFill.style.width = `${percent}%`;
+
+        punchProgress.innerText = `${punches} / ${nextMilestone}`;
+        bonusHint.innerText = `${remaining} punches left until bonus 🏅`;
+
+        bonusHint.style.transform = `translateX(-50%) scale(${percent < 5 ? 1.2 : 1})`;
+        bonusHint.style.opacity = percent < 5 ? "0.6" : "1";
+    };
 
     updatePunchDisplay();
 
@@ -80,7 +132,7 @@ function renderTopBar() {
     soundButton.style.width = iconSize + "px";
     soundButton.style.height = iconSize + "px";
     soundButton.style.cursor = "pointer";
-    soundButton.style.zIndex = "1001";
+    soundButton.style.zIndex = ZINDEX.soundIcon;
     soundButton.onclick = () => {
         soundEnabled = !soundEnabled;
         soundButton.src = soundEnabled ? "sound_on.svg" : "sound_off.svg";
@@ -116,8 +168,10 @@ function renderTabs() {
     tabBar.style.left = "0";
     tabBar.style.width = "100%";
     tabBar.style.display = "flex";
+    tabBar.style.fontFamily = FONT.body;
+    tabBar.style.color = COLORS.primary;
     tabBar.style.justifyContent = "space-around";
-    tabBar.style.background = "#002868";
+    tabBar.style.background = COLORS.badgeBg;
     tabBar.style.zIndex = "1000";
 
     ["game", "leaderboard", "tasks"].forEach(tab => {
@@ -134,12 +188,12 @@ function renderTabs() {
         btn.style.fontSize = "14px";
         btn.style.border = "none";
         btn.style.color = "#fff";
-        btn.style.background = (tab === window.activeTab) ? "#003f8a" : "#002868";
+        btn.style.background = (tab === window.activeTab) ? COLORS.badgeBg; : COLORS.primary;
         btn.onclick = () => {
             window.activeTab = tab;
             showTab(tab);
-            document.querySelectorAll("#tab-container button").forEach(b => b.style.background = "#002868");
-            btn.style.background = "#003f8a";
+            document.querySelectorAll("#tab-container button").forEach(b => b.style.background = COLORS.badgeBg);
+            btn.style.background = COLORS.primary;
         };
 
         tabBar.appendChild(btn);
