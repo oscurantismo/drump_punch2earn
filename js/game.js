@@ -25,7 +25,7 @@ function createGame() {
         type: Phaser.AUTO,
         width: window.innerWidth,
         height: window.innerHeight,
-        backgroundColor: "#ffffff",
+        backgroundColor: COLORS.badgeBg,
         scene: { preload, create },
         audio: {
             disableWebAudio: false
@@ -387,17 +387,17 @@ function createLoader() {
     loader.style.flexDirection = "column";
     loader.style.alignItems = "center";
     loader.style.justifyContent = "center";
-    loader.style.background = COLORS.offWhite;
+    loader.style.background = COLORS.badgeBg;
     loader.style.zIndex = ZINDEX.modal;
     loader.innerHTML = `
         <div class="spinner"></div>
-        <p style="font-family: FONT.body, sans-serif; font-size: 14px; color: COLORS.primary; margin-top: 20px;">
+        <p style="font-family: ${FONT.body}, sans-serif; font-size: 14px; color: ${COLORS.primary}; margin-top: 20px;">
             Made with ❤️ and collaboration from 🇨🇦
         </p>
         <style>
         .spinner {
-            border: 6px solid COLORS.primary;
-            border-top: 6px solid COLORS.primary;
+            border: 6px solid ${COLORS.primary};
+            border-top: 6px solid ${COLORS.primary};
             border-radius: 50%;
             width: 40px;
             height: 40px;
