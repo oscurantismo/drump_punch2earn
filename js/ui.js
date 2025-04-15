@@ -6,6 +6,18 @@ import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 let soundButton;
 let soundEnabled = true;
 
+if (!document.getElementById("lavaflow-style")) {
+    const style = document.createElement("style");
+    style.id = "lavaflow-style";
+    style.innerHTML = `
+        @keyframes lavaflow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 0%; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 function renderTopBar() {
     const top = document.createElement("div");
     top.style.position = "fixed";
@@ -64,7 +76,6 @@ function renderTopBar() {
 
     const punchText = document.createElement("div");
     punchText.id = "punch-text";
-    punchText.style.top = "30px";
     punchText.innerHTML = `🥊 Punches: ${window.punches || 0}`;
     punchText.style.position = "relative";
     punchText.style.zIndex = "2";
@@ -79,7 +90,9 @@ function renderTopBar() {
     progressFill.style.top = "0";
     progressFill.style.zIndex = "1";
     progressFill.style.borderRadius = "8px 0 0 8px";
-    progressFill.style.background = `linear-gradient(90deg, ${COLORS.badgeBg}, ${COLORS.primary})`;
+    progressFill.style.background = `linear-gradient(270deg, ${COLORS.primary}, ${COLORS.badgeBg}, ${COLORS.primary})`;
+    progressFill.style.backgroundSize = "400% 100%";
+    progressFill.style.animation = "lavaflow 2s linear infinite";
     progressFill.style.transition = "width 0.4s ease";
     progressFill.style.width = "0%";
     punchBar.appendChild(progressFill);
@@ -104,7 +117,7 @@ function renderTopBar() {
     bonusHint.style.left = "50%";
     bonusHint.style.transform = "translateX(-50%)";
     bonusHint.style.fontSize = "13px";
-    bonusHint.style.color = COLORS.badgeBg;
+    bonusHint.style.color = COLORS.primary;
     bonusHint.style.zIndex = ZINDEX.punchBar;
     bonusHint.style.fontFamily = FONT.body;
     bonusHint.style.transition = "opacity 0.3s ease, transform 0.3s ease";
