@@ -291,7 +291,6 @@ function renderTabs() {
 }
 export {
     renderTopBar,
-    updatePunchDisplay,
     renderTabs
 };
 
