@@ -1,6 +1,7 @@
 import { renderProfilePage } from "./profile.js";
 import { showTab } from "./ui_tabs.js";
 import { createLeaderboardPopup, showReferralPopup } from "./popups.js";
+import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 
 let soundButton;
 let soundEnabled = true;
