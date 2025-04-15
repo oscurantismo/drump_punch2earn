@@ -11,16 +11,16 @@ function renderTopBar() {
     top.style.position = "fixed";
     top.style.top = "0.5rem";
     top.style.left = "1rem";
-    top.style.background = "#fff";
-    top.style.color = "#000";
-    top.style.border = "2px solid #0047ab";
+    top.style.background = COLORS.offWhite;
+    top.style.color = COLORS.badgeBg;
+    top.style.border = "2px solid COLORS.deepRed";
     top.style.borderRadius = "10px";
-    top.style.fontFamily = "'Arial Black', sans-serif";
+    top.style.fontFamily = FONT.heading;
     top.style.padding = "6px 12px";
     top.style.zIndex = "1000";
 
     const usernameElement = document.createElement("div");
-    usernameElement.innerHTML = `👤 ${window.storedUsername}`;
+    usernameElement.innerHTML = `${window.storedUsername}`;
     usernameElement.style.cursor = "pointer";
     usernameElement.onclick = () => {
         window.activeTab = "profile";
@@ -35,10 +35,10 @@ function renderTopBar() {
     punchBar.style.top = "50px";
     punchBar.style.left = "1rem";
     punchBar.style.right = "1rem";
-    punchBar.style.background = "#b22234";
-    punchBar.style.color = "#ffffff";
+    punchBar.style.background = COLORS.deepRed;
+    punchBar.style.color = COLORS.badgeBg;
     punchBar.style.textAlign = "center";
-    punchBar.style.fontFamily = "'Arial Black', sans-serif";
+    punchBar.style.fontFamily = FONT.body;
     punchBar.style.fontSize = "18px";
     punchBar.style.padding = "6px 0";
     punchBar.style.borderRadius = "8px";
@@ -51,7 +51,7 @@ function renderTopBar() {
     punchProgress.style.position = "fixed";
     punchProgress.style.top = "88px";
     punchProgress.style.left = "1rem";
-    punchProgress.style.fontFamily = "'Arial Black', sans-serif";
+    punchProgress.style.fontFamily = FONT.body;
     punchProgress.style.fontSize = "16px";
     punchProgress.style.color = "#002868";
     punchProgress.style.zIndex = "999";
