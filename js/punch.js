@@ -20,7 +20,9 @@ function initPunchModule(config) {
     drump = config.drump;
     punchSounds = config.punchSounds;
     loadeddrumpFrames = config.loadeddrumpFrames;
-    updatePunchDisplay();
+    if (typeof window.updatePunchDisplay === "function") {
+        window.updatePunchDisplay();
+    }
 }
 
 function handlePunch() {
