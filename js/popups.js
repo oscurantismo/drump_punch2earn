@@ -1,4 +1,13 @@
-// ✅ popups.js — extracted from ui.js
+// ✅ popups.js — updated with unified styles + popup state detection
+
+// Global popup blocker
+window.isPopupOpen = () => {
+    return (
+        document.getElementById("leaderboard-reward-popup")?.style.display === "flex" ||
+        document.getElementById("referral-popup") ||
+        document.getElementById("info-container")
+    );
+};
 
 function createLeaderboardPopup() {
     if (document.getElementById("leaderboard-reward-popup")) return;
@@ -18,52 +27,65 @@ function createLeaderboardPopup() {
         zIndex: "4000"
     });
 
-    popup.innerHTML = `
-      <div style="
-          background: #fff;
-          padding: 24px;
-          border-radius: 14px;
-          max-width: 340px;
-          width: 90%;
-          font-family: 'Segoe UI', sans-serif;
-          text-align: left;
-          box-shadow: 0 0 16px rgba(0,0,0,0.3);
-          position: relative;
-      " onclick="event.stopPropagation()">
+    const card = document.createElement("div");
+    Object.assign(card.style, {
+        background: "#fff",
+        padding: "24px",
+        borderRadius: "14px",
+        maxWidth: "340px",
+        width: "90%",
+        fontFamily: "'Segoe UI', sans-serif",
+        textAlign: "left",
+        boxShadow: "0 0 16px rgba(0,0,0,0.3)",
+        position: "relative"
+    });
+
+    card.innerHTML = `
         <h3 style="text-align:center; color:#0047ab;">🏆 Leaderboard Rewards</h3>
         <ul style="font-size:14px; line-height:1.6; padding-left:18px; margin-top: 12px;">
-          <li><b>Top-25</b>: +250 punches (once)</li>
-          <li><b>Top-10</b>: +550 punches (once)</li>
-          <li><b>Top-3</b>: +1000 | <b>Top-2</b>: +2000 | <b>Top-1</b>: +4000</li>
-          <li><b>Drops:</b></li>
-          <li>Left Top-10: -200</li>
-          <li>Left Top-3/2/1: -600</li>
-          <li>Left Top-25: -100</li>
+            <li><b>Top-25</b>: +250 punches (once)</li>
+            <li><b>Top-10</b>: +550 punches (once)</li>
+            <li><b>Top-3</b>: +1000 | <b>Top-2</b>: +2000 | <b>Top-1</b>: +4000</li>
+            <li><b>Drops:</b></li>
+            <li>Left Top-10: -200</li>
+            <li>Left Top-3/2/1: -600</li>
+            <li>Left Top-25: -100</li>
         </ul>
-        <div class="leaderboard-popup-close" style="position:absolute; top:8px; right:12px; cursor:pointer; color:#888;">
-            ❌
-        </div>
-      </div>
+        <button class="leaderboard-popup-close"
+            style="margin-top: 18px; display:block; margin-left:auto; margin-right:auto;
+                   background:#0047ab; color:white; padding:10px 16px; font-weight:bold;
+                   border:none; border-radius:10px; font-size:15px; cursor:pointer;">
+            Close
+        </button>
     `;
 
-    // Prevent punch trigger
-    popup.onclick = (e) => e.stopPropagation();
+    popup.onclick = (e) => {
+        if (e.target === popup) popup.style.display = "none";
+    };
+
+    card.querySelector(".leaderboard-popup-close").onclick = () => {
+        popup.style.display = "none";
+    };
+
+    popup.appendChild(card);
     document.body.appendChild(popup);
 }
 
 function showReferralPopup() {
     const popup = document.createElement("div");
     popup.id = "referral-popup";
-    popup.style.position = "fixed";
-    popup.style.top = "0";
-    popup.style.left = "0";
-    popup.style.width = "100vw";
-    popup.style.height = "100vh";
-    popup.style.backgroundColor = "rgba(0,0,0,0.6)";
-    popup.style.display = "flex";
-    popup.style.alignItems = "center";
-    popup.style.justifyContent = "center";
-    popup.style.zIndex = "4000";
+    Object.assign(popup.style, {
+        position: "fixed",
+        top: "0",
+        left: "0",
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "rgba(0,0,0,0.6)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: "4000"
+    });
 
     const card = document.createElement("div");
     Object.assign(card.style, {
@@ -83,7 +105,9 @@ function showReferralPopup() {
             Invite a friend and you both get <b>+1000 punches</b>!
         </p>
         <p style="font-size: 13px; color: #555;">Your unique referral link:</p>
-        <input id="referral-link" value="https://t.me/Drump_punch_bot?start=referral_${window.userId}" readonly style="width: 100%; font-size: 13px; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px;" />
+        <input id="referral-link" value="https://t.me/Drump_punch_bot?start=referral_${window.userId}" readonly
+               style="width: 100%; font-size: 13px; padding: 8px; margin-bottom: 10px;
+                      border: 1px solid #ccc; border-radius: 6px;" />
     `;
 
     const copyBtn = document.createElement("button");
@@ -133,9 +157,7 @@ function showReferralPopup() {
                 whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`,
                 x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(msg)}`
             };
-            if (btnId && links[btnId]) {
-                window.open(links[btnId], "_blank");
-            }
+            if (btnId && links[btnId]) window.open(links[btnId], "_blank");
         });
     };
 
@@ -159,38 +181,46 @@ function showReferralPopup() {
     close.onclick = () => popup.remove();
     card.appendChild(close);
 
-    popup.onclick = (e) => e.stopPropagation();
+    popup.onclick = (e) => {
+        if (e.target === popup) popup.remove();
+    };
+
     popup.appendChild(card);
     document.body.appendChild(popup);
-}
-
-function faqItem(question, answer) {
-    return `
-        <div class="faq-item">
-            <div class="faq-question">${question}</div>
-            <div class="faq-answer">${answer}</div>
-        </div>
-    `;
 }
 
 function showInfoPage() {
     const existing = document.getElementById("info-container");
     if (existing) existing.remove();
 
-    const info = document.createElement("div");
-    info.id = "info-container";
-    Object.assign(info.style, {
+    const overlay = document.createElement("div");
+    overlay.id = "info-container";
+    Object.assign(overlay.style, {
         position: "fixed",
         top: "0",
         left: "0",
         right: "0",
         bottom: "0",
-        background: "#ffffff",
+        backgroundColor: "rgba(0,0,0,0.6)",
         fontFamily: "Arial, sans-serif",
         zIndex: "4000",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+    });
+
+    const info = document.createElement("div");
+    Object.assign(info.style, {
+        background: "#ffffff",
         padding: "24px",
+        borderRadius: "14px",
+        width: "90%",
+        maxWidth: "360px",
+        maxHeight: "90vh",
         overflowY: "auto",
-        boxSizing: "border-box"
+        fontFamily: "Arial, sans-serif",
+        boxShadow: "0 0 16px rgba(0,0,0,0.3)",
+        position: "relative"
     });
 
     info.innerHTML = `
@@ -264,10 +294,16 @@ function showInfoPage() {
     `;
 
     document.head.appendChild(style);
-    document.body.appendChild(info);
+    overlay.appendChild(info);
+    document.body.appendChild(overlay);
+
+    // Close on background click
+    overlay.onclick = (e) => {
+        if (e.target === overlay) overlay.remove();
+    };
 
     // Close button
-    document.getElementById("close-info").onclick = () => info.remove();
+    document.getElementById("close-info").onclick = () => overlay.remove();
 
     // FAQ toggle logic
     const questions = info.querySelectorAll(".faq-question");
