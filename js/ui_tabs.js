@@ -22,7 +22,7 @@ function showTab(tab, scene = null) {
         container.style.right = "0";
         container.style.width = "100vw";
         container.style.height = "calc(100vh - 100px)";
-        container.style.background = "#ffffff";
+        container.style.background = COLORS.deepRed;
         container.style.zIndex = "999";
         container.style.overflowY = "auto";
 
@@ -47,21 +47,21 @@ function showTab(tab, scene = null) {
             width: "100vw",
             height: "calc(100vh - 100px)",
             padding: "24px",
-            background: "#ffffff",
-            fontFamily: "'Arial', sans-serif",
+            background: COLORS.deepRed,
+            fontFamily: FONT.body,
             overflowY: "auto",
             zIndex: "999",
             boxSizing: "border-box"
         });
 
         container.innerHTML = `
-            <h2 style="color:#0047ab; font-size:24px; font-family:'Arial Black', sans-serif;">🎯 Tasks & Rewards</h2>
-            <p style="font-size:14px; color:#333; line-height:1.5; margin-top:6px;">
+            <h2 style="color:${COLORS.offWhite}; font-size:24px; font-family:${FONT.body}">🎯 Tasks & Rewards</h2>
+            <p style="font-size:14px; color:${COLORS.badgeBg}; line-height:1.5; margin-top:6px;">
                 Welcome to your task center! Here you can track your leaderboard progress, understand the reward structure, and discover upcoming challenges.
             </p>
 
-            <div style="margin-top:24px; background:#f0f4ff; border-left:5px solid #0047ab; padding:16px; border-radius:10px;">
-                <h3 style="margin-top:0;">🎁 Leaderboard Rewards</h3>
+            <div style="margin-top:24px; background:${COLORS.primary}; border-left:5px solid ${COLORS.badgeBg}; padding:16px; border-radius:10px;">
+                <h3 style="margin-top:0; color:${COLORS.offWhite};">🎁 Leaderboard Rewards</h3>
                 <ul style="font-size:14px; line-height:1.6; padding-left:20px;">
                     <li><b>Top-25:</b> +250 punches</li>
                     <li><b>Top-10:</b> +550 punches</li>
