@@ -1,5 +1,6 @@
 import { showGameUI } from "./game.js";
 import { createLeaderboardPopup } from "./popups.js";
+import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 
 function showTab(tab, scene = null) {
     // Remove all tab containers
