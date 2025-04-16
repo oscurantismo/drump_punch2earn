@@ -43,7 +43,7 @@ function renderTopBar() {
                 bottom: 4px;
                 width: 12px;
                 height: 12px;
-                background: gold;
+                background: "#fff9a0";
                 border-radius: 50%;
                 animation: floatStars 2s ease-out infinite;
                 pointer-events: none;
@@ -58,8 +58,8 @@ function renderTopBar() {
         position: "fixed",
         top: "0.5rem",
         left: "1rem",
-        background: COLORS.offWhite,
-        color: COLORS.badgeBg,
+        background: COLORS.deepRed,
+        color: COLORS.offWhite,
         border: `2px solid ${COLORS.deepRed}`,
         borderRadius: BORDER.radius,
         fontFamily: FONT.heading,
@@ -75,7 +75,7 @@ function renderTopBar() {
     const usernameElement = document.createElement("div");
     usernameElement.innerHTML = `${window.storedUsername}`;
     usernameElement.style.fontWeight = "bold";
-    usernameElement.style.color = COLORS.deepRed;
+    usernameElement.style.color = COLORS.offWhite;
 
     const settingsIcon = document.createElement("img");
     settingsIcon.src = "drump-images/settings.svg";
@@ -104,8 +104,8 @@ function renderTopBar() {
         top: "50px",
         left: "1rem",
         right: "1rem",
-        background: COLORS.deepRed,
-        color: COLORS.badgeBg,
+        background: "#000",
+        color: "#fff",
         textAlign: "center",
         fontFamily: FONT.body,
         fontSize: "18px",
@@ -122,7 +122,7 @@ function renderTopBar() {
         position: "relative",
         zIndex: "4",
         pointerEvents: "none",
-        color: COLORS.badgeBg,
+        color: "#fff",
         padding: "4px 10px",
         borderRadius: "8px",
         display: "inline-block",
@@ -171,7 +171,7 @@ function renderTopBar() {
         transform: "translateX(-50%)",
         fontFamily: FONT.body,
         fontSize: "16px",
-        color: COLORS.badgeBg,
+        color: "#222",
         zIndex: ZINDEX.punchBar
     });
     document.body.appendChild(punchProgress);
@@ -184,7 +184,7 @@ function renderTopBar() {
         left: "50%",
         transform: "translateX(-50%)",
         fontSize: "13px",
-        color: COLORS.badgeBg,
+        color: "#222",
         zIndex: ZINDEX.punchBar,
         fontFamily: FONT.body,
         transition: "opacity 0.3s ease, transform 0.3s ease",
@@ -266,9 +266,11 @@ function renderTabs() {
         btn.style.flex = "1";
         btn.style.padding = "14px 8px";
         btn.style.fontSize = "13px";
+        btn.style.fontWeight = "600";
         btn.style.border = "none";
+        btn.style.borderTop = "2px solid #888";
         btn.style.background = (tab === window.activeTab) ? COLORS.badgeBg : COLORS.primary;
-        btn.style.color = COLORS.textLight;
+        btn.style.color = "#000";
         btn.style.transition = "background 0.3s ease, transform 0.2s ease";
         btn.style.letterSpacing = "1px";
         btn.style.cursor = "pointer";
