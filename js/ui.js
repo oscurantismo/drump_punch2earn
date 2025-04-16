@@ -258,31 +258,41 @@ function renderTabs() {
         const btn = document.createElement("button");
 
         let label = tab.toUpperCase();
-        if (tab === "leaderboard") label = "LEADERBOARD";
-        if (tab === "tasks") label = "💥 EARN";
-        if (tab === "game") label = "PUNCH";
+        if (tab === "leaderboard") label = "📊";       // was "LEADERBOARD"
+        else if (tab === "game") label = "🥊";         // was "PUNCH"
+        else if (tab === "profile") label = "👤";
+        else label = "💥 EARN"; 
 
         btn.innerText = label;
         btn.style.flex = "1";
-        btn.style.padding = "14px 8px";
-        btn.style.fontSize = "13px";
-        btn.style.fontWeight = "600";
+        btn.style.padding = "12px 0";
+        btn.style.fontSize = "20px";                          // ✅ larger, more tappable
         btn.style.border = "none";
-        btn.style.borderTop = "2px solid #888";
-        btn.style.background = (tab === window.activeTab) ? COLORS.badgeBg : COLORS.primary;
-        btn.style.color = "#000";
-        btn.style.transition = "background 0.3s ease, transform 0.2s ease";
-        btn.style.letterSpacing = "1px";
+        btn.style.background = (tab === window.activeTab)
+            ? "#ffffff"                                      // ✅ light background for active
+            : "#2a3493";                                     // ✅ dark blue for inactive
+        btn.style.color = (tab === window.activeTab)
+            ? "#2a3493"                                      // ✅ text color for active
+            : "#f8f9fe";                                     // ✅ lighter text on dark
+        btn.style.transition = "all 0.3s ease";
+        btn.style.borderTop = "2px solid #FFCC68";           // ✅ separator
+        btn.style.fontFamily = FONT.body;
+        btn.style.display = "flex";
+        btn.style.justifyContent = "center";
+        btn.style.alignItems = "center";
         btn.style.cursor = "pointer";
-
-        btn.onmouseenter = () => btn.style.transform = "scale(1.05)";
-        btn.onmouseleave = () => btn.style.transform = "scale(1)";
+        btn.style.userSelect = "none";
 
         btn.onclick = () => {
             window.activeTab = tab;
             showTab(tab);
-            document.querySelectorAll("#tab-container button").forEach(b => b.style.background = COLORS.primary);
-            btn.style.background = COLORS.badgeBg;
+            document.querySelectorAll("#tab-container button").forEach(b => {
+                b.style.background = "#2a3493";
+                b.style.color = "#f8f9fe";
+            });
+            btn.style.background = "#ffffff";
+            btn.style.color = "#2a3493";
+
         };
 
         tabBar.appendChild(btn);
