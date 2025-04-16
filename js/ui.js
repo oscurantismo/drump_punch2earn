@@ -75,7 +75,7 @@ function renderTopBar() {
     const usernameElement = document.createElement("div");
     usernameElement.innerHTML = `${window.storedUsername}`;
     usernameElement.style.fontWeight = "bold";
-    usernameElement.style.color = COLORS.offWhite;
+    usernameElement.style.color = COLORS.primary;
 
     const settingsIcon = document.createElement("img");
     settingsIcon.src = "drump-images/settings.svg";
