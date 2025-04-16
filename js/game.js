@@ -38,7 +38,7 @@ function createGame() {
 
 function preload() {
     this.load.image("drump1", "drump-images/1a-min.png");
-    this.load.image("background", "drump-images/background.jpg");
+    this.load.image("background", "drump-images/background.png");
     this.load.image("punch", "drump-images/punch.png"); 
     this.load.audio("laugh", "laugh1.mp3");
     this.load.audio("oof", "oof1.mp3");
