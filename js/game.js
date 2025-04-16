@@ -136,10 +136,21 @@ function create() {
 }
 
 function showGameUI(scene) {
+    // 1. Add background
     scene.add.image(scene.scale.width / 2, scene.scale.height / 2, "background")
         .setOrigin(0.5)
         .setDisplaySize(scene.scale.width, scene.scale.height)
         .setDepth(-10);
+
+    // 2. Add dark overlay above background but behind Drump
+    const darkOverlay = scene.add.rectangle(
+        scene.scale.width / 2,
+        scene.scale.height / 2,
+        scene.scale.width,
+        scene.scale.height,
+        0x000000,
+        0.35 // Opacity (0 to 1) – adjust for how dark you want
+    ).setDepth(-9);
 
     const textureKey = `1a-min.png`;
     if (!loadeddrumpFrames.has(textureKey)) {
