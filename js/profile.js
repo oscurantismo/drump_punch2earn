@@ -50,24 +50,25 @@ function renderProfilePage() {
         position: "relative"
     });
 
-    const topCloseBtn = document.createElement("button");
-    topCloseBtn.innerHTML = "✖";
-    Object.assign(topCloseBtn.style, {
-        position: "absolute",
-        top: "12px",
-        right: "12px",
-        background: "transparent",
-        border: "none",
-        fontSize: "20px",
+    // Dynamic leaderboard rank circle
+    const leaderboardCircle = document.createElement("div");
+    leaderboardCircle.id = "leaderboard-rank-circle";
+    leaderboardCircle.innerText = "#?";
+    Object.assign(leaderboardCircle.style, {
+        width: "70px",
+        height: "70px",
+        borderRadius: "50%",
+        background: COLORS.primary,
+        color: COLORS.offWhite,
         fontWeight: "bold",
-        color: COLORS.primary,
-        cursor: "pointer",
-        transition: "color 0.3s ease"
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "22px",
+        marginBottom: "12px",
+        boxShadow: "0 0 10px rgba(0,0,0,0.2)"
     });
-    topCloseBtn.onmouseover = () => topCloseBtn.style.color = COLORS.deepRed;
-    topCloseBtn.onmouseout = () => topCloseBtn.style.color = COLORS.primary;
-    topCloseBtn.onclick = closeProfile;
-    card.appendChild(topCloseBtn);
+    card.appendChild(leaderboardCircle);
 
     const username = document.createElement("h2");
     username.innerText = `${window.storedUsername}'s Profile`;
@@ -78,14 +79,6 @@ function renderProfilePage() {
         fontFamily: FONT.heading
     });
     card.appendChild(username);
-
-    const avatar = document.createElement("div");
-    avatar.innerText = "👤";
-    Object.assign(avatar.style, {
-        fontSize: "48px",
-        marginBottom: "12px"
-    });
-    card.appendChild(avatar);
 
     const punchesStat = document.createElement("div");
     punchesStat.innerHTML = `🥊 Punches: <span id="punchProfileStat">0</span>`;
@@ -223,6 +216,7 @@ function renderProfilePage() {
 
     fetchProfileData();
     if (window.userId) fetchReferralHistory();
+    fetchUserRank(); // ✅ Get rank from backend
 }
 
 function fetchProfileData() {
@@ -245,6 +239,18 @@ function fetchProfileData() {
             }
         })
         .catch(err => console.error("Error fetching profile data:", err));
+}
+
+function fetchUserRank() {
+    fetch("https://drumpleaderboard-production.up.railway.app/leaderboard")
+        .then(res => res.json())
+        .then(data => {
+            const index = data.findIndex(entry => entry.user_id === window.userId);
+            const rank = index >= 0 ? `#${index + 1}` : ">100";
+            const circle = document.getElementById("leaderboard-rank-circle");
+            if (circle) circle.innerText = rank;
+        })
+        .catch(err => console.error("Error fetching rank:", err));
 }
 
 function closeProfile() {
