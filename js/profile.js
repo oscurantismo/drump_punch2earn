@@ -1,6 +1,7 @@
 import { fetchReferralHistory, renderReferralHistory } from "./referral.js";
 import { createLeaderboardPopup } from "./popups.js";
 import { updatePunchDisplay } from "./ui.js";
+import { COLORS, FONT } from "./styles.js";
 
 function renderProfilePage() {
     const existingProfile = document.getElementById("profile-container");
@@ -8,7 +9,7 @@ function renderProfilePage() {
 
     window.activeTab = "profile";
     updatePunchDisplay();
-    createLeaderboardPopup(); // ensures the popup exists
+    createLeaderboardPopup();
 
     const container = document.createElement("div");
     container.id = "profile-container";
@@ -20,10 +21,10 @@ function renderProfilePage() {
         bottom: "0",
         width: "100vw",
         height: "100vh",
-        background: "#f0f4ff",
+        background: COLORS.badgeBg,
         zIndex: "2000",
         overflowY: "auto",
-        fontFamily: "'Arial Black', sans-serif",
+        fontFamily: FONT.body,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -35,13 +36,13 @@ function renderProfilePage() {
 
     const card = document.createElement("div");
     Object.assign(card.style, {
-        background: "#ffffff",
-        color: "#000",
+        background: COLORS.offWhite,
+        color: COLORS.primary,
         padding: "24px",
         borderRadius: "18px",
         width: "90%",
         maxWidth: "420px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
@@ -59,22 +60,22 @@ function renderProfilePage() {
         border: "none",
         fontSize: "20px",
         fontWeight: "bold",
-        color: "#aaa",
+        color: COLORS.primary,
         cursor: "pointer",
         transition: "color 0.3s ease"
     });
-    topCloseBtn.onmouseover = () => topCloseBtn.style.color = "#e74c3c";
-    topCloseBtn.onmouseout = () => topCloseBtn.style.color = "#aaa";
+    topCloseBtn.onmouseover = () => topCloseBtn.style.color = COLORS.deepRed;
+    topCloseBtn.onmouseout = () => topCloseBtn.style.color = COLORS.primary;
     topCloseBtn.onclick = closeProfile;
     card.appendChild(topCloseBtn);
 
     const username = document.createElement("h2");
     username.innerText = `${window.storedUsername}'s Profile`;
     Object.assign(username.style, {
-        marginBottom: "16px",
+        marginBottom: "8px",
         fontSize: "22px",
-        color: "#002868",
-        margin: "0 0 8px"
+        color: COLORS.deepRed,
+        fontFamily: FONT.heading
     });
     card.appendChild(username);
 
@@ -91,15 +92,17 @@ function renderProfilePage() {
     Object.assign(punchesStat.style, {
         fontSize: "18px",
         marginBottom: "20px",
-        color: "#0047ab"
+        color: COLORS.primary,
+        fontWeight: "bold"
     });
     card.appendChild(punchesStat);
 
     const divider = document.createElement("hr");
     Object.assign(divider.style, {
         border: "none",
-        borderTop: "2px solid #000000",
-        margin: "20px 0"
+        borderTop: `2px solid ${COLORS.primary}`,
+        margin: "20px 0",
+        width: "100%"
     });
     card.appendChild(divider);
 
@@ -108,26 +111,28 @@ function renderProfilePage() {
     Object.assign(referralTitle.style, {
         fontSize: "18px",
         marginBottom: "8px",
-        color: "#222"
+        color: COLORS.primary
     });
     card.appendChild(referralTitle);
 
     const referralMsg = document.createElement("p");
-    referralMsg.innerText = "Invite friends and earn +1000 🥊 punches for each sent and accepted referral!";
+    referralMsg.innerText = "Earn +1000 🥊 punches for every valid invite!";
     Object.assign(referralMsg.style, {
         fontSize: "14px",
-        color: "#666",
-        marginBottom: "6px"
+        color: "#333",
+        marginBottom: "4px",
+        textAlign: "center"
     });
     card.appendChild(referralMsg);
 
     const referralCondition = document.createElement("p");
-    referralCondition.innerText = "Your friend must punch at least 20 times for you to earn the reward.";
+    referralCondition.innerText = "Your friend must punch 20+ times.";
     Object.assign(referralCondition.style, {
         fontSize: "12px",
-        color: "#999",
+        color: "#888",
         marginBottom: "14px",
-        lineHeight: "1.3"
+        lineHeight: "1.4",
+        textAlign: "center"
     });
     card.appendChild(referralCondition);
 
@@ -140,7 +145,7 @@ function renderProfilePage() {
         padding: "10px",
         borderRadius: "8px",
         border: "1px solid #ccc",
-        fontFamily: "Arial",
+        fontFamily: FONT.body,
         fontSize: "13px",
         marginBottom: "10px"
     });
@@ -157,29 +162,31 @@ function renderProfilePage() {
     const copyBtn = document.createElement("button");
     copyBtn.innerText = "📋 Copy";
     copyBtn.style.flex = "1";
-    styleGameButton(copyBtn, "#0077cc", "#005fa3");
+    styleGameButton(copyBtn, "#0047ab", "#00337a");
     copyBtn.onclick = () => {
         navigator.clipboard.writeText(referralInput.value);
         alert("Link copied!");
     };
 
     const shareBtn = document.createElement("button");
-    shareBtn.innerText = "📤 Share";
+    shareBtn.innerText = "📣 Share";
     shareBtn.style.flex = "1";
-    styleGameButton(shareBtn, "#b22234", "#9e1e2c");
+    styleGameButton(shareBtn, "#8e0004", "#6c0003");
     shareBtn.onclick = () => {
-        const message = `Join me in Drump | Punch2Earn! Punch and earn rewards 💥 Use my link: ${referralInput.value}`;
+        const cleanLink = `https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
+        const message = `🥊 Ready to blow off some steam?\nJoin me in Drump | Punch2Earn — the only game where you punch Drump for glory, leaderboard fame, and real rewards. 💥\n\nUse my link to get started: ${cleanLink}`;
+
         Telegram.WebApp.showPopup({
             title: "Share your referral link",
             message: "Choose where to share your invite:",
             buttons: [
                 { id: "telegram", type: "default", text: "Telegram" },
                 { id: "x", type: "default", text: "X (Twitter)" },
-                { id: "whatsapp", type: "default", text: "WhatsApp" },
+                { id: "whatsapp", type: "default", text: "WhatsApp" }
             ]
         }, (btnId) => {
             const links = {
-                telegram: `https://t.me/share/url?url=${encodeURIComponent(referralInput.value)}&text=${encodeURIComponent(message)}`,
+                telegram: `https://t.me/share/url?url=${encodeURIComponent(cleanLink)}&text=${encodeURIComponent(message)}`,
                 whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`,
                 x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`
             };
@@ -194,7 +201,7 @@ function renderProfilePage() {
     const closeButton = document.createElement("button");
     closeButton.innerHTML = "🚪 Exit Profile";
     Object.assign(closeButton.style, {
-        background: "#e74c3c",
+        background: COLORS.deepRed,
         color: "#fff",
         padding: "12px 24px",
         fontSize: "16px",
@@ -206,8 +213,8 @@ function renderProfilePage() {
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
         transition: "background 0.3s"
     });
-    closeButton.onmouseover = () => closeButton.style.background = "#c0392b";
-    closeButton.onmouseout = () => closeButton.style.background = "#e74c3c";
+    closeButton.onmouseover = () => closeButton.style.background = "#6c0003";
+    closeButton.onmouseout = () => closeButton.style.background = COLORS.deepRed;
     closeButton.onclick = closeProfile;
     card.appendChild(closeButton);
 
@@ -243,7 +250,6 @@ function fetchProfileData() {
 function closeProfile() {
     const profile = document.getElementById("profile-container");
     if (profile) profile.remove();
-
     window.activeTab = "game";
     updatePunchDisplay();
 }
@@ -257,7 +263,7 @@ function styleGameButton(button, bg, hoverBg) {
         border: "none",
         cursor: "pointer",
         fontSize: "14px",
-        fontFamily: "'Arial Black', sans-serif",
+        fontFamily: FONT.body,
         transition: "background 0.3s"
     });
     button.onmouseover = () => button.style.background = hoverBg;
