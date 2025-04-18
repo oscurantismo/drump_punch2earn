@@ -10,8 +10,8 @@ function renderPunchBadge() {
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    top: "50px",
-    left: "20px",
+    top: "60px",
+    left: "0.75rem",
     width: "144px",
     height: "40px",
     background: "#2a3493",
@@ -23,7 +23,7 @@ function renderPunchBadge() {
     fontSize: "15px",
     fontWeight: "bold",
     display: "flex",
-    alignItems: "center",
+    alignItems: "flex-start",
     boxShadow: "2px 2px 0 #000",
     zIndex: ZINDEX.punchBar + 1,
   });
@@ -114,7 +114,7 @@ function renderPunchBar() {
   punchBar.id = "punch-bar";
   Object.assign(punchBar.style, {
     position: "fixed",
-    top: "118px",  // shifted lower to fit badge above
+    top: "130px",  // shifted lower to fit badge above
     left: "0.75rem",
     right: "0.75rem",
     background: "#FFF2C5",
