@@ -1,5 +1,7 @@
 import { handlePunch, initPunchModule, wiggleDrump } from "./punch.js";
-import { renderTopBar, renderTabs, updatePunchDisplay } from "./ui.js";
+import { renderTabs, updatePunchDisplay } from "./ui.js";
+import { renderTopBar } from "./topbar.js";
+import { renderPunchBar } from "./punchbar.js";
 import { createReferralAndRewardsButtons } from "./buttons.js";
 import { showInfoPage } from "./popups.js";
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
