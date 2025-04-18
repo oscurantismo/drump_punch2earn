@@ -31,9 +31,7 @@ function updatePunchDisplay() {
   }
 }
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/*  BOTTOM TAB BAR                                                          */
-function renderTabs() {
+function renderTabs(activeTab = "game") {
   const tabBar = document.createElement("div");
   tabBar.id = "tab-container";
   Object.assign(tabBar.style, {
@@ -42,52 +40,49 @@ function renderTabs() {
     left: "0",
     width: "100%",
     display: "flex",
-    fontFamily: FONT.body,
-    background: COLORS.primary,
+    justifyContent: "space-around",
+    background: "transparent",
+    padding: "12px 0",
     zIndex: ZINDEX.tabBar,
-    boxShadow: "0 -4px 10px rgba(0,0,0,0.2)",
   });
 
-  /* active tab list */
-  ["game", "leaderboard", "earn"].forEach((tab) => {
-    const btn = document.createElement("button");
-
   const tabs = [
-    { id: "game", label: "PUNCH TO EARN", icon: "drump-images/punch.svg" },
-    { id: "leaderboard", label: "LEADERBOARD", icon: "drump-images/leaderboard.svg" },
-    { id: "earn", label: "DAILY CHALLENGE", icon: "drump-images/earn.svg" },
+    { id: "game", label: "PUNCH TO EARN", icon: "punch.svg" },
+    { id: "leaderboard", label: "LEADERBOARD", icon: "leaderboard.svg" },
+    { id: "earn", label: "DAILY CHALLENGE", icon: "earn.svg" },
   ];
 
+  tabs.forEach((tab) => {
+    const btn = document.createElement("button");
+    btn.dataset.tab = tab.id;
 
-    btn.textContent = label;
-    btn.style.flex = "1";
-    btn.style.padding = "12px 0";
-    btn.style.fontSize = "20px";
-    btn.style.border = "none";
-    btn.style.transition = "all 0.3s ease";
-    btn.style.borderTop = "2px solid #FFCC68";
-    btn.style.fontFamily = FONT.body;
-    btn.style.display = "flex";
-    btn.style.justifyContent = "center";
-    btn.style.alignItems = "center";
-    btn.style.userSelect = "none";
-    btn.style.cursor = "pointer";
+    Object.assign(btn.style, {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "8px 14px",
+      fontFamily: FONT.body,
+      fontSize: "13px",
+      fontWeight: "bold",
+      borderRadius: "12px",
+      border: "2px solid #000",
+      background: tab.id === activeTab ? "#fff2c5" : COLORS.badgeBg,
+      boxShadow: tab.id === activeTab ? "inset 0 0 0 3px #000" : "2px 2px 0 #000",
+      transition: "all 0.2s ease",
+      cursor: "pointer",
+      width: "110px",
+      textAlign: "center",
+    });
 
-    /* Active / inactive colours */
-    const setActive = (isActive) => {
-      btn.style.background = isActive ? "#ffffff" : COLORS.primary;
-      btn.style.color      = isActive ? COLORS.primary : COLORS.textLight;
-    };
-    setActive(tab === window.activeTab);
+    btn.innerHTML = `
+      <img src="${tab.icon}" alt="${tab.label}" style="height: 26px; margin-bottom: 6px;" />
+      ${tab.label}
+    `;
 
-    /* Click  */
     btn.onclick = () => {
-      window.activeTab = tab;
-      showTab(tab);
-      document.querySelectorAll("#tab-container button").forEach((b) =>
-        setActive(false)
-      );
-      setActive(true);
+      window.activeTab = tab.id;
+      showTab(tab.id);
     };
 
     tabBar.appendChild(btn);
@@ -95,6 +90,7 @@ function renderTabs() {
 
   document.body.appendChild(tabBar);
 }
+
 
 /* ────────────────────────────────────────────────────────────────────────── */
 export { renderTabs, updatePunchDisplay };
