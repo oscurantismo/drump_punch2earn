@@ -15,6 +15,9 @@ function updatePunchDisplay() {
   const remaining = showMilestone - count;
   const percent = Math.min(100, ((count - (showMilestone - 100)) / 100) * 100);
 
+  const badgeCount = document.getElementById("punch-badge-count");
+  if (badgeCount) badgeCount.textContent = count.toLocaleString();
+
   if (fillEl) fillEl.style.width = `${percent}%`;
   if (countEl) countEl.textContent = `${count} / ${showMilestone}`;
   if (hintEl) {
