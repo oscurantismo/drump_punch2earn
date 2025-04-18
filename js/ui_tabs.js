@@ -93,16 +93,15 @@ function showTab(tab, scene = null) {
     container.appendChild(iframe);
     document.body.appendChild(container);
     createLeaderboardPopup();
-  }
 
-    /* EARN TAB ------------------------------------------------------------- */
-    } else if (tab === "earn") {
-      renderEarnTab();
+  /* EARN TAB ------------------------------------------------------------- */
+  } else if (tab === "earn") {
+    renderEarnTab();
 
-    /* PROFILE TAB ---------------------------------------------------------- */
-    } else if (tab === "profile") {
-      renderProfilePage();
-    }
+  /* PROFILE TAB ---------------------------------------------------------- */
+  } else if (tab === "profile") {
+    renderProfilePage();
   }
+}
 
 export { showTab };
