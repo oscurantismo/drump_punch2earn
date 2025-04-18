@@ -8,24 +8,36 @@ import { renderTopBar } from "./topbar.js";
 import { renderPunchBar } from "./punchbar.js";
 
 function showTab(tab, scene = null) {
-  document.querySelectorAll("#top-bar, #punch-bar, #punch-progress, #bonus-hint")
+  // Clean up previously rendered containers
+  document.querySelectorAll("#top-bar, #punch-bar, #punch-progress, #bonus-hint, #leaderboard-container, #earn-container, #profile-container")
     .forEach(el => el && el.remove());
 
-  renderTopBar(); // always render
-
-  if (tab === "game") {
-    renderPunchBar(); // only for game
-    showGameUI(scene);
-  }
-
-  // ✅ Set global background
+  // Set global background
   document.body.style.backgroundImage = "url('background.png')";
   document.body.style.backgroundSize = "cover";
   document.body.style.backgroundPosition = "center";
   document.body.style.backgroundRepeat = "no-repeat";
+  document.body.style.transition = "background 0.3s ease";
 
+  // Topbar is always visible
+  renderTopBar();
 
-  renderTabs();
+  // Punch bar only visible on game tab
+  if (tab === "game") renderPunchBar();
+
+  // Update tab highlight
+  const updateTabHighlight = () => {
+    document.querySelectorAll("#tab-container button").forEach(btn => {
+      const active = btn.dataset.tab === tab;
+      btn.style.background = active ? "#fff2c5" : COLORS.badgeBg;
+      btn.style.boxShadow = active ? "inset 0 0 0 3px #000" : "2px 2px 0 #000";
+      btn.style.transform = active ? "translateY(-2px)" : "translateY(0)";
+    });
+  };
+
+  // Always render tabs
+  renderTabs(tab);
+  setTimeout(updateTabHighlight, 50);
 
   // === GAME TAB ===
   if (tab === "game" && scene) {
@@ -56,13 +68,11 @@ function showTab(tab, scene = null) {
 
     const showFallback = () => {
       container.innerHTML = `
-        <div style="
-          height:100%;display:flex;align-items:center;justify-content:center;
-          padding:0 16px;box-sizing:border-box;background:#f8f9fe;">
-          <div style="
-            width:100%;max-width:420px;background:#fff;border:2px solid #2a3493;
-            border-radius:10px;padding:24px;text-align:center;
-            font-family:'Segoe UI',sans-serif;color:#2a3493;">
+        <div style="height:100%;display:flex;align-items:center;justify-content:center;
+                    padding:0 16px;box-sizing:border-box;background:#f8f9fe;">
+          <div style="width:100%;max-width:420px;background:#fff;border:2px solid #2a3493;
+                      border-radius:10px;padding:24px;text-align:center;
+                      font-family:'Segoe UI',sans-serif;color:#2a3493;">
             <h2 style="margin:0 0 6px;">🚧 Leaderboard under maintenance</h2>
             <p style="margin:0;">Please check back soon – we’re improving your experience.</p>
           </div>
@@ -85,7 +95,7 @@ function showTab(tab, scene = null) {
   } else if (tab === "profile") {
     renderProfilePage();
 
-  // === INFO TAB === (if you have one)
+  // === INFO TAB (optional) ===
   } else if (tab === "info" && typeof renderInfoPage === "function") {
     renderInfoPage();
   }
