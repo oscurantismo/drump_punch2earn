@@ -45,12 +45,12 @@ function showTab(tab, scene = null) {
     showGameUI(scene);
 
   /* LEADERBOARD TAB ------------------------------------------------------ */
-  } else if (tab === "leaderboard") {
+    } else if (tab === "leaderboard") {
     const container = document.createElement("div");
     container.id = "leaderboard-container";
     Object.assign(container.style, {
       position: "fixed",
-      top: "100px",           // below punch bar
+      top: "100px",
       bottom: "0",
       left: "0",
       right: "0",
@@ -69,7 +69,7 @@ function showTab(tab, scene = null) {
       display: "block",
     });
 
-    /* ------- graceful fallback ------- */
+    /* graceful fallback */
     const showFallback = () => {
       container.innerHTML = `
         <div style="
@@ -77,30 +77,27 @@ function showTab(tab, scene = null) {
           padding:0 16px;box-sizing:border-box;background:#f8f9fe;">
           <div style="
             width:100%;max-width:420px;background:#fff;border:2px solid #2a3493;
-            border-radius:10px;padding:24px;text-align:center;font-family:'Segoe UI',sans-serif;color:#2a3493;">
+            border-radius:10px;padding:24px;text-align:center;
+            font-family:'Segoe UI',sans-serif;color:#2a3493;">
             <h2 style="margin:0 0 6px;">🚧 Leaderboard under maintenance</h2>
             <p style="margin:0;">Please check back soon – we’re improving your experience.</p>
           </div>
         </div>`;
     };
 
-    /* network failure */
-    iframe.onerror = showFallback;
-    /* hanging / 5‑second timeout */
-    const t = setTimeout(showFallback, 5000);
+    iframe.onerror = showFallback;                // network error
+    const t = setTimeout(showFallback, 5000);     // 5‑s hang fallback
     iframe.onload = () => clearTimeout(t);
 
     container.appendChild(iframe);
     document.body.appendChild(container);
     createLeaderboardPopup();
-  }
 
-
-  /* EARN TAB (new) ------------------------------------------------------- */
+  /* EARN TAB ------------------------------------------------------------- */
   } else if (tab === "earn") {
-    renderEarnTab();   // earn_tab.js takes care of its own DOM & styling
+    renderEarnTab();
 
-  /* PROFILE TAB (called elsewhere) -------------------------------------- */
+  /* PROFILE TAB ---------------------------------------------------------- */
   } else if (tab === "profile") {
     renderProfilePage();
   }
