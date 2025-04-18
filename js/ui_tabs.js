@@ -13,7 +13,7 @@ function showTab(tab, scene = null) {
     .forEach(el => el && el.remove());
 
   // Set global background
-  document.body.style.backgroundImage = "url('background.png')";
+  document.body.style.backgroundImage = "url('drump-images/background.png')";
   document.body.style.backgroundSize = "cover";
   document.body.style.backgroundPosition = "center";
   document.body.style.backgroundRepeat = "no-repeat";
