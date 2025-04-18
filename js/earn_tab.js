@@ -4,15 +4,15 @@ import { updatePunchDisplay } from "./ui.js";
 
 /* ─── TASK CONFIG ─────────────────────────────────────────────────────── */
 const TASKS = [
-  { id: "follow_x",        title: "Follow us on X",                 reward: 40,  url: "https://twitter.com/DrumpPunch2Earn" },
-  { id: "like_pinned",     title: "Like our pinned tweet",          reward: 25,  url: "https://twitter.com/DrumpPunch2Earn/status/000" },
-  { id: "retweet_pinned",  title: "Re‑post pinned tweet",           reward: 35,  url: "https://twitter.com/DrumpPunch2Earn/status/000" },
-  { id: "quote_tweet",     title: "Quote‑tweet with #Punch2Earn",   reward: 60,  url: "https://twitter.com/intent/tweet?text=%23Punch2Earn%20I%20just%20joined%20Drump%20%7C%20Punch2Earn!" },
-  { id: "join_channel",    title: "Join our Telegram channel",      reward: 25,  url: "https://t.me/DrumpPunch2Earn" },
-  { id: "join_group",      title: "Join the community chat",        reward: 30,  url: "https://t.me/DrumpPunch2Earn_Chat" },
+  { id: "follow_x",        title: "Follow us on X",                 reward: 40,  url: "https://x.com/DrumpGame" },
+  { id: "like_pinned",     title: "Like our pinned tweet",          reward: 25,  url: "https://twitter.com/DrumpGame/status/1910371569005736401" },
+  { id: "retweet_pinned",  title: "Re‑post pinned tweet",           reward: 35,  url: "https://twitter.com/DrumpGame/status/1910371569005736401" },
+  { id: "quote_tweet",     title: "Quote‑tweet with #Punch2Earn",   reward: 60,  url: "https://twitter.com/intent/tweet?text=%23Punch2Earn%20I%20just%20joined%20DrumpGame!" },
+  { id: "join_channel",    title: "Join our Telegram channel",      reward: 25,  url: "https://t.me/drumpgame" },
+  { id: "join_group",      title: "Join the community chat",        reward: 30,  url: "https://t.me/drumpgame" },
   { id: "share_game_tg",   title: "Share the game with a friend",   reward: 50,  url: "https://t.me/share/url?url=https://t.me/Drump_punch_bot&text=Come%20punch%20Drump%20with%20me!" },
-  { id: "invite_friend_tg",title: "Invite a friend to the chat",    reward: 100, url: "https://t.me/DrumpPunch2Earn_Chat" },
-  { id: "twitter_space",   title: "Join our next Twitter Space",    reward: 130, url: "https://twitter.com/DrumpPunch2Earn" },
+  { id: "invite_friend_tg",title: "Invite a friend to the chat",    reward: 100, url: "https://t.me/drumpgame" },
+  { id: "twitter_space",   title: "Join our next X Space",    reward: 130, url: "https://x.com/DrumpGame" },
 ];
 
 /* ─── HELPERS ─────────────────────────────────────────────────────────── */
