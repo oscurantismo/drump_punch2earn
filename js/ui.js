@@ -46,14 +46,11 @@ function renderTabs(activeTab = "game") {
     zIndex: ZINDEX.tabBar,
   });
 
-  const tabIcons = {
-    game: "drump-images/punch.svg",
-    leaderboard: "drump-images/leaderboard.svg",
-    earn: "drump-images/earn.svg"
-  };
-
-  btn.innerHTML = `<img src="${tabIcons[tab]}" alt="${tab}" style="width: 26px; height: 26px;">`;
-
+  const tabs = [
+    { id: "game", icon: "drump-images/punch.svg", label: "Punch" },
+    { id: "leaderboard", icon: "drump-images/leaderboard.svg", label: "Leaderboard" },
+    { id: "earn", icon: "drump-images/earn.svg", label: "Earn" },
+  ];
 
   tabs.forEach((tab) => {
     const btn = document.createElement("button");
@@ -83,6 +80,10 @@ function renderTabs(activeTab = "game") {
       ${tab.label}
     `;
 
+    if (tab.id === "earn") {
+      btn.classList.add("jump-tab");
+    }
+
     btn.onclick = () => {
       window.activeTab = tab.id;
       showTab(tab.id);
@@ -93,7 +94,6 @@ function renderTabs(activeTab = "game") {
 
   document.body.appendChild(tabBar);
 }
-
 
 /* ────────────────────────────────────────────────────────────────────────── */
 export { renderTabs, updatePunchDisplay };
