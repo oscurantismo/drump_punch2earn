@@ -1,4 +1,5 @@
 import { updatePunchDisplay } from "./ui.js";
+import { showFloatingBonus } from "./punchbar.js";
 
 let drump, punchSounds, loadeddrumpFrames;
 let hitCooldown = false;
@@ -79,7 +80,9 @@ function handlePunch() {
 
     showPunchEffect();
     showPunchZapEffect();
-    animateFloatingText(`+1${bonus ? ` 🎉 +${bonus}` : ''}`);
+    showFloatingBonus("+1");
+    if (bonus) showFloatingBonus("+25", true);
+
     wiggleDrump(scene);
 
     setTimeout(() => { hitCooldown = false; }, 200);
