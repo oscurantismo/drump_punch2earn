@@ -29,6 +29,7 @@ function showTab(tab, scene = null) {
   }
 
 
+
 const updateTabHighlight = () => {
   document.querySelectorAll("#tab-container button").forEach(btn => {
     const active = btn.dataset.tab === tab;
