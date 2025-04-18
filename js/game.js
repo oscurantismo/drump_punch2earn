@@ -20,6 +20,10 @@ const PUNCH_THRESHOLD = 10;    // Punches per sync
 window.onload = () => {
     createLoader();
     createGame();
+    renderTopBar();          // Always show topbar
+    renderPunchBar();        // Show punch bar immediately
+    renderTabs();            // Show bottom nav
+    showTab("game");         // Default tab on launch
 };
 
 function createGame() {
