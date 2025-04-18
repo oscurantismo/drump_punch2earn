@@ -2,21 +2,21 @@ import { renderProfilePage } from "./profile.js";
 import { showGameUI } from "./game.js";
 import { createLeaderboardPopup } from "./popups.js";
 import { renderEarnTab } from "./earn_tab.js";
-import { renderTopBar, renderTabs } from "./ui.js";
+import { renderTabs } from "./ui.js";
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
+import { renderTopBar } from "./topbar.js";
+import { renderPunchBar } from "./punchbar.js";
 
 function showTab(tab, scene = null) {
-  // Clear containers
-  [
-    "game-container",
-    "leaderboard-container",
-    "earn-container",
-    "profile-container",
-    "info-container",
-  ].forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) el.remove();
-  });
+  document.querySelectorAll("#top-bar, #punch-bar, #punch-progress, #bonus-hint")
+    .forEach(el => el && el.remove());
+
+  renderTopBar(); // always render
+
+  if (tab === "game") {
+    renderPunchBar(); // only for game
+    showGameUI(scene);
+  }
 
   // ✅ Set global background
   document.body.style.backgroundImage = "url('background.png')";
@@ -24,8 +24,7 @@ function showTab(tab, scene = null) {
   document.body.style.backgroundPosition = "center";
   document.body.style.backgroundRepeat = "no-repeat";
 
-  // ✅ Always show topbar and bottom nav
-  renderTopBar();  // this should only show username, info, sound icons
+
   renderTabs();
 
   // === GAME TAB ===
