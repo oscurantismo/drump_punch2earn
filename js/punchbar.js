@@ -1,61 +1,50 @@
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 import { updatePunchDisplay } from "./ui.js";
 
+let badgeTextEl;
+
 function renderPunchBadge() {
-  const existing = document.getElementById("punch-badge");
-  if (existing) existing.remove();
+  if (document.getElementById("punch-badge")) return;
 
   const badge = document.createElement("div");
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    top: "52px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    display: "flex",
-    alignItems: "center",
+    top: "56px", // 👈 between topbar and punch bar
+    left: "1rem",
     background: "#2a3493",
     color: "#fff",
-    padding: "6px 16px 6px 6px",
-    borderRadius: "30px",
-    fontFamily: FONT.heading,
+    padding: "8px 14px",
+    borderRadius: "16px",
+    border: "3px solid #000",
+    fontFamily: "'Negrita Pro', sans-serif",
     fontSize: "16px",
     fontWeight: "bold",
-    zIndex: ZINDEX.punchBar,
-    boxShadow: "2px 2px 0 #000",
-    gap: "12px",
-  });
-
-  const glove = document.createElement("div");
-  Object.assign(glove.style, {
-    width: "38px",
-    height: "38px",
-    borderRadius: "50%",
-    background: "#FFEDAC",
-    border: "2px solid #000",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-    flexShrink: "0",
+    boxShadow: "2px 2px 0 #000",
+    zIndex: 1001
   });
 
   const icon = document.createElement("img");
-  icon.src = "drump-images/punch.svg";
-  icon.style.width = "20px";
-  icon.style.height = "20px";
-  glove.appendChild(icon);
+  icon.src = "drump-images/punch.png";
+  Object.assign(icon.style, {
+    width: "34px",
+    height: "34px",
+    marginRight: "10px",
+    borderRadius: "50%",
+    background: "#ffedac",
+    padding: "4px",
+    boxShadow: "2px 2px 0 #000"
+  });
 
-  const label = document.createElement("div");
-  label.innerHTML = `Punches<br><span id="punch-badge-count">${window.punches || 0}</span>`;
-  label.style.lineHeight = "1.1";
-  label.style.fontSize = "15px";
-  label.style.textAlign = "left";
+  badgeTextEl = document.createElement("div");
+  badgeTextEl.innerHTML = `Punches<br><span style="font-size:20px">${window.punches || 0}</span>`;
 
-  badge.appendChild(glove);
-  badge.appendChild(label);
-
+  badge.append(icon, badgeTextEl);
   document.body.appendChild(badge);
 }
+
 
 
 function renderPunchBar() {
