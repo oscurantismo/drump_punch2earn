@@ -12,7 +12,7 @@ const TASKS = [
   { id: "join_group",      title: "Join the community chat",        reward: 30,  url: "https://t.me/drumpgame" },
   { id: "share_game_tg",   title: "Share the game with a friend",   reward: 50,  url: "https://t.me/share/url?url=https://t.me/Drump_punch_bot&text=Come%20punch%20Drump%20with%20me!" },
   { id: "invite_friend_tg",title: "Invite a friend to the chat",    reward: 100, url: "https://t.me/drumpgame" },
-  { id: "twitter_space",   title: "Join our next X Space",    reward: 130, url: "https://x.com/DrumpGame" },
+  { id: "twitter_space",   title: "Join our next X Space",          reward: 130, url: "https://x.com/DrumpGame" },
 ];
 
 /* ─── HELPERS ─────────────────────────────────────────────────────────── */
@@ -61,7 +61,6 @@ export function renderEarnTab() {
     zIndex: ZINDEX.punchBar,                 // under tab bar (1000)
   });
 
-  /* header */
   const h = document.createElement("h2");
   h.textContent = "🎯 Tasks & Rewards";
   Object.assign(h.style, {
@@ -76,7 +75,6 @@ export function renderEarnTab() {
   Object.assign(sub.style, { margin: "0 0 20px", fontSize: "14px", color: COLORS.deepRed });
   wrap.appendChild(sub);
 
-  /* cards */
   TASKS.forEach((t) => {
     const card = document.createElement("div");
     Object.assign(card.style, {
@@ -119,6 +117,18 @@ export function renderEarnTab() {
 
         markDone(t.id);
         grantReward(t.reward);
+
+        // ✅ Tell backend to log the reward properly
+        if (window.userId) {
+          fetch("https://drumpleaderboard-production.up.railway.app/tasks/complete", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_id: window.userId,
+              task_id: t.id,
+            }),
+          }).catch(() => {});
+        }
 
         btn.textContent = "✅ Done";
         btn.style.background = COLORS.offWhite;
