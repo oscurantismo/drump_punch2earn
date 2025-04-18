@@ -46,13 +46,23 @@
   border: 2px solid #000;
 }
 
-/* Earn tab animation */
+/* Earn tab with bounce */
 .jump-tab {
-  animation: jumpStretch 0.8s ease-in-out infinite;
+  animation: bounceJump 1.2s cubic-bezier(0.25, 1.5, 0.5, 1) infinite;
+  transform-origin: bottom center;
 }
 
-@keyframes jumpStretch {
-  0%   { transform: translateY(0) scale(1); }
-  50%  { transform: translateY(-6px) scale(1.05, 0.95); }
-  100% { transform: translateY(0) scale(1); }
+@keyframes bounceJump {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-8px) scale(1.05, 0.95);
+  }
+  50% {
+    transform: translateY(-2px) scale(0.98, 1.02);
+  }
+  70% {
+    transform: translateY(-4px) scale(1.03, 0.97);
+  }
 }
