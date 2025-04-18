@@ -5,7 +5,7 @@ import { renderEarnTab } from "./earn_tab.js";
 import { renderTabs } from "./ui.js";
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 import { renderTopBar } from "./topbar.js";
-import { renderPunchBar } from "./punchbar.js";
+import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
 
 function showTab(tab, scene = null) {
   // Clean up previously rendered containers
