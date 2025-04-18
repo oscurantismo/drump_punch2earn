@@ -1,6 +1,63 @@
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 import { updatePunchDisplay } from "./ui.js";
 
+function renderPunchBadge() {
+  const existing = document.getElementById("punch-badge");
+  if (existing) existing.remove();
+
+  const badge = document.createElement("div");
+  badge.id = "punch-badge";
+  Object.assign(badge.style, {
+    position: "fixed",
+    top: "52px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    display: "flex",
+    alignItems: "center",
+    background: "#2a3493",
+    color: "#fff",
+    padding: "6px 16px 6px 6px",
+    borderRadius: "30px",
+    fontFamily: FONT.heading,
+    fontSize: "16px",
+    fontWeight: "bold",
+    zIndex: ZINDEX.punchBar,
+    boxShadow: "2px 2px 0 #000",
+    gap: "12px",
+  });
+
+  const glove = document.createElement("div");
+  Object.assign(glove.style, {
+    width: "38px",
+    height: "38px",
+    borderRadius: "50%",
+    background: "#FFEDAC",
+    border: "2px solid #000",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: "0",
+  });
+
+  const icon = document.createElement("img");
+  icon.src = "drump-images/punch.svg";
+  icon.style.width = "20px";
+  icon.style.height = "20px";
+  glove.appendChild(icon);
+
+  const label = document.createElement("div");
+  label.innerHTML = `Punches<br><span id="punch-badge-count">${window.punches || 0}</span>`;
+  label.style.lineHeight = "1.1";
+  label.style.fontSize = "15px";
+  label.style.textAlign = "left";
+
+  badge.appendChild(glove);
+  badge.appendChild(label);
+
+  document.body.appendChild(badge);
+}
+
+
 function renderPunchBar() {
   if (!document.getElementById("punchbar-stripe-style")) {
     const style = document.createElement("style");
