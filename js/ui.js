@@ -3,20 +3,19 @@ import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 function updatePunchDisplay() {
   const count = window.punches || 0;
+
   const punchTextEl = document.getElementById("punch-text");
   const fillEl = document.getElementById("punch-fill");
   const countEl = document.getElementById("punch-progress");
   const hintEl = document.getElementById("bonus-hint");
 
   if (punchTextEl) punchTextEl.innerHTML = `🥊 Punches: ${count}`;
+  if (badgeTextEl) badgeTextEl.innerHTML = `Punches<br><span style="font-size:20px">${count}</span>`;
 
   const nextMilestone = Math.ceil(count / 100) * 100;
   const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
   const remaining = showMilestone - count;
   const percent = Math.min(100, ((count - (showMilestone - 100)) / 100) * 100);
-
-  const badgeCount = document.getElementById("punch-badge-count");
-  if (badgeCount) badgeCount.textContent = count.toLocaleString();
 
   if (fillEl) fillEl.style.width = `${percent}%`;
   if (countEl) countEl.textContent = `${count} / ${showMilestone}`;
@@ -26,6 +25,7 @@ function updatePunchDisplay() {
     hintEl.style.opacity = percent < 5 ? "0.6" : "1";
   }
 }
+
 
 function renderTabs(activeTab = "game") {
   const tabBar = document.createElement("div");
