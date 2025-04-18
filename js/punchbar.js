@@ -10,11 +10,9 @@ function renderPunchBadge() {
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    marginTop: "12px",
-    marginBottom: "12px",
-    marginLeft: "auto",
-    marginRight: "auto",
-    left: "1rem",
+    top: "52px",
+    left: "50%",
+    transform: "translateX(-50%)",
     background: "#2a3493",
     color: "#fff",
     padding: "8px 14px",
@@ -26,7 +24,9 @@ function renderPunchBadge() {
     display: "flex",
     alignItems: "center",
     boxShadow: "2px 2px 0 #000",
-    zIndex: 1001
+    zIndex: ZINDEX.topBar + 1,
+    marginTop: "12px",
+    marginBottom: "12px",
   });
 
   const icon = document.createElement("img");
@@ -47,8 +47,6 @@ function renderPunchBadge() {
   badge.append(icon, badgeTextEl);
   document.body.appendChild(badge);
 }
-
-
 
 function renderPunchBar() {
   if (!document.getElementById("punchbar-stripe-style")) {
@@ -105,7 +103,7 @@ function renderPunchBar() {
   punchBar.id = "punch-bar";
   Object.assign(punchBar.style, {
     position: "fixed",
-    top: "116px",
+    top: "118px",  // shifted lower to fit badge above
     left: "0.75rem",
     right: "0.75rem",
     background: "#FFF2C5",
@@ -123,7 +121,6 @@ function renderPunchBar() {
     boxShadow: "2px 2px 0 #000",
   });
 
-  // Left Icon
   const icon = document.createElement("img");
   icon.src = "drump-images/flamepunch.svg";
   Object.assign(icon.style, {
@@ -131,7 +128,6 @@ function renderPunchBar() {
     height: "32px",
   });
 
-  // Center Content
   const center = document.createElement("div");
   Object.assign(center.style, {
     flex: 1,
@@ -187,7 +183,6 @@ function renderPunchBar() {
 
   center.append(title, barWrap, punchText);
 
-  // Right Icon
   const upgrade = document.createElement("img");
   upgrade.src = "drump-images/upgrade.svg";
   Object.assign(upgrade.style, {
@@ -200,12 +195,11 @@ function renderPunchBar() {
   punchBar.append(icon, center, upgrade);
   document.body.appendChild(punchBar);
 
-  // Floating bonus container
   const floatingContainer = document.createElement("div");
   floatingContainer.id = "punch-gain-container";
   Object.assign(floatingContainer.style, {
     position: "fixed",
-    top: "76px",
+    top: "118px",
     left: "50%",
     transform: "translateX(-50%)",
     pointerEvents: "none",
@@ -228,4 +222,4 @@ function showFloatingBonus(text, isBonus = false) {
   setTimeout(() => gain.remove(), isBonus ? 1800 : 900);
 }
 
-export { renderPunchBar, showFloatingBonus, renderPunchBadge };
+export { renderPunchBar, showFloatingBonus, renderPunchBadge, badgeTextEl };
