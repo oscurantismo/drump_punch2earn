@@ -46,11 +46,14 @@ function renderTabs(activeTab = "game") {
     zIndex: ZINDEX.tabBar,
   });
 
-  const tabs = [
-    { id: "game", label: "PUNCH", icon: "drump-images/punch.svg" },
-    { id: "leaderboard", label: "LEADERBOARD", icon: "drump-images/leaderboard.svg" },
-    { id: "earn", label: "EARN", icon: "drump-images/earn.svg" },
-  ];
+  const tabIcons = {
+    game: "drump-images/punch.svg",
+    leaderboard: "drump-images/leaderboard.svg",
+    earn: "drump-images/earn.svg"
+  };
+
+  btn.innerHTML = `<img src="${tabIcons[tab]}" alt="${tab}" style="width: 26px; height: 26px;">`;
+
 
   tabs.forEach((tab) => {
     const btn = document.createElement("button");
