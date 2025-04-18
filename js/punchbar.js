@@ -10,43 +10,54 @@ function renderPunchBadge() {
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    top: "52px",
-    left: "50%",
-    transform: "translateX(-50%)",
+    top: "143px",
+    left: "20px",
+    width: "144px",
+    height: "40px",
     background: "#2a3493",
     color: "#fff",
-    padding: "8px 14px",
-    borderRadius: "16px",
+    padding: "4px 10px",
+    borderRadius: "10px",
     border: "3px solid #000",
     fontFamily: "'Negrita Pro', sans-serif",
-    fontSize: "16px",
+    fontSize: "15px",
     fontWeight: "bold",
     display: "flex",
     alignItems: "center",
     boxShadow: "2px 2px 0 #000",
-    zIndex: ZINDEX.topBar + 1,
-    marginTop: "12px",
-    marginBottom: "12px",
+    zIndex: ZINDEX.punchBar + 1,
   });
 
-  const icon = document.createElement("img");
-  icon.src = "drump-images/punch.svg";
+  const icon = document.createElement("div");
   Object.assign(icon.style, {
-    width: "34px",
-    height: "34px",
-    marginRight: "10px",
+    width: "32px",
+    height: "32px",
+    minWidth: "32px",
     borderRadius: "50%",
     background: "#ffedac",
     padding: "4px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: "8px",
     boxShadow: "2px 2px 0 #000"
   });
 
+  const img = document.createElement("img");
+  img.src = "drump-images/punch.svg";
+  Object.assign(img.style, {
+    width: "20px",
+    height: "20px",
+  });
+  icon.appendChild(img);
+
   badgeTextEl = document.createElement("div");
-  badgeTextEl.innerHTML = `Punches<br><span style="font-size:20px">${window.punches || 0}</span>`;
+  badgeTextEl.innerHTML = `Punches<br><span style="font-size:17px; font-weight:900">${window.punches || 0}</span>`;
 
   badge.append(icon, badgeTextEl);
   document.body.appendChild(badge);
 }
+
 
 function renderPunchBar() {
   if (!document.getElementById("punchbar-stripe-style")) {
