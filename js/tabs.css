@@ -1,27 +1,29 @@
-.jump-tab {
-  animation: jumpStretch 0.8s ease-in-out infinite;
-}
-
 #tab-container {
   background: linear-gradient(to top, #2a3493 0%, #2a3493 50%, transparent 100%);
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   overflow: hidden;
   transition: all 0.3s ease;
-  height: 56px; /* shorter tabs */
+  height: 56px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  z-index: 1000;
 }
 
-/* Default button style */
+/* Buttons inside tab */
 #tab-container button {
   background: #FFCC68;
   color: #2a3493;
   border: none;
-  border-radius: 0;
   font-size: 16px;
-  transition: all 0.2s ease-in-out;
   font-family: 'Negrita Pro', sans-serif;
-  padding: 6px 0 8px;
+  transition: all 0.2s ease-in-out;
   height: 100%;
+  width: 100%;
+  border-radius: 0;
 }
 
 /* Active tab style */
@@ -32,7 +34,11 @@
   z-index: 10;
 }
 
-/* Earn tab jump animation */
+/* Earn tab animation */
+.jump-tab {
+  animation: jumpStretch 0.8s ease-in-out infinite;
+}
+
 @keyframes jumpStretch {
   0%   { transform: translateY(0) scale(1); }
   50%  { transform: translateY(-6px) scale(1.05, 0.95); }
