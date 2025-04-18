@@ -24,6 +24,7 @@ function showTab(tab, scene = null) {
 
   if (tab === "game") {
     if (!document.getElementById("punch-bar")) renderPunchBar();
+    renderPunchBadge();
     if (scene) showGameUI(scene);
   }
 
