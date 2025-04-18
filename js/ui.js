@@ -4,14 +4,14 @@ import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 function updatePunchDisplay() {
   const count = window.punches || 0;
-
   const punchTextEl = document.getElementById("punch-text");
   const fillEl = document.getElementById("punch-fill");
   const countEl = document.getElementById("punch-progress");
   const hintEl = document.getElementById("bonus-hint");
+  const badgeTextEl = document.getElementById("punch-badge-text");
 
   if (punchTextEl) punchTextEl.innerHTML = `🥊 Punches: ${count}`;
-  if (badgeTextEl) badgeTextEl.innerHTML = `Punches<br><span style="font-size:20px">${count}</span>`;
+  if (badgeTextEl) badgeTextEl.textContent = count.toLocaleString();
 
   const nextMilestone = Math.ceil(count / 100) * 100;
   const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
