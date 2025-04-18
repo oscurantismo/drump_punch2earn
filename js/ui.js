@@ -96,4 +96,4 @@ function renderTabs() {
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-export { renderTopBar, renderTabs, updatePunchDisplay };
+export { renderTabs, updatePunchDisplay };
