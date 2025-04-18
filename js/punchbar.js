@@ -10,7 +10,10 @@ function renderPunchBadge() {
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    top: "56px", // 👈 between topbar and punch bar
+    marginTop: "12px",
+    marginBottom: "12px",
+    marginLeft: "auto",
+    marginRight: "auto",
     left: "1rem",
     background: "#2a3493",
     color: "#fff",
@@ -27,7 +30,7 @@ function renderPunchBadge() {
   });
 
   const icon = document.createElement("img");
-  icon.src = "drump-images/punch.png";
+  icon.src = "drump-images/punch.svg";
   Object.assign(icon.style, {
     width: "34px",
     height: "34px",
@@ -90,9 +93,9 @@ function renderPunchBar() {
       .gain-label.bonus {
         background: #FFCC68;
         color: #000;
-        padding: 4px 10px;
+        padding: 8px 16px;
         border-radius: 20px;
-        font-size: 13px;
+        font-size: 16px;
       }
     `;
     document.head.appendChild(style);
@@ -102,7 +105,7 @@ function renderPunchBar() {
   punchBar.id = "punch-bar";
   Object.assign(punchBar.style, {
     position: "fixed",
-    top: "76px",
+    top: "116px",
     left: "0.75rem",
     right: "0.75rem",
     background: "#FFF2C5",
