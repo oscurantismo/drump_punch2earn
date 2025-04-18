@@ -50,17 +50,14 @@ function showTab(tab, scene = null) {
     container.id = "leaderboard-container";
     Object.assign(container.style, {
       position: "fixed",
-      top: "100px",
+      top: "100px",                 // below punch bar
       bottom: "0",
-      marginBottom: "280px",
-      paddingBottom: "180px",
       left: "0",
       right: "0",
-      width: "100vw",
+      /* width 100 % is implicit with left/right 0; avoids 100 vw scrollbar issue */
       height: "calc(100vh - 100px)",
-      background: COLORS.deepRed,
       zIndex: 999,
-      overflowY: "auto",
+      overflow: "hidden",           // prevent horizontal bleed
       animation: "fadeSlideIn 0.4s ease-out",
     });
 
@@ -70,11 +67,13 @@ function showTab(tab, scene = null) {
       width: "100%",
       height: "100%",
       border: "none",
+      display: "block",
     });
 
-    container.appendChild(iframe);
-    document.body.appendChild(container);
-    createLeaderboardPopup();
+  container.appendChild(iframe);
+  document.body.appendChild(container);
+  createLeaderboardPopup();
+
 
   /* EARN TAB (new) ------------------------------------------------------- */
   } else if (tab === "earn") {
