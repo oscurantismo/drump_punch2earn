@@ -170,36 +170,6 @@ function showGameUI(scene) {
     } else {
         drawDrump(scene, textureKey);
     }
-
-    // ✅ Add sound toggle button
-    const iconSize = 32;
-    const soundButton = document.createElement("img");
-    soundButton.src = window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off.svg";
-    soundButton.style.position = "fixed";
-    soundButton.style.top = "12px";
-    soundButton.style.right = "56px";
-    soundButton.style.width = iconSize + "px";
-    soundButton.style.height = iconSize + "px";
-    soundButton.style.cursor = "pointer";
-    soundButton.style.zIndex = "1001";
-    soundButton.onclick = () => {
-        window.soundEnabled = !window.soundEnabled;
-        soundButton.src = window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off.svg";
-    };
-    document.body.appendChild(soundButton);
-
-    // Info button
-    const infoButton = document.createElement("img");
-    infoButton.src = "drump-images/info_icon.svg"; // use an actual info icon you have
-    infoButton.style.position = "fixed";
-    infoButton.style.top = "12px";
-    infoButton.style.right = "12px";
-    infoButton.style.width = iconSize + "px";
-    infoButton.style.height = iconSize + "px";
-    infoButton.style.cursor = "pointer";
-    infoButton.style.zIndex = "1001";
-    infoButton.onclick = () => showInfoPage();
-    document.body.appendChild(infoButton);
 }
 
 function showOnboarding() {
