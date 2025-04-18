@@ -79,11 +79,11 @@ function renderTopBar() {
     return icon;
   };
 
-  icons.appendChild(makeIcon("bell.svg", "Bell", () => {}));
-  icons.appendChild(makeIcon("info.svg", "Info", () => showInfoPage?.()));
-  icons.appendChild(makeIcon(window.soundEnabled ? "sound_on.svg" : "sound_off.svg", "Sound", () => {
+  icons.appendChild(makeIcon("drump-images/bell.svg", "Bell", () => {}));
+  icons.appendChild(makeIcon("drump-images/info.svg", "Info", () => showInfoPage?.()));
+  icons.appendChild(makeIcon(window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off.svg", "Sound", () => {
     window.soundEnabled = !window.soundEnabled;
-    soundIcon.src = window.soundEnabled ? "sound_on.svg" : "sound_off.svg";
+    soundIcon.src = window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off.svg";
   }));
 
   const soundIcon = icons.lastChild;
