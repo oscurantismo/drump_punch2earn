@@ -5,7 +5,8 @@
 import { renderProfilePage } from "./profile.js";
 import { showGameUI } from "./game.js";
 import { createLeaderboardPopup } from "./popups.js";
-import { renderEarnTab } from "./earn_tab.js";          // ← NEW
+import { renderEarnTab } from "./earn_tab.js";
+import { renderTopBar, renderTabs } from "./ui.js";
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -92,6 +93,8 @@ function showTab(tab, scene = null) {
 
     container.appendChild(iframe);
     document.body.appendChild(container);
+    renderTopBar();
+    renderTabs();
     createLeaderboardPopup();
 
   /* EARN TAB ------------------------------------------------------------- */
