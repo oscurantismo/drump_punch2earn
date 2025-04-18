@@ -25,6 +25,13 @@ function showTab(tab, scene = null) {
   // Punch bar only visible on game tab
   if (tab === "game") renderPunchBar();
 
+  if (tab === "game") {
+  if (!document.getElementById("punch-bar")) {
+    renderPunchBar();
+  }
+  showGameUI(scene);
+}
+
   // Update tab highlight
   const updateTabHighlight = () => {
     document.querySelectorAll("#tab-container button").forEach(btn => {
