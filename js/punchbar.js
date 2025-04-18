@@ -76,7 +76,7 @@ function renderPunchBar() {
 
   // Left Icon
   const icon = document.createElement("img");
-  icon.src = "drump-images/punch.svg";
+  icon.src = "drump-images/flamepunch.svg";
   Object.assign(icon.style, {
     width: "32px",
     height: "32px",
