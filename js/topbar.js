@@ -69,15 +69,19 @@ function renderTopBar() {
     icon.src = src;
     icon.alt = alt;
     Object.assign(icon.style, {
-      width: "36px", height: "36px",
-      borderRadius: "50%", background: "#FFF2C5",
-      border: "2px solid #000", padding: "6px",
-      boxShadow: "2px 2px 0 #000",
+      width: "18px",          // ↓ smaller than before
+      height: "18px",
+      borderRadius: "50%",
+      background: "#FFF2C5",
+      border: "2px solid #000",
+      padding: "4px",
+      boxShadow: "1.5px 1.5px 0 #000",
       cursor: "pointer",
     });
     icon.onclick = onclick;
     return icon;
   };
+
 
   icons.appendChild(makeIcon("drump-images/bell.svg", "Bell", () => {}));
   icons.appendChild(makeIcon("drump-images/info.svg", "Info", () => showInfoPage?.()));
