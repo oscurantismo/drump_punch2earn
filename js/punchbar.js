@@ -76,7 +76,7 @@ function renderPunchBar() {
 
   // Left Icon
   const icon = document.createElement("img");
-  icon.src = "punch.svg";
+  icon.src = "drump-images/punch.svg";
   Object.assign(icon.style, {
     width: "32px",
     height: "32px",
@@ -140,7 +140,7 @@ function renderPunchBar() {
 
   // Right Icon
   const upgrade = document.createElement("img");
-  upgrade.src = "upgrade.svg";
+  upgrade.src = "drump-images/upgrade.svg";
   Object.assign(upgrade.style, {
     width: "24px",
     height: "24px",
