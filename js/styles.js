@@ -26,8 +26,3 @@ export const ZINDEX = {
     tabBar: 1000,
     punchEffect: 9999,
 };
-
-.jump-tab {
-  animation: jumpStretch 0.8s ease-in-out infinite;
-}
-
