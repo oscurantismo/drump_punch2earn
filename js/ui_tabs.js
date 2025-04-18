@@ -32,15 +32,16 @@ function showTab(tab, scene = null) {
   showGameUI(scene);
 }
 
-  // Update tab highlight
-  const updateTabHighlight = () => {
-    document.querySelectorAll("#tab-container button").forEach(btn => {
-      const active = btn.dataset.tab === tab;
-      btn.style.background = active ? "#fff2c5" : COLORS.badgeBg;
-      btn.style.boxShadow = active ? "inset 0 0 0 3px #000" : "2px 2px 0 #000";
-      btn.style.transform = active ? "translateY(-2px)" : "translateY(0)";
-    });
-  };
+const updateTabHighlight = () => {
+  document.querySelectorAll("#tab-container button").forEach(btn => {
+    const active = btn.dataset.tab === tab;
+    btn.classList.toggle("active-tab", active);
+
+    if (btn.dataset.tab === "earn") {
+      btn.classList.toggle("jump-tab", active); // add animation
+    }
+  });
+};
 
   // Always render tabs
   renderTabs(tab);
