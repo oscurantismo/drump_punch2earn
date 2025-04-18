@@ -233,5 +233,3 @@ export function renderEarnTab() {
 
   document.body.appendChild(container);
 }
-
-export { renderEarnTab };
