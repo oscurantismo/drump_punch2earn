@@ -22,15 +22,11 @@ function showTab(tab, scene = null) {
   // Topbar is always visible
   renderTopBar();
 
-  // Punch bar only visible on game tab
-  if (tab === "game") renderPunchBar();
-
   if (tab === "game") {
-  if (!document.getElementById("punch-bar")) {
-    renderPunchBar();
+    if (!document.getElementById("punch-bar")) renderPunchBar();
+    if (scene) showGameUI(scene);
   }
-  showGameUI(scene);
-}
+
 
 const updateTabHighlight = () => {
   document.querySelectorAll("#tab-container button").forEach(btn => {
