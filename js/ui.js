@@ -1,4 +1,5 @@
 import { showTab } from "./ui_tabs.js";
+import { renderPunchBadge } from "./punchbar.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 function updatePunchDisplay() {
