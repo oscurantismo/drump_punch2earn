@@ -18,18 +18,35 @@ function renderPunchBar() {
           rgba(255,255,255,.2) 75%, transparent 75%);
         background-size: 30px 30px;
         animation: stripes 1.2s linear infinite;
-        pointer-events: none; z-index: 2;
+        pointer-events: none;
+        z-index: 2;
+        border-radius: 999px;
       }
-      @keyframes floatStars {
-        0% { transform: translateY(0) scale(1); opacity: 1; }
-        100% { transform: translateY(-40px) scale(1.3); opacity: 0; }
+
+      @keyframes floatGain {
+        0%   { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-32px); opacity: 0; }
       }
-      .floating-star {
-        position: absolute; bottom: 4px;
-        width: 12px; height: 12px; border-radius: 50%;
-        background: #fff9a0;
-        animation: floatStars 2s ease-out infinite;
-        pointer-events: none; z-index: 3;
+
+      .gain-label {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-weight: bold;
+        font-family: 'Commissioner', sans-serif;
+        color: #fff;
+        font-size: 14px;
+        animation: floatGain 0.9s ease-out forwards;
+        z-index: 10;
+      }
+
+      .gain-label.bonus {
+        background: #FFCC68;
+        color: #000;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 13px;
       }
     `;
     document.head.appendChild(style);
@@ -39,66 +56,127 @@ function renderPunchBar() {
   punchBar.id = "punch-bar";
   Object.assign(punchBar.style, {
     position: "fixed",
-    top: "52px",
-    left: "1rem", right: "1rem",
-    background: "#000", color: "#fff",
-    textAlign: "center", fontFamily: FONT.body,
-    fontSize: "18px", padding: "6px 0",
-    borderRadius: "8px", zIndex: ZINDEX.punchBar,
-    overflow: "hidden",
+    top: "76px",
+    left: "0.75rem",
+    right: "0.75rem",
+    background: "#FFF2C5",
+    color: "#000",
+    fontFamily: FONT.body,
+    fontSize: "14px",
+    padding: "6px 12px",
+    borderRadius: "12px",
+    border: "2px solid #000",
+    zIndex: ZINDEX.punchBar,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "12px",
+    boxShadow: "2px 2px 0 #000",
   });
+
+  // Left Icon
+  const icon = document.createElement("img");
+  icon.src = "punch.svg";
+  Object.assign(icon.style, {
+    width: "32px",
+    height: "32px",
+  });
+
+  // Center Content
+  const center = document.createElement("div");
+  Object.assign(center.style, {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  });
+
+  const title = document.createElement("div");
+  title.textContent = "My Progress";
+  Object.assign(title.style, {
+    fontWeight: "bold",
+    fontFamily: FONT.heading,
+    fontSize: "15px",
+    marginBottom: "2px",
+  });
+
+  const barWrap = document.createElement("div");
+  Object.assign(barWrap.style, {
+    position: "relative",
+    width: "100%",
+    height: "16px",
+    borderRadius: "999px",
+    background: "#eee",
+    overflow: "hidden",
+    border: "1px solid #999",
+  });
+
+  const fill = document.createElement("div");
+  fill.id = "punch-fill";
+  Object.assign(fill.style, {
+    position: "absolute",
+    top: "0",
+    bottom: "0",
+    left: "0",
+    width: "0%",
+    background: COLORS.primary,
+    borderRadius: "999px",
+    transition: "width 0.4s ease",
+    zIndex: 1,
+  });
+
+  fill.appendChild(Object.assign(document.createElement("div"), { className: "stripe-overlay" }));
+  barWrap.appendChild(fill);
 
   const punchText = document.createElement("div");
-  punchText.id = "punch-text";
-  punchText.innerHTML = `🥊 Punches: ${window.punches || 0}`;
+  punchText.id = "punch-progress";
   Object.assign(punchText.style, {
-    position: "relative", zIndex: "4", pointerEvents: "none",
-    padding: "4px 10px", fontWeight: "bold",
+    fontSize: "13px",
+    color: "#222",
+    marginTop: "4px",
   });
-  punchBar.appendChild(punchText);
 
-  const progressFill = document.createElement("div");
-  progressFill.id = "punch-fill";
-  Object.assign(progressFill.style, {
-    position: "absolute", inset: "0 auto 0 0",
-    borderRadius: "8px 0 0 8px", width: "0%",
-    background: COLORS.primary, transition: "width 0.4s ease", zIndex: 1,
+  center.append(title, barWrap, punchText);
+
+  // Right Icon
+  const upgrade = document.createElement("img");
+  upgrade.src = "upgrade.svg";
+  Object.assign(upgrade.style, {
+    width: "24px",
+    height: "24px",
+    cursor: "pointer",
   });
-  progressFill.appendChild(Object.assign(document.createElement("div"), { className: "stripe-overlay" }));
-  punchBar.appendChild(progressFill);
+  upgrade.title = "Upgrade (coming soon)";
 
-  for (let i = 0; i < 5; i++) {
-    const star = document.createElement("div");
-    star.className = "floating-star";
-    star.style.left = `${10 + i * 20}%`;
-    star.style.animationDelay = `${i * 0.4}s`;
-    punchBar.appendChild(star);
-  }
-
+  punchBar.append(icon, center, upgrade);
   document.body.appendChild(punchBar);
 
-  const punchProgress = document.createElement("div");
-  punchProgress.id = "punch-progress";
-  Object.assign(punchProgress.style, {
-    position: "fixed", top: "105px", left: "50%",
+  // Floating bonus container
+  const floatingContainer = document.createElement("div");
+  floatingContainer.id = "punch-gain-container";
+  Object.assign(floatingContainer.style, {
+    position: "fixed",
+    top: "76px",
+    left: "50%",
     transform: "translateX(-50%)",
-    fontFamily: FONT.body, fontSize: "16px", color: "#222",
-    zIndex: ZINDEX.punchBar,
+    pointerEvents: "none",
+    zIndex: ZINDEX.punchBar + 1,
   });
-  document.body.appendChild(punchProgress);
-
-  const bonusHint = document.createElement("div");
-  bonusHint.id = "bonus-hint";
-  Object.assign(bonusHint.style, {
-    position: "fixed", top: "126px", left: "50%",
-    transform: "translateX(-50%)",
-    fontSize: "13px", color: "#222",
-    fontFamily: FONT.body, zIndex: ZINDEX.punchBar,
-    transition: "opacity 0.3s ease, transform 0.3s ease",
-  });
-  document.body.appendChild(bonusHint);
+  document.body.appendChild(floatingContainer);
 
   updatePunchDisplay();
 }
 
-export { renderPunchBar };
+function showFloatingBonus(text, isBonus = false) {
+  const gain = document.createElement("div");
+  gain.className = "gain-label";
+  if (isBonus) gain.classList.add("bonus");
+  gain.textContent = text;
+
+  const container = document.getElementById("punch-gain-container");
+  container.appendChild(gain);
+
+  setTimeout(() => gain.remove(), isBonus ? 1800 : 900);
+}
+
+export { renderPunchBar, showFloatingBonus };
