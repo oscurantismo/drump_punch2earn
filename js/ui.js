@@ -47,9 +47,9 @@ function renderTabs(activeTab = "game") {
   });
 
   const tabs = [
-    { id: "game", label: "PUNCH TO EARN", icon: "punch.svg" },
-    { id: "leaderboard", label: "LEADERBOARD", icon: "leaderboard.svg" },
-    { id: "earn", label: "DAILY CHALLENGE", icon: "earn.svg" },
+    { id: "game", label: "PUNCH", icon: "drump-images/punch.svg" },
+    { id: "leaderboard", label: "LEADERBOARD", icon: "drump-images/leaderboard.svg" },
+    { id: "earn", label: "EARN", icon: "drump-images/earn.svg" },
   ];
 
   tabs.forEach((tab) => {
