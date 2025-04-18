@@ -11,7 +11,10 @@ function updatePunchDisplay() {
   const badgeTextEl = document.getElementById("punch-badge-text");
 
   if (punchTextEl) punchTextEl.innerHTML = `🥊 Punches: ${count}`;
-  if (badgeTextEl) badgeTextEl.textContent = count.toLocaleString();
+  if (badgeTextEl) {
+    badgeTextEl.innerHTML = `Punches<br><span style="font-size:17px; font-weight:900">${window.punches}</span>`;
+  }
+
 
   const nextMilestone = Math.ceil(count / 100) * 100;
   const showMilestone = nextMilestone === count ? nextMilestone + 100 : nextMilestone;
