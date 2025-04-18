@@ -156,7 +156,7 @@ function showGameUI(scene) {
         scene.scale.width,
         scene.scale.height,
         0x000000,
-        0.2 // Opacity (0 to 1) – adjust for how dark you want
+        0 // Opacity (0 to 1) – adjust for how dark you want
     ).setDepth(-9);
 
     const textureKey = `1a-min.png`;
