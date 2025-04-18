@@ -10,7 +10,7 @@ function renderPunchBadge() {
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    top: "143px",
+    top: "50px",
     left: "20px",
     width: "144px",
     height: "40px",
