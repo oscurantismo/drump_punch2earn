@@ -1,4 +1,5 @@
 import { COLORS, FONT, ZINDEX } from "./styles.js";
+import { updatePunchDisplay } from "./ui.js";
 
 function renderPunchBar() {
   if (!document.getElementById("punchbar-stripe-style")) {
