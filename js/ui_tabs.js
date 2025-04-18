@@ -9,7 +9,7 @@ import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
 
 function showTab(tab, scene = null) {
   // Clean up previously rendered containers
-  document.querySelectorAll("#top-bar, #punch-bar, #punch-progress, #bonus-hint, #leaderboard-container, #earn-container, #profile-container")
+  document.querySelectorAll("#top-bar, #punch-badge, #punch-bar, #punch-progress, #bonus-hint, #leaderboard-container, #earn-container, #profile-container")
     .forEach(el => el && el.remove());
 
   // Set global background
