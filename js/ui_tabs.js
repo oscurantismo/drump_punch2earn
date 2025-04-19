@@ -2,7 +2,6 @@ import { renderProfilePage } from "./profile.js";
 import { showGameUI } from "./game.js";
 import { createLeaderboardPopup } from "./popups.js";
 import { renderEarnTab, getIncompleteTaskCount } from "./earn_tab.js";
-import { renderTabs } from "./ui.js";
 import { COLORS, ZINDEX } from "./styles.js";
 import { renderTopBar } from "./topbar.js";
 import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
@@ -10,7 +9,10 @@ import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
 function showTab(tab, scene = null) {
   window.activeTab = tab;
 
-  // Clean up only content area, preserve topbar/tabs
+  if (tab === "game" && !scene) {
+    scene = window.game?.scene?.scenes?.[0];
+  }
+
   document.getElementById("page-content")?.remove();
   document.getElementById("punch-bar")?.remove();
   document.getElementById("punch-badge")?.remove();
@@ -120,4 +122,45 @@ function showTab(tab, scene = null) {
   }
 }
 
-export { showTab };
+function renderTabs(activeTab = "game") {
+  const tabBar = document.createElement("div");
+  tabBar.id = "tab-container";
+  Object.assign(tabBar.style, {
+    position: "fixed",
+    bottom: "0",
+    left: "0",
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-around",
+    zIndex: ZINDEX.tabBar,
+  });
+
+  const tabs = [
+    { id: "game", icon: "drump-images/punch.svg", label: "Punch" },
+    { id: "leaderboard", icon: "drump-images/leaderboard.svg", label: "Leaderboard" },
+    { id: "earn", icon: "drump-images/earn.svg", label: "Earn" },
+  ];
+
+  tabs.forEach((tab) => {
+    const btn = document.createElement("button");
+    btn.className = `tab-button ${tab.id === activeTab ? "active-tab" : ""}`;
+    if (tab.id === "earn") btn.classList.add("jump-tab");
+    btn.dataset.tab = tab.id;
+
+    btn.innerHTML = `
+      <img src="${tab.icon}" alt="${tab.label}" class="tab-icon" />
+      ${tab.label}
+    `;
+
+    btn.onclick = () => {
+      window.activeTab = tab.id;
+      showTab(tab.id);
+    };
+
+    tabBar.appendChild(btn);
+  });
+
+  document.body.appendChild(tabBar);
+}
+
+export { showTab, renderTabs };
