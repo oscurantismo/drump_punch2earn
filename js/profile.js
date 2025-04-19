@@ -12,7 +12,7 @@ function renderProfilePage() {
   window.activeTab = "profile";
   updatePunchDisplay();
   renderTopBar();
-  renderTabs("profile");
+  renderTabs();
   createLeaderboardPopup();
 
   const container = document.createElement("div");
