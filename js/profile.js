@@ -4,276 +4,190 @@ import { updatePunchDisplay } from "./ui.js";
 import { COLORS, FONT } from "./styles.js";
 
 function renderProfilePage() {
-    const existingProfile = document.getElementById("profile-container");
-    if (existingProfile) existingProfile.remove();
+  const existing = document.getElementById("profile-container");
+  if (existing) existing.remove();
 
-    window.activeTab = "profile";
-    updatePunchDisplay();
-    createLeaderboardPopup();
+  window.activeTab = "profile";
+  updatePunchDisplay();
+  createLeaderboardPopup();
 
-    const container = document.createElement("div");
-    container.id = "profile-container";
-    Object.assign(container.style, {
-        position: "fixed",
-        top: "0",
-        left: "0",
-        right: "0",
-        bottom: "0",
-        width: "100vw",
-        height: "100vh",
-        background: COLORS.badgeBg,
-        zIndex: "2000",
-        overflowY: "auto",
-        fontFamily: FONT.body,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        padding: "24px",
-        paddingTop: "40px",
-        boxSizing: "border-box"
+  const container = document.createElement("div");
+  container.id = "profile-container";
+
+  const section = document.createElement("div");
+  section.className = "profile-section";
+
+  // === Avatar Circle (Telegram pic or fallback initials) ===
+  const avatar = document.createElement("div");
+  avatar.className = "profile-initials";
+
+  const photoUrl = Telegram.WebApp?.initDataUnsafe?.user?.photo_url;
+
+  if (photoUrl) {
+    avatar.style.backgroundImage = `url(${photoUrl})`;
+    avatar.style.backgroundSize = "cover";
+    avatar.style.backgroundPosition = "center";
+    avatar.style.border = "3px solid #000";
+    avatar.textContent = "";
+  } else {
+    avatar.textContent = getUserInitials(window.storedUsername);
+  }
+
+  section.appendChild(avatar);
+
+  // === Username Display ===
+  const name = document.createElement("div");
+  name.className = "profile-name";
+  name.textContent = window.storedUsername || "Anonymous";
+  section.appendChild(name);
+
+  // === Punch Count ===
+  const punches = document.createElement("div");
+  punches.className = "punch-score";
+  punches.innerHTML = `Punches: <span id="punchProfileStat">0</span>`;
+  section.appendChild(punches);
+
+  // === Invite Button ===
+  const invite = document.createElement("button");
+  invite.className = "invite-btn";
+  invite.textContent = "INVITE & EARN";
+  invite.onclick = () => window.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+  section.appendChild(invite);
+
+  container.appendChild(section);
+
+  // === Referral Rewards Box ===
+  const rewardBox = document.createElement("div");
+  rewardBox.className = "referral-box";
+  rewardBox.innerHTML = `
+    <div><b>+1000 🥾</b> per successful referral<br><small>(FRIEND MUST PUNCH 20×)</small></div>
+  `;
+
+  const referralInput = document.createElement("input");
+  referralInput.type = "text";
+  referralInput.readOnly = true;
+  referralInput.className = "referral-link";
+  referralInput.value = `https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
+  rewardBox.appendChild(referralInput);
+
+  // === Copy + Share Buttons ===
+  const actionRow = document.createElement("div");
+  actionRow.className = "referral-actions";
+
+  const copyBtn = document.createElement("button");
+  copyBtn.className = "copy-btn";
+  copyBtn.textContent = "COPY";
+  copyBtn.onclick = () => {
+    navigator.clipboard.writeText(referralInput.value);
+    alert("Referral link copied!");
+  };
+
+  const shareBtn = document.createElement("button");
+  shareBtn.className = "share-btn";
+  shareBtn.textContent = "SHARE";
+  shareBtn.onclick = () => {
+    const msg = `🥊 Join me on Drump | Punch2Earn!\n\nUse my referral: ${referralInput.value}`;
+    Telegram.WebApp.showPopup({
+      title: "Share your invite",
+      message: "Choose where to share:",
+      buttons: [
+        { id: "telegram", type: "default", text: "Telegram" },
+        { id: "x", type: "default", text: "X (Twitter)" },
+        { id: "whatsapp", type: "default", text: "WhatsApp" }
+      ]
+    }, (id) => {
+      const encoded = encodeURIComponent(msg);
+      const url = {
+        telegram: `https://t.me/share/url?url=${encoded}`,
+        whatsapp: `https://api.whatsapp.com/send?text=${encoded}`,
+        x: `https://twitter.com/intent/tweet?text=${encoded}`
+      }[id];
+      if (url) window.open(url, "_blank");
     });
+  };
 
-    const card = document.createElement("div");
-    Object.assign(card.style, {
-        background: COLORS.offWhite,
-        color: COLORS.primary,
-        padding: "24px",
-        borderRadius: "18px",
-        width: "90%",
-        maxWidth: "420px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-        boxSizing: "border-box",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        position: "relative"
-    });
+  actionRow.appendChild(copyBtn);
+  actionRow.appendChild(shareBtn);
+  rewardBox.appendChild(actionRow);
+  container.appendChild(rewardBox);
 
-    // Dynamic leaderboard rank circle
-    const leaderboardCircle = document.createElement("div");
-    leaderboardCircle.id = "leaderboard-rank-circle";
-    leaderboardCircle.innerText = "#?";
-    Object.assign(leaderboardCircle.style, {
-        width: "70px",
-        height: "70px",
-        borderRadius: "50%",
-        background: COLORS.primary,
-        color: COLORS.offWhite,
-        fontWeight: "bold",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "22px",
-        marginBottom: "12px",
-        boxShadow: "0 0 10px rgba(0,0,0,0.2)"
-    });
-    card.appendChild(leaderboardCircle);
+  // === Referral History ===
+  const historyBox = document.createElement("div");
+  historyBox.className = "referral-history";
+  historyBox.innerHTML = `<b>REFERRAL HISTORY:</b><br><div id="referral-history-list" style="margin-top: 8px;">Loading...</div>`;
+  container.appendChild(historyBox);
 
-    const username = document.createElement("h2");
-    username.innerText = `${window.storedUsername}'s Profile`;
-    Object.assign(username.style, {
-        marginBottom: "8px",
-        fontSize: "22px",
-        color: COLORS.deepRed,
-        fontFamily: FONT.heading
-    });
-    card.appendChild(username);
+  // === Claimed Rewards ===
+  const rewardsBox = document.createElement("div");
+  rewardsBox.className = "referral-history";
+  rewardsBox.innerHTML = `<b>CLAIMED REWARDS:</b><br><div id="claimed-rewards-list" style="margin-top: 8px;">Loading...</div>`;
+  container.appendChild(rewardsBox);
 
-    const punchesStat = document.createElement("div");
-    punchesStat.innerHTML = `🥊 Punches: <span id="punchProfileStat">0</span>`;
-    Object.assign(punchesStat.style, {
-        fontSize: "18px",
-        marginBottom: "20px",
-        color: COLORS.primary,
-        fontWeight: "bold"
-    });
-    card.appendChild(punchesStat);
+  document.body.appendChild(container);
 
-    const divider = document.createElement("hr");
-    Object.assign(divider.style, {
-        border: "none",
-        borderTop: `2px solid ${COLORS.primary}`,
-        margin: "20px 0",
-        width: "100%"
-    });
-    card.appendChild(divider);
+  fetchProfileData();
+  fetchUserRank();
+  if (window.userId) {
+    fetchReferralHistory();
+    fetchClaimedRewards();
+  }
+}
 
-    const referralTitle = document.createElement("h3");
-    referralTitle.innerText = "Invite & Earn";
-    Object.assign(referralTitle.style, {
-        fontSize: "18px",
-        marginBottom: "8px",
-        color: COLORS.primary
-    });
-    card.appendChild(referralTitle);
-
-    const referralMsg = document.createElement("p");
-    referralMsg.innerText = "Earn +1000 🥊 punches for every valid invite!";
-    Object.assign(referralMsg.style, {
-        fontSize: "14px",
-        color: "#333",
-        marginBottom: "4px",
-        textAlign: "center"
-    });
-    card.appendChild(referralMsg);
-
-    const referralCondition = document.createElement("p");
-    referralCondition.innerText = "Your friend must punch 20+ times.";
-    Object.assign(referralCondition.style, {
-        fontSize: "12px",
-        color: "#888",
-        marginBottom: "14px",
-        lineHeight: "1.4",
-        textAlign: "center"
-    });
-    card.appendChild(referralCondition);
-
-    const referralInput = document.createElement("input");
-    referralInput.type = "text";
-    referralInput.readOnly = true;
-    referralInput.value = `https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
-    Object.assign(referralInput.style, {
-        width: "100%",
-        padding: "10px",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-        fontFamily: FONT.body,
-        fontSize: "13px",
-        marginBottom: "10px"
-    });
-    card.appendChild(referralInput);
-
-    const btnGroup = document.createElement("div");
-    Object.assign(btnGroup.style, {
-        display: "flex",
-        gap: "10px",
-        width: "100%",
-        marginBottom: "16px"
-    });
-
-    const copyBtn = document.createElement("button");
-    copyBtn.innerText = "📋 Copy";
-    copyBtn.style.flex = "1";
-    styleGameButton(copyBtn, "#0047ab", "#00337a");
-    copyBtn.onclick = () => {
-        navigator.clipboard.writeText(referralInput.value);
-        alert("Link copied!");
-    };
-
-    const shareBtn = document.createElement("button");
-    shareBtn.innerText = "📣 Share";
-    shareBtn.style.flex = "1";
-    styleGameButton(shareBtn, "#8e0004", "#6c0003");
-    shareBtn.onclick = () => {
-        const cleanLink = `https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
-        const message = `🥊 Ready to blow off some steam?\nJoin me in Drump | Punch2Earn — the only game where you punch Drump for glory, leaderboard fame, and real rewards. 💥\n\nUse my link to get started: ${cleanLink}`;
-
-        Telegram.WebApp.showPopup({
-            title: "Share your referral link",
-            message: "Choose where to share your invite:",
-            buttons: [
-                { id: "telegram", type: "default", text: "Telegram" },
-                { id: "x", type: "default", text: "X (Twitter)" },
-                { id: "whatsapp", type: "default", text: "WhatsApp" }
-            ]
-        }, (btnId) => {
-            const links = {
-                telegram: `https://t.me/share/url?url=${encodeURIComponent(cleanLink)}&text=${encodeURIComponent(message)}`,
-                whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`,
-                x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`
-            };
-            if (btnId && links[btnId]) window.open(links[btnId], "_blank");
-        });
-    };
-
-    btnGroup.appendChild(copyBtn);
-    btnGroup.appendChild(shareBtn);
-    card.appendChild(btnGroup);
-
-    const closeButton = document.createElement("button");
-    closeButton.innerHTML = "🚪 Exit Profile";
-    Object.assign(closeButton.style, {
-        background: COLORS.deepRed,
-        color: "#fff",
-        padding: "12px 24px",
-        fontSize: "16px",
-        fontWeight: "bold",
-        borderRadius: "12px",
-        border: "none",
-        cursor: "pointer",
-        marginTop: "28px",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-        transition: "background 0.3s"
-    });
-    closeButton.onmouseover = () => closeButton.style.background = "#6c0003";
-    closeButton.onmouseout = () => closeButton.style.background = COLORS.deepRed;
-    closeButton.onclick = closeProfile;
-    card.appendChild(closeButton);
-
-    container.appendChild(card);
-    document.body.appendChild(container);
-
-    fetchProfileData();
-    if (window.userId) fetchReferralHistory();
-    fetchUserRank(); // ✅ Get rank from backend
+function getUserInitials(name = "") {
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
 }
 
 function fetchProfileData() {
-    if (!window.userId) {
-        console.warn("❌ userId not available. Cannot fetch profile data.");
-        return;
-    }
-
-    fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
-        .then(res => {
-            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-            return res.json();
-        })
-        .then(data => {
-            if (typeof data.punches === "number") {
-                window.punches = data.punches;
-                const punchProfileStat = document.getElementById("punchProfileStat");
-                if (punchProfileStat) punchProfileStat.textContent = window.punches;
-                updatePunchDisplay();
-            }
-        })
-        .catch(err => console.error("Error fetching profile data:", err));
+  if (!window.userId) return;
+  fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
+    .then(res => res.json())
+    .then(data => {
+      if (typeof data.punches === "number") {
+        window.punches = data.punches;
+        const stat = document.getElementById("punchProfileStat");
+        if (stat) stat.textContent = window.punches;
+        updatePunchDisplay();
+      }
+    })
+    .catch(err => console.error("Error fetching profile data:", err));
 }
 
 function fetchUserRank() {
-    fetch("https://drumpleaderboard-production.up.railway.app/leaderboard")
-        .then(res => res.json())
-        .then(data => {
-            const index = data.findIndex(entry => entry.user_id === window.userId);
-            const rank = index >= 0 ? `#${index + 1}` : ">100";
-            const circle = document.getElementById("leaderboard-rank-circle");
-            if (circle) circle.innerText = rank;
-        })
-        .catch(err => console.error("Error fetching rank:", err));
+  fetch("https://drumpleaderboard-production.up.railway.app/leaderboard")
+    .then(res => res.json())
+    .then(data => {
+      const index = data.findIndex(entry => entry.user_id === window.userId);
+      const rank = index >= 0 ? `#${index + 1}` : ">100";
+      const avatar = document.querySelector(".profile-initials");
+      if (avatar && !Telegram.WebApp?.initDataUnsafe?.user?.photo_url) {
+        avatar.textContent = rank;
+      }
+    })
+    .catch(err => console.error("Error fetching rank:", err));
 }
 
-function closeProfile() {
-    const profile = document.getElementById("profile-container");
-    if (profile) profile.remove();
-    window.activeTab = "game";
-    updatePunchDisplay();
-}
-
-function styleGameButton(button, bg, hoverBg) {
-    Object.assign(button.style, {
-        background: bg,
-        color: "#fff",
-        padding: "10px 0",
-        borderRadius: "10px",
-        border: "none",
-        cursor: "pointer",
-        fontSize: "14px",
-        fontFamily: FONT.body,
-        transition: "background 0.3s"
+function fetchClaimedRewards() {
+  fetch("https://drumpleaderboard-production.up.railway.app/rewards")
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("claimed-rewards-list");
+      if (!Array.isArray(data) || !list) return (list.innerText = "None yet.");
+      const userRewards = data.filter(r => r.user_id === window.userId);
+      if (userRewards.length === 0) {
+        list.innerText = "None yet.";
+      } else {
+        list.innerHTML = userRewards.map(r =>
+          `<div style="margin-bottom: 6px;">✅ <b>${r.reward_type}</b>: ${r.change} 🥾 – <small>${r.timestamp.split("T")[0]}</small></div>`
+        ).join("");
+      }
+    })
+    .catch(err => {
+      const list = document.getElementById("claimed-rewards-list");
+      if (list) list.innerText = "Unable to load rewards.";
+      console.error("Error fetching rewards:", err);
     });
-    button.onmouseover = () => button.style.background = hoverBg;
-    button.onmouseout = () => button.style.background = bg;
 }
 
 export { renderProfilePage };
