@@ -112,16 +112,17 @@
   font-size: 13px;
   background: #fff;
   border: 1px solid #000;
-  padding: 8px;
+  padding: 8px 10px;
   border-radius: 6px;
   width: 100%;
-  max-width: 100%;
+  box-sizing: border-box;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  box-shadow: var(--box-shadow);
   font-family: var(--font-body);
+  box-shadow: var(--box-shadow);
 }
+
 
 /* === COPY + SHARE ACTIONS === */
 .referral-actions {
