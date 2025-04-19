@@ -1,8 +1,9 @@
 /* Global shared styles */
 :root {
-  --box-shadow: 1px 2px 0px 0px #000000;
+  --default-border: 1px solid #000000;
+  --box-shadow: 2px 2px 0 #000;
   --card-bg: #fff7d5;
-  --card-border: 2px solid #2a3493;
+  --card-border: 1px solid #252525;
   --blue-btn: #2a3493;
   --btn-radius: 8px;
   --heading-bg: #FFEDAC;
@@ -30,7 +31,7 @@
 /* Section headers (e.g. Daily Quest) */
 .task-section-heading {
   background: var(--heading-bg);
-  border: var(--card-border);
+  border: var(--default-border);
   border-radius: 10px;
   box-shadow: var(--box-shadow);
   padding: 8px 16px;
@@ -40,6 +41,16 @@
   color: #000;
 }
 
+#earn-content {
+  position: absolute;
+  top: 100px; /* space for topbar */
+  padding-top: 20px; /* additional breathing room below topbar */
+  padding-bottom: 120px; /* space for nav tabs */
+  padding-left: 16px;
+  padding-right: 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
 
 /* Task card container */
 .task-card {
@@ -66,8 +77,8 @@
 
 /* Punch icon */
 .punch-reward img {
-  width: 18px;
-  height: 18px;
+  width: 12px;
+  height: 9px;
 }
 
 /* GET / CLAIM / DONE buttons */
@@ -90,4 +101,6 @@
   background: var(--card-bg);
   color: #8e0004;
   cursor: default;
+  box-shadow: none;
+  border: var(--default-border);
 }
