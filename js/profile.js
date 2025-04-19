@@ -3,7 +3,7 @@ import { createLeaderboardPopup } from "./popups.js";
 import { updatePunchDisplay } from "./ui.js";
 import { renderTopBar } from "./topbar.js";
 import { renderTabs } from "./ui_tabs.js";
-import { COLORS, FONT } from "./styles.js";
+import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 function renderProfilePage() {
   const existing = document.getElementById("profile-container");
@@ -12,7 +12,7 @@ function renderProfilePage() {
   document.getElementById("page-content")?.remove(); // ✅ Clean up previous tab content
 
   window.activeTab = "profile";
-  updatePunchDisplay();
+
   renderTopBar();
   renderTabs();
   createLeaderboardPopup();
@@ -24,7 +24,7 @@ function renderProfilePage() {
   Object.assign(container.style, {
     position: "fixed",
     top: "0", left: "0", right: "0", bottom: "0",
-    background: "url('drump-images/background.png') no-repeat center center",
+    background: "url('./drump-images/background.png') no-repeat center center",
     backgroundSize: "cover",
     overflowY: "auto",
     padding: "100px 16px 120px",
