@@ -28,14 +28,13 @@ function showTab(tab, scene = null) {
       const active = btn.dataset.tab === tab;
       btn.classList.toggle("active-tab", active);
 
-      // Clear previous badge
+      // Remove old badge with smooth transition
       const existingBadge = btn.querySelector(".task-badge");
-        if (existingBadge) {
-          existingBadge.style.opacity = "0";
-          existingBadge.style.transform = "scale(0.8)";
-          setTimeout(() => existingBadge.remove(), 200); // match transition timing
-        }
-
+      if (existingBadge) {
+        existingBadge.style.opacity = "0";
+        existingBadge.style.transform = "scale(0.8)";
+        setTimeout(() => existingBadge.remove(), 200);
+      }
 
       // If Earn tab, attach count badge
       if (btn.dataset.tab === "earn") {
