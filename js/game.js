@@ -1,5 +1,6 @@
 import { handlePunch, initPunchModule, wiggleDrump } from "./punch.js";
 import { renderTabs, updatePunchDisplay } from "./ui.js";
+import { getIncompleteTaskCount } from "./earn_tab.js";
 import { showTab } from "./ui_tabs.js";
 import { renderTopBar } from "./topbar.js";
 import { renderPunchBar } from "./punchbar.js";
@@ -23,7 +24,20 @@ window.onload = () => {
     createGame();
     renderTopBar();          // Always show topbar
     renderPunchBar();        // Show punch bar immediately
-    renderTabs();            // Show bottom nav
+    renderTabs();
+    setTimeout(() => {
+        const earnBtn = document.querySelector('#tab-container button[data-tab="earn"]');
+        if (earnBtn && !earnBtn.querySelector(".task-badge")) {
+            const incomplete = getIncompleteTaskCount?.() || 0;
+            if (incomplete > 0) {
+                const badge = document.createElement("span");
+                badge.className = "task-badge";
+                badge.textContent = incomplete;
+                earnBtn.appendChild(badge);
+            }
+        }
+    }, 20); // wait for tab to fully render
+    // Show bottom nav
     showTab("game");         // Default tab on launch
 };
 
