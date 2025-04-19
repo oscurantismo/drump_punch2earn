@@ -1,4 +1,3 @@
-import { showTab } from "./ui_tabs.js";
 import { renderPunchBadge } from "./punchbar.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 
@@ -30,46 +29,4 @@ function updatePunchDisplay() {
   }
 }
 
-
-function renderTabs(activeTab = "game") {
-  const tabBar = document.createElement("div");
-  tabBar.id = "tab-container";
-  Object.assign(tabBar.style, {
-    position: "fixed",
-    bottom: "0",
-    left: "0",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-around",
-    zIndex: ZINDEX.tabBar,
-  });
-
-  const tabs = [
-    { id: "game", icon: "drump-images/punch.svg", label: "Punch" },
-    { id: "leaderboard", icon: "drump-images/leaderboard.svg", label: "Leaderboard" },
-    { id: "earn", icon: "drump-images/earn.svg", label: "Earn" },
-  ];
-
-  tabs.forEach((tab) => {
-    const btn = document.createElement("button");
-    btn.className = `tab-button ${tab.id === activeTab ? "active-tab" : ""}`;
-    if (tab.id === "earn") btn.classList.add("jump-tab");
-    btn.dataset.tab = tab.id;
-
-    btn.innerHTML = `
-      <img src="${tab.icon}" alt="${tab.label}" class="tab-icon" />
-      ${tab.label}
-    `;
-
-    btn.onclick = () => {
-      window.activeTab = tab.id;
-      showTab(tab.id);
-    };
-
-    tabBar.appendChild(btn);
-  });
-
-  document.body.appendChild(tabBar);
-}
-
-export { renderTabs, updatePunchDisplay };
+export { updatePunchDisplay };
