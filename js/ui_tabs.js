@@ -30,7 +30,12 @@ function showTab(tab, scene = null) {
 
       // Clear previous badge
       const existingBadge = btn.querySelector(".task-badge");
-      if (existingBadge) existingBadge.remove();
+        if (existingBadge) {
+          existingBadge.style.opacity = "0";
+          existingBadge.style.transform = "scale(0.8)";
+          setTimeout(() => existingBadge.remove(), 200); // match transition timing
+        }
+
 
       // If Earn tab, attach count badge
       if (btn.dataset.tab === "earn") {
