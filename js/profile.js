@@ -11,12 +11,27 @@ function renderProfilePage() {
 
   window.activeTab = "profile";
   updatePunchDisplay();
-  renderTopBar();
+  renderTopBar(); // shows only username + icons now
   renderTabs();
   createLeaderboardPopup();
 
   const container = document.createElement("div");
   container.id = "profile-container";
+  Object.assign(container.style, {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    right: "0",
+    bottom: "0",
+    background: "url('drump-images/background.png') no-repeat center center",
+    backgroundSize: "cover",
+    overflowY: "auto",
+    padding: "100px 16px 120px",
+    boxSizing: "border-box",
+    fontFamily: FONT.body,
+    fontWeight: "normal",
+    zIndex: 900
+  });
 
   const section = document.createElement("div");
   section.className = "profile-section";
@@ -127,7 +142,7 @@ function renderProfilePage() {
     fontSize: "14px",
     fontWeight: "normal",
     cursor: "pointer",
-    margin: "30px auto 100px",
+    margin: "32px auto 100px",
     display: "block",
     boxShadow: "1px 2px 0px 0px #000000"
   });
@@ -142,7 +157,6 @@ function renderProfilePage() {
   };
 
   container.appendChild(closeBtn);
-
   document.body.appendChild(container);
 
   fetchProfileData();
