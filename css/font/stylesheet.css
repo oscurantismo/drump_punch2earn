@@ -1,0 +1,36 @@
+@font-face {
+    font-family: 'Negrita Pro';
+    src: url('NegritaPro.eot');
+    src: local('Negrita Pro'), local('NegritaPro'),
+        url('NegritaPro.eot?#iefix') format('embedded-opentype'),
+        url('NegritaPro.woff2') format('woff2'),
+        url('NegritaPro.woff') format('woff'),
+        url('NegritaPro.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Negrita Pro Dingbat';
+    src: url('NegritaProDingbat.eot');
+    src: local('Negrita Pro Dingbat'), local('NegritaProDingbat'),
+        url('NegritaProDingbat.eot?#iefix') format('embedded-opentype'),
+        url('NegritaProDingbat.woff2') format('woff2'),
+        url('NegritaProDingbat.woff') format('woff'),
+        url('NegritaProDingbat.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Negrita Pro Oblique';
+    src: url('NegritaProOblique.eot');
+    src: local('Negrita Pro Oblique'), local('NegritaProOblique'),
+        url('NegritaProOblique.eot?#iefix') format('embedded-opentype'),
+        url('NegritaProOblique.woff2') format('woff2'),
+        url('NegritaProOblique.woff') format('woff'),
+        url('NegritaProOblique.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
