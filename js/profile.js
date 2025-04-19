@@ -111,12 +111,41 @@ function renderProfilePage() {
   rewardsBox.innerHTML = `<b>CLAIMED REWARDS:</b><br><div id="claimed-rewards-list" style="margin-top: 8px;">Loading...</div>`;
   container.appendChild(rewardsBox);
 
+  // === Close Profile Button ===
+  const closeBtn = document.createElement("button");
+  closeBtn.innerText = "❌ Close Profile";
+  Object.assign(closeBtn.style, {
+    background: COLORS.deepRed,
+    color: "#fff",
+    padding: "10px 20px",
+    borderRadius: "10px",
+    border: "none",
+    fontFamily: FONT.body,
+    fontSize: "14px",
+    fontWeight: "normal",
+    cursor: "pointer",
+    margin: "30px auto 40px",
+    display: "block",
+    boxShadow: "1px 2px 0px 0px #000000"
+  });
+  closeBtn.onclick = async () => {
+    const profileEl = document.getElementById("profile-container");
+    if (profileEl) profileEl.remove();
+
+    const returnTo = window.lastActiveTab || "game";
+    window.activeTab = returnTo;
+    const { showTab } = await import("./ui_tabs.js");
+    showTab(returnTo);
+  };
+
+  container.appendChild(closeBtn);
+
   document.body.appendChild(container);
 
   fetchProfileData();
   fetchUserRank();
   if (window.userId) {
-    fetchReferralHistory(); // ✅ this triggers renderReferralHistory
+    fetchReferralHistory();
     fetchClaimedRewards();
   }
 }
@@ -143,7 +172,7 @@ function fetchProfileData() {
 }
 
 function fetchUserRank() {
-  fetch("https://drumpleaderboard-production.up.railway.app/leaderboard")
+  fetch("https://drumpleaderboard-production.up.railway.app/leaderboard.json")
     .then(res => res.json())
     .then(data => {
       const index = data.findIndex(entry => entry.user_id === window.userId);
