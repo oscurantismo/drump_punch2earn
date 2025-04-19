@@ -87,6 +87,8 @@ function create() {
 
   updatePunchDisplay();
 
+  renderTopBar();
+
   fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
     .then(res => res.json())
     .then(profile => {
