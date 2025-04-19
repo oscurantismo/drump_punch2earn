@@ -10,7 +10,7 @@
 }
 
 #earn-container {
-  background-image: url("drump-images/background.png");
+  background-image: url("./drump-images/background.png");
   background-size: cover;
   background-position: center;
   padding: 24px 16px 140px;
