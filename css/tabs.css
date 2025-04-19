@@ -48,6 +48,8 @@
   transition: all 0.2s ease;
   box-shadow: var(--box-shadow);
   cursor: pointer;
+  z-index: 1;
+  position: relative;
 }
 
 .task-badge {
