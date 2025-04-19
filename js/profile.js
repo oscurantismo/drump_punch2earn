@@ -11,7 +11,7 @@ function renderProfilePage() {
 
   window.activeTab = "profile";
   updatePunchDisplay();
-  renderTopBar(); // shows only username + icons now
+  renderTopBar();
   renderTabs();
   createLeaderboardPopup();
 
@@ -48,7 +48,6 @@ function renderProfilePage() {
   } else {
     avatar.textContent = getUserInitials(window.storedUsername);
   }
-
   section.appendChild(avatar);
 
   const name = document.createElement("div");
@@ -66,10 +65,8 @@ function renderProfilePage() {
   invite.textContent = "INVITE & EARN";
   invite.onclick = () => window.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
   section.appendChild(invite);
-
   container.appendChild(section);
 
-  // === Referral Box ===
   const rewardBox = document.createElement("div");
   rewardBox.className = "referral-box";
   rewardBox.innerHTML = `
@@ -123,13 +120,11 @@ function renderProfilePage() {
   rewardBox.appendChild(actionRow);
   container.appendChild(rewardBox);
 
-  // === Claimed Rewards Section ===
   const rewardsBox = document.createElement("div");
   rewardsBox.className = "referral-history";
   rewardsBox.innerHTML = `<b>CLAIMED REWARDS:</b><br><div id="claimed-rewards-list" style="margin-top: 8px;">Loading...</div>`;
   container.appendChild(rewardsBox);
 
-  // === Close Profile Button ===
   const closeBtn = document.createElement("button");
   closeBtn.innerText = "❌ Close Profile";
   Object.assign(closeBtn.style, {
@@ -149,7 +144,6 @@ function renderProfilePage() {
   closeBtn.onclick = async () => {
     const profileEl = document.getElementById("profile-container");
     if (profileEl) profileEl.remove();
-
     const returnTo = window.lastActiveTab || "game";
     window.activeTab = returnTo;
     const { showTab } = await import("./ui_tabs.js");
@@ -186,6 +180,20 @@ function fetchProfileData() {
       }
     })
     .catch(err => console.error("Error fetching profile data:", err));
+}
+
+function fetchUserRank() {
+  fetch("https://drumpleaderboard-production.up.railway.app/leaderboard")
+    .then(res => res.json())
+    .then(data => {
+      const index = data.findIndex(entry => entry.user_id === window.userId);
+      const rank = index >= 0 ? `#${index + 1}` : ">100";
+      const avatar = document.querySelector(".profile-initials");
+      if (avatar && !Telegram.WebApp?.initDataUnsafe?.user?.photo_url) {
+        avatar.textContent = rank;
+      }
+    })
+    .catch(err => console.error("Error fetching rank:", err));
 }
 
 function fetchClaimedRewards() {
