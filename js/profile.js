@@ -174,20 +174,6 @@ function fetchProfileData() {
     .catch(err => console.error("Error fetching profile data:", err));
 }
 
-function fetchUserRank() {
-  fetch("https://drumpleaderboard-production.up.railway.app/leaderboard.json")
-    .then(res => res.json())
-    .then(data => {
-      const index = data.findIndex(entry => entry.user_id === window.userId);
-      const rank = index >= 0 ? `#${index + 1}` : ">100";
-      const avatar = document.querySelector(".profile-initials");
-      if (avatar && !Telegram.WebApp?.initDataUnsafe?.user?.photo_url) {
-        avatar.textContent = rank;
-      }
-    })
-    .catch(err => console.error("Error fetching rank:", err));
-}
-
 function fetchClaimedRewards() {
   fetch("https://drumpleaderboard-production.up.railway.app/rewards")
     .then(res => res.json())
