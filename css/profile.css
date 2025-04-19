@@ -13,7 +13,7 @@
   padding: 100px 16px 100px;
   box-sizing: border-box;
   font-family: var(--font-body);
-  z-index: 2000;
+  z-index: 900;
   font-weight: normal;
   animation: fadeInProfile 0.35s ease both;
 }
