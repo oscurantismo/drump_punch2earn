@@ -31,7 +31,6 @@
   color: #000000;
   font-family: 'Negrita Pro', sans-serif;
   font-size: 13px;
-  font-weight: bold;
   border: none;
   border-radius: var(--btn-radius);
   padding: 10px 14px;
@@ -60,7 +59,6 @@
   background-size: 200% 200%;
   color: #fff;
   font-size: 12px;
-  font-weight: bold;
   border-radius: 12px;
   padding: 2px 6px;
   min-width: 20px;
