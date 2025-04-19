@@ -21,6 +21,11 @@ const SOCIAL_TASKS = [
   { id: "twitter_space", title: "Join our next X Space", reward: 130, url: "https://x.com/DrumpGame" }
 ];
 
+export function getIncompleteTaskCount() {
+  const allTasks = [...DAILY_TASKS, ...SOCIAL_TASKS];
+  return allTasks.filter(t => !localStorage.getItem(`${LS_PREFIX}${t.id}`)).length;
+}
+
 const isDone = (id) => localStorage.getItem(`${LS_PREFIX}${id}`) === "1";
 const markDone = (id) => localStorage.setItem(`${LS_PREFIX}${id}`, "1");
 
@@ -143,7 +148,7 @@ export function renderEarnTab() {
       section.appendChild(card);
     });
 
-    wrap.appendChild(section);
+    content.appendChild(section);
   }
 
   renderSection("🗓 Daily Quests", DAILY_TASKS);
