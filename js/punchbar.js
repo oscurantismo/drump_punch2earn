@@ -21,7 +21,6 @@ function renderPunchBadge() {
     border: "3px solid #000",
     fontFamily: "'Negrita Pro', sans-serif",
     fontSize: "15px",
-    fontWeight: "bold",
     display: "flex",
     alignItems: "flex-start",
     boxShadow: "2px 2px 0 #000",
@@ -91,7 +90,6 @@ function renderPunchBar() {
         bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
-        font-weight: bold;
         font-family: 'Commissioner', sans-serif;
         color: #fff;
         font-size: 14px;
@@ -150,7 +148,6 @@ function renderPunchBar() {
   const title = document.createElement("div");
   title.textContent = "My Progress";
   Object.assign(title.style, {
-    fontWeight: "bold",
     fontFamily: FONT.heading,
     fontSize: "15px",
     marginBottom: "2px",
