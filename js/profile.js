@@ -1,4 +1,4 @@
-import { fetchReferralHistory, renderReferralHistory } from "./referral.js";
+import { fetchReferralHistory } from "./referral.js";
 import { createLeaderboardPopup } from "./popups.js";
 import { updatePunchDisplay } from "./ui.js";
 import { COLORS, FONT } from "./styles.js";
@@ -17,12 +17,10 @@ function renderProfilePage() {
   const section = document.createElement("div");
   section.className = "profile-section";
 
-  // === Avatar Circle (Telegram pic or fallback initials) ===
+  // === Avatar (Telegram or fallback initials) ===
   const avatar = document.createElement("div");
   avatar.className = "profile-initials";
-
   const photoUrl = Telegram.WebApp?.initDataUnsafe?.user?.photo_url;
-
   if (photoUrl) {
     avatar.style.backgroundImage = `url(${photoUrl})`;
     avatar.style.backgroundSize = "cover";
@@ -35,19 +33,16 @@ function renderProfilePage() {
 
   section.appendChild(avatar);
 
-  // === Username Display ===
   const name = document.createElement("div");
   name.className = "profile-name";
   name.textContent = window.storedUsername || "Anonymous";
   section.appendChild(name);
 
-  // === Punch Count ===
   const punches = document.createElement("div");
   punches.className = "punch-score";
   punches.innerHTML = `Punches: <span id="punchProfileStat">0</span>`;
   section.appendChild(punches);
 
-  // === Invite Button ===
   const invite = document.createElement("button");
   invite.className = "invite-btn";
   invite.textContent = "INVITE & EARN";
@@ -56,7 +51,7 @@ function renderProfilePage() {
 
   container.appendChild(section);
 
-  // === Referral Rewards Box ===
+  // === Referral Box ===
   const rewardBox = document.createElement("div");
   rewardBox.className = "referral-box";
   rewardBox.innerHTML = `
@@ -70,7 +65,6 @@ function renderProfilePage() {
   referralInput.value = `https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
   rewardBox.appendChild(referralInput);
 
-  // === Copy + Share Buttons ===
   const actionRow = document.createElement("div");
   actionRow.className = "referral-actions";
 
@@ -111,13 +105,7 @@ function renderProfilePage() {
   rewardBox.appendChild(actionRow);
   container.appendChild(rewardBox);
 
-  // === Referral History ===
-  const historyBox = document.createElement("div");
-  historyBox.className = "referral-history";
-  historyBox.innerHTML = `<b>REFERRAL HISTORY:</b><br><div id="referral-history-list" style="margin-top: 8px;">Loading...</div>`;
-  container.appendChild(historyBox);
-
-  // === Claimed Rewards ===
+  // === Claimed Rewards Section ===
   const rewardsBox = document.createElement("div");
   rewardsBox.className = "referral-history";
   rewardsBox.innerHTML = `<b>CLAIMED REWARDS:</b><br><div id="claimed-rewards-list" style="margin-top: 8px;">Loading...</div>`;
@@ -128,7 +116,7 @@ function renderProfilePage() {
   fetchProfileData();
   fetchUserRank();
   if (window.userId) {
-    fetchReferralHistory();
+    fetchReferralHistory(); // ✅ this triggers renderReferralHistory
     fetchClaimedRewards();
   }
 }
