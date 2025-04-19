@@ -9,17 +9,25 @@ function renderTopBar() {
   top.id = "top-bar";
   Object.assign(top.style, {
     position: "fixed",
-    top: "0", left: "0", right: "0",
-    display: "flex", justifyContent: "space-between", alignItems: "center",
-    padding: "10px 12px", zIndex: ZINDEX.topBar,
-    background: "transparent", height: "52px",
+    top: "0",
+    left: "0",
+    right: "0",
+    height: "52px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 12px",
+    background: "transparent",
     fontFamily: FONT.heading,
+    zIndex: ZINDEX.topBar,
   });
 
-  // — Username Pill or Avatar —
+  // === Avatar + Username Pill ===
   const userWrap = document.createElement("div");
   Object.assign(userWrap.style, {
-    display: "flex", alignItems: "center", gap: "8px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
     background: "#FFF2C5",
     borderRadius: "999px",
     border: "2px solid #000",
@@ -30,41 +38,50 @@ function renderTopBar() {
   });
 
   const avatar = document.createElement("div");
+  const username = window.storedUsername || "Anonymous";
+
   if (window.avatarUrl) {
     avatar.style.backgroundImage = `url('${window.avatarUrl}')`;
     Object.assign(avatar.style, {
       backgroundSize: "cover",
       backgroundPosition: "center",
       borderRadius: "50%",
-      width: "28px", height: "28px",
+      width: "28px",
+      height: "28px",
       border: "1.5px solid #000",
     });
   } else {
-    avatar.textContent = (window.storedUsername || "AN").slice(0, 2).toUpperCase();
+    avatar.textContent = username.slice(0, 2).toUpperCase();
     Object.assign(avatar.style, {
-      background: "#000", color: "#FFF2C5",
-      borderRadius: "50%", width: "28px", height: "28px",
-      display: "flex", alignItems: "center", justifyContent: "center",
+      background: "#000",
+      color: "#FFF2C5",
+      borderRadius: "50%",
+      width: "28px",
+      height: "28px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       fontSize: "14px",
     });
   }
 
   const label = document.createElement("div");
-  label.textContent = window.storedUsername || "Anonymous";
+  label.textContent = username;
 
   userWrap.append(avatar, label);
 
-  // ✅ Store last visited tab before opening profile
   userWrap.onclick = () => {
     window.lastActiveTab = window.activeTab || "game";
     window.activeTab = "profile";
     renderProfilePage();
   };
 
-  // — Icons —
+  // === Icon Buttons ===
   const icons = document.createElement("div");
   Object.assign(icons.style, {
-    display: "flex", gap: "10px", alignItems: "center",
+    display: "flex",
+    gap: "10px",
+    alignItems: "center",
   });
 
   const makeIcon = (src, alt, onclick) => {
@@ -85,7 +102,10 @@ function renderTopBar() {
     return icon;
   };
 
+  // Bell (placeholder)
   icons.appendChild(makeIcon("drump-images/bell.svg", "Bell", () => {}));
+
+  // Info
   icons.appendChild(makeIcon("drump-images/info.svg", "Info", () => showInfoPage?.()));
 
   // Sound toggle
@@ -101,6 +121,7 @@ function renderTopBar() {
   );
   icons.appendChild(soundIcon);
 
+  // === Render topbar ===
   top.append(userWrap, icons);
   document.body.appendChild(top);
 }
