@@ -55,7 +55,7 @@ function createLeaderboardPopup() {
         <button class="leaderboard-popup-close"
             style="margin-top: 18px; display:block; margin-left:auto; margin-right:auto;
                    background:${COLORS.primary}; color:${COLORS.offWhite}; padding:10px 16px;
-                   font-weight:bold; border:none; border-radius:${BORDER.radius};
+                   border:none; border-radius:${BORDER.radius};
                    font-size:15px; cursor:pointer;">
             Close
         </button>
@@ -268,7 +268,7 @@ function showInfoPage() {
 
         <div style="text-align:center; margin-top: 30px;">
             <button id="close-info"
-                style="background:${COLORS.primary}; color:${COLORS.offWhite}; padding:10px 16px; font-weight:bold;
+                style="background:${COLORS.primary}; color:${COLORS.offWhite}; padding:10px 16px;
                        border:none; border-radius:${BORDER.radius}; font-size:16px; cursor:pointer;">
                 Close
             </button>
@@ -286,7 +286,6 @@ function showInfoPage() {
         .faq-question {
             background: #f0f4ff;
             padding: 12px;
-            font-weight: bold;
             cursor: pointer;
             font-size: 14px;
         }
