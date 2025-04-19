@@ -50,10 +50,15 @@ export function renderEarnTab() {
   wrap.id = "earn-container";
   wrap.className = "earn-container";
 
+  const content = document.createElement("div");
+  content.id = "earn-content";
+  wrap.appendChild(content);
+
   const h = document.createElement("h2");
   h.textContent = "🎯 Tasks & Rewards";
   h.className = "task-section-heading";
-  wrap.appendChild(h);
+  content.appendChild(h); // ✅ Append to content instead of wrap
+
 
   const taskToConfirm = localStorage.getItem(CONFIRM_KEY);
 
