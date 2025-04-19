@@ -49,6 +49,7 @@
   min-width: 20px;
   text-align: center;
   box-shadow: 2px 2px 0 #000;
+  z-index: 9999;
 }
 
 
