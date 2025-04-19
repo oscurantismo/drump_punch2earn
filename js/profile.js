@@ -9,21 +9,21 @@ function renderProfilePage() {
   const existing = document.getElementById("profile-container");
   if (existing) existing.remove();
 
+  // Reset and render global UI
   window.activeTab = "profile";
   updatePunchDisplay();
-  renderTopBar();
-  renderTabs();
+  renderTopBar();     // ✅ Always visible
+  renderTabs("profile");
   createLeaderboardPopup();
 
   const container = document.createElement("div");
   container.id = "profile-container";
+
+  // Ensure profile UI is scrollable but doesn’t block tabs
   Object.assign(container.style, {
     position: "fixed",
-    top: "0",
-    left: "0",
-    right: "0",
-    bottom: "0",
-    background: "url('../drump-images/background.png') no-repeat center center",
+    top: "0", left: "0", right: "0", bottom: "0",
+    background: "url('drump-images/background.png') no-repeat center center",
     backgroundSize: "cover",
     overflowY: "auto",
     padding: "100px 16px 120px",
@@ -33,6 +33,7 @@ function renderProfilePage() {
     zIndex: 900
   });
 
+  // === Avatar and Username Section ===
   const section = document.createElement("div");
   section.className = "profile-section";
 
@@ -65,8 +66,10 @@ function renderProfilePage() {
   invite.textContent = "INVITE & EARN";
   invite.onclick = () => window.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
   section.appendChild(invite);
+
   container.appendChild(section);
 
+  // === Referral Box ===
   const rewardBox = document.createElement("div");
   rewardBox.className = "referral-box";
   rewardBox.innerHTML = `
@@ -120,21 +123,23 @@ function renderProfilePage() {
   rewardBox.appendChild(actionRow);
   container.appendChild(rewardBox);
 
+  // === Claimed Rewards Section ===
   const rewardsBox = document.createElement("div");
   rewardsBox.className = "referral-history";
   rewardsBox.innerHTML = `<b>CLAIMED REWARDS:</b><br><div id="claimed-rewards-list" style="margin-top: 8px;">Loading...</div>`;
   container.appendChild(rewardsBox);
 
+  // === Close Button ===
   const closeBtn = document.createElement("button");
   closeBtn.innerText = "❌ Close Profile";
   Object.assign(closeBtn.style, {
     background: COLORS.deepRed,
     color: "#fff",
-    padding: "10px 20px",
+    padding: "12px 24px",
     borderRadius: "10px",
     border: "none",
     fontFamily: FONT.body,
-    fontSize: "14px",
+    fontSize: "15px",
     fontWeight: "normal",
     cursor: "pointer",
     margin: "32px auto 100px",
