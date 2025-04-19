@@ -20,141 +20,116 @@ const SUBMIT_INTERVAL = 15000; // 15 seconds
 const PUNCH_THRESHOLD = 10;    // Punches per sync
 
 window.onload = () => {
-    createLoader();
-    createGame();
-    renderTopBar();          // Always show topbar
-    renderPunchBar();        // Show punch bar immediately
-    renderTabs();
-    setTimeout(() => {
-        const earnBtn = document.querySelector('#tab-container button[data-tab="earn"]');
-        if (earnBtn && !earnBtn.querySelector(".task-badge")) {
-            const incomplete = getIncompleteTaskCount?.() || 0;
-            if (incomplete > 0) {
-                const badge = document.createElement("span");
-                badge.className = "task-badge";
-                badge.textContent = incomplete;
-                earnBtn.appendChild(badge);
-            }
-        }
-    }, 20); // wait for tab to fully render
-    // Show bottom nav
-    showTab("game");         // Default tab on launch
+  createLoader();
+  createGame();
 };
 
 function createGame() {
-    const gameConfig = {
-        type: Phaser.AUTO,
-        width: window.innerWidth,
-        height: window.innerHeight,
-        backgroundColor: COLORS.badgeBg,
-        scene: { preload, create },
-        audio: {
-            disableWebAudio: false
-        }
-    };
+  const gameConfig = {
+    type: Phaser.AUTO,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    backgroundColor: COLORS.badgeBg,
+    scene: { preload, create },
+    audio: {
+      disableWebAudio: false
+    }
+  };
 
-    game = new Phaser.Game(gameConfig);
-    window.game = game;
+  game = new Phaser.Game(gameConfig);
+  window.game = game;
 }
 
 function preload() {
-    this.load.image("drump1", "drump-images/1a-min.png");
-    this.load.image("background", "drump-images/background.png");
-    this.load.image("punch", "drump-images/punch.png"); 
-    this.load.audio("laugh", "laugh1.mp3");
-    this.load.audio("oof", "oof1.mp3");
+  this.load.image("drump1", "drump-images/1a-min.png");
+  this.load.image("background", "drump-images/background.png");
+  this.load.image("punch", "drump-images/punch.png");
+  this.load.audio("laugh", "laugh1.mp3");
+  this.load.audio("oof", "oof1.mp3");
 
+  for (let i = 1; i <= 4; i++) {
+    this.load.audio("punch" + i, `punch${i}.mp3`);
+  }
 
-    for (let i = 1; i <= 4; i++) {
-        this.load.audio("punch" + i, `punch${i}.mp3`);
-    }
-
-    this.load.image("drump-images/sound_on.svg");
-    this.load.image("drump-images/sound_off.svg");
+  this.load.image("drump-images/sound_on.svg");
+  this.load.image("drump-images/sound_off.svg");
 }
 
 function create() {
-    Telegram.WebApp.ready();
+  Telegram.WebApp.ready();
 
-    const initUser = Telegram.WebApp.initDataUnsafe?.user;
-        if (initUser) {
-            const fallbackUsername = initUser.username || "Anonymous";
-            const firstName = initUser.first_name || "";
-            const lastName = initUser.last_name || "";
+  const initUser = Telegram.WebApp.initDataUnsafe?.user;
+  if (initUser) {
+    const fallbackUsername = initUser.username || "Anonymous";
+    const firstName = initUser.first_name || "";
+    const lastName = initUser.last_name || "";
 
-            // Display name logic
-            let displayName = "Anonymous";
-            if (firstName.trim()) {
-                displayName = firstName;
-            } else if (lastName.trim()) {
-                displayName = lastName;
-            } else {
-                displayName = fallbackUsername;
-            }
-
-            window.storedUsername = displayName; // For display
-            window.telegramUsername = fallbackUsername; // For logging / backend
-            window.userId = initUser.id.toString();
-        }
-
-
-    window.activeTab = "game";
-
-    const cached = localStorage.getItem(`score_${window.userId}`);
-    if (cached !== null) {
-        window.punches = parseInt(cached);
+    let displayName = "Anonymous";
+    if (firstName.trim()) {
+      displayName = firstName;
+    } else if (lastName.trim()) {
+      displayName = lastName;
+    } else {
+      displayName = fallbackUsername;
     }
 
-    updatePunchDisplay();
+    window.storedUsername = displayName;
+    window.telegramUsername = fallbackUsername;
+    window.userId = initUser.id.toString();
+  }
 
-    fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
+  window.activeTab = "game";
+
+  const cached = localStorage.getItem(`score_${window.userId}`);
+  if (cached !== null) {
+    window.punches = parseInt(cached);
+  }
+
+  updatePunchDisplay();
+
+  fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
     .then(res => res.json())
     .then(profile => {
-        if (typeof profile.punches === "number") {
-            // Update only if backend score is higher
-            if (profile.punches > window.punches) {
-                window.punches = profile.punches;
-                updatePunchDisplay();
-                const punchEl = document.getElementById("punch-count");
-                if (punchEl) punchEl.textContent = window.punches;
-            }
+      if (typeof profile.punches === "number") {
+        if (profile.punches > window.punches) {
+          window.punches = profile.punches;
+          updatePunchDisplay();
+          const punchEl = document.getElementById("punch-count");
+          if (punchEl) punchEl.textContent = window.punches;
         }
+      }
     })
     .catch(err => console.error("❌ Failed to sync punches from server:", err));
 
+  if (this.sound.context.state === "suspended") {
+    this.sound.context.resume();
+  }
 
-    // ✅ Resume audio context if needed
-    if (this.sound.context.state === "suspended") {
-        this.sound.context.resume();
+  punchSounds = [];
+  for (let i = 1; i <= 4; i++) {
+    try {
+      const sound = this.sound.add("punch" + i, {
+        volume: 0.8,
+        loop: false
+      });
+      punchSounds.push(sound);
+    } catch (e) {
+      console.warn(`⚠️ Failed to load punch sound ${i}:`, e);
     }
+  }
 
-    // ✅ Load punch sounds with fallback
-    punchSounds = [];
-    for (let i = 1; i <= 4; i++) {
-        try {
-            const sound = this.sound.add("punch" + i, {
-                volume: 0.8,
-                loop: false
-            });
-            punchSounds.push(sound);
-        } catch (e) {
-            console.warn(`⚠️ Failed to load punch sound ${i}:`, e);
-        }
-    }
+  // ✅ Set up UI after game scene is ready
+  const { showTab } = window; // global import from ui_tabs.js
+  showTab("game", this);
 
-    renderTopBar();
-    renderTabs();
+  registerUser();
+  createReferralAndRewardsButtons(window.userId);
 
-    showGameUI(this);
-    registerUser();
-
-    createReferralAndRewardsButtons(window.userId);
-
-    if (!localStorage.getItem("onboarding_complete")) {
-        setTimeout(() => showOnboarding(), 300); // Give UI time to render
-    }
-
+  if (!localStorage.getItem("onboarding_complete")) {
+    setTimeout(() => showOnboarding(), 300);
+  }
 }
+
 
 function showGameUI(scene) {
     // 1. Add background
