@@ -8,58 +8,56 @@ import { renderTopBar } from "./topbar.js";
 import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
 
 function showTab(tab, scene = null) {
-  // === Keep topbar and bottom tabs — only remove content ===
-  document.getElementById("page-content")?.remove();
+  window.activeTab = tab;
 
-  // === Create dedicated container for tab-specific content ===
+  // Clean up tab-specific content only
+  document.getElementById("page-content")?.remove();
+  document.getElementById("punch-bar")?.remove();
+  document.getElementById("punch-badge")?.remove();
+
   const content = document.createElement("div");
   content.id = "page-content";
   Object.assign(content.style, {
     position: "fixed",
-    top: "60px", // below topbar
-    bottom: "64px", // above nav tabs
+    top: "60px",
+    bottom: "64px",
     left: "0",
     right: "0",
-    zIndex: ZINDEX.punchBar,
     overflow: "hidden",
+    zIndex: ZINDEX.punchBar,
   });
 
-  // === Update tab highlight and badge ===
+  // Static layout: topbar and tabs never removed
+  renderTopBar();
+  renderTabs(tab);
+
   const updateTabHighlight = () => {
     document.querySelectorAll("#tab-container button").forEach(btn => {
-      const active = btn.dataset.tab === tab;
-      btn.classList.toggle("active-tab", active);
+      const isActive = btn.dataset.tab === tab;
+      btn.classList.toggle("active-tab", isActive);
 
-      const existingBadge = btn.querySelector(".task-badge");
-      if (existingBadge) {
-        existingBadge.style.opacity = "0";
-        existingBadge.style.transform = "scale(0.8)";
-        setTimeout(() => existingBadge.remove(), 200);
-      }
+      const badge = btn.querySelector(".task-badge");
+      if (badge) badge.remove();
 
       if (btn.dataset.tab === "earn") {
         const incomplete = getIncompleteTaskCount?.() || 0;
         if (incomplete > 0) {
-          const badge = document.createElement("span");
-          badge.className = "task-badge";
-          badge.textContent = incomplete;
-          btn.appendChild(badge);
+          const newBadge = document.createElement("span");
+          newBadge.className = "task-badge";
+          newBadge.textContent = incomplete;
+          btn.appendChild(newBadge);
         }
       }
     });
   };
 
-  // === Static topbar and nav tabs ===
-  renderTopBar();
-  renderTabs(tab);
   setTimeout(updateTabHighlight, 50);
 
   // === GAME TAB ===
   if (tab === "game") {
-    if (!document.getElementById("punch-bar")) renderPunchBar();
-    if (!document.getElementById("punch-badge")) renderPunchBadge();
+    renderPunchBar();
+    renderPunchBadge();
     showGameUI(scene);
-    // Game UI manages its own page layer — no need for content container
 
   // === LEADERBOARD TAB ===
   } else if (tab === "leaderboard") {
@@ -70,7 +68,7 @@ function showTab(tab, scene = null) {
       height: "100%",
       border: "none",
       display: "block",
-      background: "transparent"
+      background: "transparent",
     });
 
     iframe.onerror = () => {
