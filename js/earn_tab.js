@@ -1,4 +1,3 @@
-import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 import { updatePunchDisplay } from "./ui.js";
 
 const LS_PREFIX = "earn_task_done_";
@@ -49,103 +48,52 @@ export function renderEarnTab() {
 
   const wrap = document.createElement("div");
   wrap.id = "earn-container";
-  Object.assign(wrap.style, {
-    position: "fixed",
-    top: "100px",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: "calc(100vh - 100px)",
-    overflowY: "auto",
-    padding: "24px 16px 140px",
-    boxSizing: "border-box",
-    backgroundImage: "url('drump-images/background.png')",
-    backgroundSize: "cover",
-    fontFamily: FONT.body,
-    color: COLORS.primary,
-    zIndex: ZINDEX.punchBar,
-  });
+  wrap.className = "earn-container";
 
   const h = document.createElement("h2");
   h.textContent = "🎯 Tasks & Rewards";
-  Object.assign(h.style, {
-    margin: "0 0 10px",
-    fontFamily: FONT.heading,
-    color: COLORS.primary,
-    fontSize: "22px"
-  });
+  h.className = "task-section-heading";
   wrap.appendChild(h);
-
-  const style = document.createElement("style");
-  style.textContent = `
-    .loader {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid ${COLORS.primary};
-      border-top: 2px solid transparent;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-right: 8px;
-      vertical-align: middle;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  `;
-  document.head.appendChild(style);
 
   const taskToConfirm = localStorage.getItem(CONFIRM_KEY);
 
   function renderSection(titleText, taskList) {
-    const sectionTitle = document.createElement("h3");
+    const section = document.createElement("div");
+
+    const sectionTitle = document.createElement("div");
     sectionTitle.textContent = titleText;
-    Object.assign(sectionTitle.style, {
-      fontSize: "16px",
-      marginBottom: "12px",
-      color: COLORS.deepRed
-    });
-    wrap.appendChild(sectionTitle);
+    sectionTitle.className = "task-section-heading";
+    section.appendChild(sectionTitle);
 
     taskList.forEach((t) => {
       const card = document.createElement("div");
-      Object.assign(card.style, {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "14px 18px",
-        marginBottom: "12px",
-        borderRadius: "14px",
-        border: "2px solid #2a3493",
-        background: "#fff7d5",
-        color: "#000",
-        fontWeight: "bold",
-      });
+      card.className = "task-card";
 
       const title = document.createElement("span");
       title.textContent = t.title;
-      title.style.maxWidth = "60%";
+      title.style.maxWidth = "55%";
       card.appendChild(title);
 
+      const rewardWrap = document.createElement("div");
+      rewardWrap.className = "punch-reward";
+
+      const punchIcon = document.createElement("img");
+      punchIcon.src = "drump-images/punch.svg";
+      punchIcon.alt = "punch";
+      rewardWrap.appendChild(punchIcon);
+
+      const punchCount = document.createElement("span");
+      punchCount.textContent = t.reward;
+      rewardWrap.appendChild(punchCount);
+
       const btn = document.createElement("button");
+      btn.className = "task-btn";
+
       const done = isDone(t.id);
-      Object.assign(btn.style, {
-        fontFamily: FONT.body,
-        fontSize: "14px",
-        fontWeight: "bold",
-        padding: "8px 12px",
-        border: "none",
-        borderRadius: "8px",
-        minWidth: "90px",
-      });
 
       const showClaimButton = () => {
-        btn.textContent = `🎁 Claim +${t.reward} 🥾`;
+        btn.textContent = "CLAIM";
         btn.disabled = false;
-        btn.style.background = COLORS.primary;
-        btn.style.color = COLORS.textLight;
-        btn.style.cursor = "pointer";
         btn.onclick = () => {
           markDone(t.id);
           grantReward(t.reward);
@@ -161,38 +109,25 @@ export function renderEarnTab() {
             }).catch(() => {});
           }
 
-          btn.textContent = "✅ Done";
+          btn.textContent = "DONE";
           btn.disabled = true;
-          btn.style.background = COLORS.offWhite;
-          btn.style.color = COLORS.deepRed;
-          btn.style.cursor = "default";
           localStorage.removeItem(CONFIRM_KEY);
         };
       };
 
       const startConfirmationDelay = () => {
-        btn.disabled = true;
         btn.innerHTML = `<span class="loader"></span> Confirming...`;
-        btn.style.background = "#ffeeba";
-        btn.style.color = "#000";
-        btn.style.cursor = "wait";
+        btn.disabled = true;
         setTimeout(showClaimButton, 15000);
       };
 
       if (done) {
-        btn.textContent = "✅ Done";
+        btn.textContent = "DONE";
         btn.disabled = true;
-        btn.style.background = COLORS.offWhite;
-        btn.style.color = COLORS.deepRed;
-        btn.style.cursor = "default";
       } else if (taskToConfirm === t.id) {
         startConfirmationDelay();
       } else {
-        btn.textContent = `+${t.reward} 🥾`;
-        btn.style.background = COLORS.primary;
-        btn.style.color = COLORS.textLight;
-        btn.style.cursor = "pointer";
-
+        btn.textContent = "GET";
         btn.onclick = () => {
           if (t.url?.startsWith("https://t.me/")) {
             Telegram.WebApp.openTelegramLink(t.url);
@@ -204,9 +139,12 @@ export function renderEarnTab() {
         };
       }
 
-      card.appendChild(btn);
-      wrap.appendChild(card);
+      rewardWrap.appendChild(btn);
+      card.appendChild(rewardWrap);
+      section.appendChild(card);
     });
+
+    wrap.appendChild(section);
   }
 
   renderSection("🗓 Daily Quests", DAILY_TASKS);
