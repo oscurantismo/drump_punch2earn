@@ -3,19 +3,18 @@ import { showGameUI } from "./game.js";
 import { createLeaderboardPopup } from "./popups.js";
 import { renderEarnTab, getIncompleteTaskCount } from "./earn_tab.js";
 import { renderTabs } from "./ui.js";
-import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
+import { COLORS, ZINDEX } from "./styles.js";
 import { renderTopBar } from "./topbar.js";
 import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
 
 function showTab(tab, scene = null) {
   window.activeTab = tab;
 
-  // Clean up dynamic page content
+  // Clean up only content area, preserve topbar/tabs
   document.getElementById("page-content")?.remove();
   document.getElementById("punch-bar")?.remove();
   document.getElementById("punch-badge")?.remove();
 
-  // Create the main content wrapper
   const content = document.createElement("div");
   content.id = "page-content";
   Object.assign(content.style, {
@@ -28,10 +27,10 @@ function showTab(tab, scene = null) {
     zIndex: ZINDEX.punchBar,
   });
 
-  // Always render top bar and tabs
   renderTopBar();
   renderTabs(tab);
 
+  // === Update tab states + task badge ===
   const updateTabHighlight = () => {
     document.querySelectorAll("#tab-container button").forEach(btn => {
       const isActive = btn.dataset.tab === tab;
@@ -56,16 +55,21 @@ function showTab(tab, scene = null) {
 
   // === GAME TAB ===
   if (tab === "game") {
-    if (!document.getElementById("punch-bar")) renderPunchBar();
-    if (!document.getElementById("punch-badge")) renderPunchBadge();
+    renderPunchBar();
+    renderPunchBadge();
 
-    // ✅ Use stored scene fallback if needed
-    const activeScene = scene || window.phaserScene;
+    const activeScene =
+      scene ||
+      window.game?.scene?.scenes?.[0] || // fallback to first loaded scene
+      null;
+
     if (activeScene) {
       showGameUI(activeScene);
     } else {
       console.warn("⚠️ No Phaser scene available to render game.");
     }
+
+    document.body.appendChild(content);
 
   // === LEADERBOARD TAB ===
   } else if (tab === "leaderboard") {
