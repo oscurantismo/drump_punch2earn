@@ -1,5 +1,5 @@
 import { renderProfilePage } from "./profile.js";
-import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
+import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 function renderTopBar() {
   const existing = document.getElementById("top-bar");
@@ -53,7 +53,10 @@ function renderTopBar() {
   label.textContent = window.storedUsername || "Anonymous";
 
   userWrap.append(avatar, label);
+
+  // ✅ Store last visited tab before opening profile
   userWrap.onclick = () => {
+    window.lastActiveTab = window.activeTab || "game";
     window.activeTab = "profile";
     renderProfilePage();
   };
@@ -69,7 +72,7 @@ function renderTopBar() {
     icon.src = src;
     icon.alt = alt;
     Object.assign(icon.style, {
-      width: "18px",          // ↓ smaller than before
+      width: "18px",
       height: "18px",
       borderRadius: "50%",
       background: "#FFF2C5",
@@ -82,15 +85,21 @@ function renderTopBar() {
     return icon;
   };
 
-
   icons.appendChild(makeIcon("drump-images/bell.svg", "Bell", () => {}));
   icons.appendChild(makeIcon("drump-images/info.svg", "Info", () => showInfoPage?.()));
-  icons.appendChild(makeIcon(window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off.svg", "Sound", () => {
-    window.soundEnabled = !window.soundEnabled;
-    soundIcon.src = window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off.svg";
-  }));
 
-  const soundIcon = icons.lastChild;
+  // Sound toggle
+  const soundIcon = makeIcon(
+    window.soundEnabled ? "drump-images/sound_on.svg" : "drump-images/sound_off.svg",
+    "Sound",
+    () => {
+      window.soundEnabled = !window.soundEnabled;
+      soundIcon.src = window.soundEnabled
+        ? "drump-images/sound_on.svg"
+        : "drump-images/sound_off.svg";
+    }
+  );
+  icons.appendChild(soundIcon);
 
   top.append(userWrap, icons);
   document.body.appendChild(top);
