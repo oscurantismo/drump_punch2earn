@@ -127,7 +127,7 @@ function renderProfilePage() {
   container.appendChild(rewardsBox);
 
   const closeBtn = document.createElement("button");
-  closeBtn.innerText = "❌ Close Profile";
+  closeBtn.innerText = "Close Profile";
   Object.assign(closeBtn.style, {
     background: COLORS.deepRed,
     color: "#fff",
@@ -141,10 +141,10 @@ function renderProfilePage() {
     margin: "30px auto 40px",
     display: "block",
     boxShadow: "1px 2px 0px 0px #000000",
-    position: "sticky",
-    bottom: "0",
-    zIndex: 1
+    width: "100%",
+    maxWidth: "280px"
   });
+
   closeBtn.onclick = async () => {
     const profileEl = document.getElementById("profile-container");
     if (profileEl) profileEl.remove();
