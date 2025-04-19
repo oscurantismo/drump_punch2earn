@@ -16,6 +16,8 @@ const TASKS = [
 
 /* ─── HELPERS ─────────────────────────────────────────────────────────── */
 const LS_PREFIX = "earn_task_done_";
+const CONFIRM_KEY = "confirm_task_id";
+
 const isDone = (id) => localStorage.getItem(`${LS_PREFIX}${id}`) === "1";
 const markDone = (id) => localStorage.setItem(`${LS_PREFIX}${id}`, "1");
 
@@ -94,6 +96,8 @@ export function renderEarnTab() {
   `;
   document.head.appendChild(style);
 
+  const taskToConfirm = localStorage.getItem(CONFIRM_KEY);
+
   TASKS.forEach((t) => {
     const card = document.createElement("div");
     Object.assign(card.style, {
@@ -125,56 +129,55 @@ export function renderEarnTab() {
       minWidth: "90px",
     });
 
+    const showClaimButton = () => {
+      btn.textContent = `🎁 Claim +${t.reward} 🥾`;
+      btn.disabled = false;
+      btn.style.background = COLORS.primary;
+      btn.style.color = COLORS.textLight;
+      btn.style.cursor = "pointer";
+
+      btn.onclick = () => {
+        markDone(t.id);
+        grantReward(t.reward);
+
+        if (window.userId) {
+          fetch("https://drumpleaderboard-production.up.railway.app/tasks/complete", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_id: window.userId,
+              task_id: t.id,
+            }),
+          }).catch(() => {});
+        }
+
+        btn.textContent = "✅ Done";
+        btn.disabled = true;
+        btn.style.background = COLORS.offWhite;
+        btn.style.color = COLORS.deepRed;
+        btn.style.cursor = "default";
+        localStorage.removeItem(CONFIRM_KEY);
+      };
+    };
+
+    const startConfirmationDelay = () => {
+      btn.disabled = true;
+      btn.innerHTML = `<span class="loader"></span> Confirming...`;
+      btn.style.background = COLORS.badgeBg;
+      btn.style.color = COLORS.primary;
+      btn.style.cursor = "wait";
+      setTimeout(showClaimButton, 15000);
+    };
+
     if (done) {
       btn.textContent = "✅ Done";
       btn.disabled = true;
       btn.style.background = COLORS.offWhite;
       btn.style.color = COLORS.deepRed;
       btn.style.cursor = "default";
+    } else if (taskToConfirm === t.id) {
+      startConfirmationDelay();
     } else {
-      let resumeListener;
-
-      const showClaimButton = () => {
-        btn.textContent = `🎁 Claim +${t.reward} 🥾`;
-        btn.disabled = false;
-        btn.style.background = COLORS.primary;
-        btn.style.color = COLORS.textLight;
-        btn.style.cursor = "pointer";
-
-        btn.onclick = () => {
-          markDone(t.id);
-          grantReward(t.reward);
-
-          if (window.userId) {
-            fetch("https://drumpleaderboard-production.up.railway.app/tasks/complete", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                user_id: window.userId,
-                task_id: t.id,
-              }),
-            }).catch(() => {});
-          }
-
-          btn.textContent = "✅ Done";
-          btn.disabled = true;
-          btn.style.background = COLORS.offWhite;
-          btn.style.color = COLORS.deepRed;
-          btn.style.cursor = "default";
-          Telegram.WebApp.offEvent('resume', resumeListener);
-        };
-      };
-
-      const startConfirmationDelay = () => {
-        btn.disabled = true;
-        btn.innerHTML = `<span class="loader"></span> Confirming...`;
-        btn.style.background = COLORS.badgeBg;
-        btn.style.color = COLORS.primary;
-        btn.style.cursor = "wait";
-
-        setTimeout(showClaimButton, 15000);
-      };
-
       btn.textContent = `+${t.reward} 🥾`;
       btn.style.background = COLORS.primary;
       btn.style.color = COLORS.textLight;
@@ -184,15 +187,10 @@ export function renderEarnTab() {
         if (t.url.startsWith("https://t.me/")) {
           Telegram.WebApp.openTelegramLink(t.url);
         } else {
-          Telegram.WebApp.openLink(t.url); // ✅ updated to keep app open
+          Telegram.WebApp.openLink(t.url);
         }
-
-        btn.textContent = "Waiting to return...";
-        btn.disabled = true;
-        btn.style.cursor = "wait";
-
-        resumeListener = () => startConfirmationDelay();
-        Telegram.WebApp.onEvent('resume', resumeListener);
+        localStorage.setItem(CONFIRM_KEY, t.id);
+        location.reload(); // persist state via reload
       };
     }
 
