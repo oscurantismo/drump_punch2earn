@@ -184,7 +184,7 @@ export function renderEarnTab() {
         if (t.url.startsWith("https://t.me/")) {
           Telegram.WebApp.openTelegramLink(t.url);
         } else {
-          window.open(t.url, "_blank");
+          Telegram.WebApp.openLink(t.url); // ✅ updated to keep app open
         }
 
         btn.textContent = "Waiting to return...";
