@@ -52,6 +52,7 @@
   padding-right: 16px;
   box-sizing: border-box;
   overflow-y: auto;
+  bottom: 45px;
 }
 
 /* Task card container */
