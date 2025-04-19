@@ -1,5 +1,16 @@
+:root {
+  --default-border: 1px solid #000000;
+  --box-shadow: 2px 2px 0 #000;
+  --card-bg: #fff7d5;
+  --card-border: 1px solid #252525;
+  --blue-btn: #2a3493;
+  --btn-radius: 8px;
+  --heading-bg: #FFEDAC;
+  --font-heading: 'Negrita Pro', sans-serif;
+  --font-body: 'Commissioner', sans-serif;
+}
+
 #tab-container {
-  background: #FFEDAC;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -16,22 +27,22 @@
 
 /* Base style for buttons */
 #tab-container button {
-  background: #FFCC68;
-  color: #2a3493;
+  background: #FFE99B;
+  color: #000000;
   font-family: 'Negrita Pro', sans-serif;
   font-size: 13px;
   font-weight: bold;
   border: none;
-  border-radius: 14px;
-  padding: 6px 10px;
+  border-radius: var(--btn-radius);
+  padding: 10px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 90px;
-  height: 52px;
+  width: auto;
+  height: auto;
   transition: all 0.2s ease;
-  box-shadow: 2px 2px 0 #000;
+  box-shadow: var(--box-shadow);
   cursor: pointer;
 }
 
@@ -51,7 +62,6 @@
   box-shadow: 2px 2px 0 #000;
   z-index: 9999;
 }
-
 
 
 /* Active tab — slightly lighter */
