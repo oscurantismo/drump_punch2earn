@@ -4,8 +4,11 @@ import { updatePunchDisplay } from "./ui.js";
 let badgeTextEl;
 
 function renderPunchBadge() {
+  // Prevent badge from rendering in profile or any non-game tab
   if (window.activeTab !== "game") return;
+  if (document.getElementById("profile-container")) return;
   if (document.getElementById("punch-badge")) return;
+
 
   const badge = document.createElement("div");
   badge.id = "punch-badge";
