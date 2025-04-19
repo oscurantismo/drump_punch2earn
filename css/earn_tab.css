@@ -99,8 +99,8 @@
 
 .task-btn[disabled] {
   background: var(--card-bg);
-  color: #8e0004;
+  color: #252525;
   cursor: default;
   box-shadow: none;
-  border: var(--default-border);
+  border: none;
 }
