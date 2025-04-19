@@ -24,7 +24,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  font-family: var(--font-body);
+  font-family: var(--font-heading);
   z-index: 999;
 }
 
@@ -66,7 +66,6 @@
   align-items: center;
   padding: 14px 16px;
   margin-bottom: 12px;
-  font-weight: bold;
   color: #000;
 }
 /* Punch reward on the left */
@@ -74,7 +73,6 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-weight: bold;
   font-size: 14px;
 }
 
@@ -86,8 +84,7 @@
 
 /* GET / CLAIM / DONE buttons */
 .task-btn {
-  font-family: var(--font-body);
-  font-weight: bold;
+  font-family: var(--font-heading);
   font-size: 14px;
   padding: 8px 16px;
   border: none;
