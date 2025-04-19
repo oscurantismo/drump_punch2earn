@@ -8,6 +8,7 @@ import { COLORS, FONT } from "./styles.js";
 function renderProfilePage() {
   const existing = document.getElementById("profile-container");
   if (existing) existing.remove();
+  document.getElementById("page-content")?.remove();
 
   // Reset and render global UI
   window.activeTab = "profile";
