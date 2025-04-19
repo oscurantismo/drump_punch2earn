@@ -1,6 +1,5 @@
 import { fetchReferralHistory } from "./referral.js";
 import { createLeaderboardPopup } from "./popups.js";
-import { updatePunchDisplay } from "./ui.js";
 import { renderTopBar } from "./topbar.js";
 import { renderTabs } from "./ui_tabs.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
@@ -10,6 +9,8 @@ function renderProfilePage() {
   if (existing) existing.remove();
 
   document.getElementById("page-content")?.remove(); // ✅ Clean up previous tab content
+  document.getElementById("punch-bar")?.remove();    // 🧼 Extra cleanup
+  document.getElementById("punch-badge")?.remove();
 
   window.activeTab = "profile";
 
@@ -19,22 +20,19 @@ function renderProfilePage() {
 
   const container = document.createElement("div");
   container.id = "profile-container";
-
-  // Ensure profile UI is scrollable but doesn’t block tabs
   Object.assign(container.style, {
     position: "fixed",
     top: "0", left: "0", right: "0", bottom: "0",
     background: "url('./drump-images/background.png') no-repeat center center",
     backgroundSize: "cover",
     overflowY: "auto",
-    padding: "100px 16px 120px",
+    padding: "90px 16px 140px",
     boxSizing: "border-box",
     fontFamily: FONT.body,
     fontWeight: "normal",
     zIndex: 900
   });
 
-  // === Avatar and Username Section ===
   const section = document.createElement("div");
   section.className = "profile-section";
 
@@ -70,7 +68,6 @@ function renderProfilePage() {
 
   container.appendChild(section);
 
-  // === Referral Box ===
   const rewardBox = document.createElement("div");
   rewardBox.className = "referral-box";
   rewardBox.innerHTML = `
@@ -124,28 +121,29 @@ function renderProfilePage() {
   rewardBox.appendChild(actionRow);
   container.appendChild(rewardBox);
 
-  // === Claimed Rewards Section ===
   const rewardsBox = document.createElement("div");
   rewardsBox.className = "referral-history";
-  rewardsBox.innerHTML = `<b>CLAIMED REWARDS:</b><br><div id="claimed-rewards-list" style="margin-top: 8px;">Loading...</div>`;
+  rewardsBox.innerHTML = `<b>CLAIMED REWARDS:</b><div id="claimed-rewards-list" style="margin-top: 8px;"></div>`;
   container.appendChild(rewardsBox);
 
-  // === Close Button ===
   const closeBtn = document.createElement("button");
   closeBtn.innerText = "❌ Close Profile";
   Object.assign(closeBtn.style, {
     background: COLORS.deepRed,
     color: "#fff",
-    padding: "12px 24px",
+    padding: "14px 24px",
     borderRadius: "10px",
     border: "none",
     fontFamily: FONT.body,
     fontSize: "15px",
     fontWeight: "normal",
     cursor: "pointer",
-    margin: "32px auto 100px",
+    margin: "30px auto 40px",
     display: "block",
-    boxShadow: "1px 2px 0px 0px #000000"
+    boxShadow: "1px 2px 0px 0px #000000",
+    position: "sticky",
+    bottom: "0",
+    zIndex: 1
   });
   closeBtn.onclick = async () => {
     const profileEl = document.getElementById("profile-container");
@@ -157,19 +155,21 @@ function renderProfilePage() {
   };
 
   container.appendChild(closeBtn);
+
   const wrap = document.createElement("div");
   wrap.id = "page-content";
-  wrap.style.position = "fixed";
-  wrap.style.top = "60px";
-  wrap.style.bottom = "64px";
-  wrap.style.left = "0";
-  wrap.style.right = "0";
-  wrap.style.overflow = "hidden";
-  wrap.style.zIndex = ZINDEX.punchBar;
+  Object.assign(wrap.style, {
+    position: "fixed",
+    top: "60px",
+    bottom: "64px",
+    left: "0",
+    right: "0",
+    overflow: "hidden",
+    zIndex: ZINDEX.punchBar,
+  });
 
   wrap.appendChild(container);
   document.body.appendChild(wrap);
-
 
   fetchProfileData();
   fetchUserRank();
@@ -194,7 +194,6 @@ function fetchProfileData() {
         window.punches = data.punches;
         const stat = document.getElementById("punchProfileStat");
         if (stat) stat.textContent = window.punches;
-        updatePunchDisplay();
       }
     })
     .catch(err => console.error("Error fetching profile data:", err));
@@ -225,7 +224,7 @@ function fetchClaimedRewards() {
         list.innerText = "None yet.";
       } else {
         list.innerHTML = userRewards.map(r =>
-          `<div style="margin-bottom: 6px;">✅ <b>${r.reward_type}</b>: ${r.change} <img src="drump-images/punch.svg" alt="punch" style="height:14px; vertical-align:-2px;"> – <small>${r.timestamp.split("T")[0]}</small></div>`
+          `<div>✅ <b>${r.reward_type}</b>: ${r.change} <img src="drump-images/punch.svg" alt="punch" style="height:14px; vertical-align:-2px;"> <small style="float:right;">${r.timestamp.split("T")[0]}</small></div>`
         ).join("");
       }
     })
