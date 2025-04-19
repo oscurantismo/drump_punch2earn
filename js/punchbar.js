@@ -4,6 +4,7 @@ import { updatePunchDisplay } from "./ui.js";
 let badgeTextEl;
 
 function renderPunchBadge() {
+  if (window.activeTab !== "game") return;
   if (document.getElementById("punch-badge")) return;
 
   const badge = document.createElement("div");
@@ -57,8 +58,9 @@ function renderPunchBadge() {
   document.body.appendChild(badge);
 }
 
-
 function renderPunchBar() {
+  if (window.activeTab !== "game") return;
+
   if (!document.getElementById("punchbar-stripe-style")) {
     const style = document.createElement("style");
     style.id = "punchbar-stripe-style";
@@ -112,7 +114,7 @@ function renderPunchBar() {
   punchBar.id = "punch-bar";
   Object.assign(punchBar.style, {
     position: "fixed",
-    top: "130px",  // shifted lower to fit badge above
+    top: "130px",
     left: "0.75rem",
     right: "0.75rem",
     background: "#FFF2C5",
