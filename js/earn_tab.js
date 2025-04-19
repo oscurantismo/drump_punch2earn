@@ -154,5 +154,5 @@ export function renderEarnTab() {
   renderSection("🗓 Daily Quests", DAILY_TASKS);
   renderSection("🌐 Social Tasks", SOCIAL_TASKS);
 
-  document.body.appendChild(wrap);
+  document.getElementById("page-content")?.appendChild(wrap);
 }
