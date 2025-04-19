@@ -119,8 +119,7 @@ function create() {
   }
 
   // ✅ Set up UI after game scene is ready
-  const { showTab } = window; // global import from ui_tabs.js
-  showTab("game", this);
+  showTab("game", this); // ✅ now accessible
 
   registerUser();
   createReferralAndRewardsButtons(window.userId);
