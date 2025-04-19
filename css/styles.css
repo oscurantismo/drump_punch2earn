@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'Negrita Pro';
-  src: url('css/fonts/NegritaPro.woff2') format('woff2'),
-       url('css/fonts/NegritaPro.woff') format('woff');
+  src: url('fonts/NegritaPro.woff2') format('woff2'),
+       url('fonts/NegritaPro.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
