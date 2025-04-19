@@ -134,6 +134,7 @@
 .referral-actions button {
   flex: 1;
   min-width: 120px;
+  height: 42px;
   padding: 10px;
   border-radius: 10px;
   border: none;
@@ -141,7 +142,13 @@
   font-size: 14px;
   box-shadow: var(--box-shadow);
   cursor: pointer;
+  transition: background 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
+
 
 .copy-btn {
   background: #2a3493;
