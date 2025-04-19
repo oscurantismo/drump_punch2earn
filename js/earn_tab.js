@@ -1,4 +1,3 @@
-/* earn_tab.js  –  Social‑task rewards */
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 import { updatePunchDisplay } from "./ui.js";
 
@@ -47,18 +46,18 @@ export function renderEarnTab() {
   wrap.id = "earn-container";
   Object.assign(wrap.style, {
     position: "fixed",
-    top: "100px",                            // below punch bar
+    top: "100px",
     left: 0,
     right: 0,
     bottom: 0,
     height: "calc(100vh - 100px)",
     overflowY: "auto",
-    padding: "24px 16px 140px",              // bottom padding for nav bar
+    padding: "24px 16px 140px",
     boxSizing: "border-box",
     background: COLORS.offWhite,
     fontFamily: FONT.body,
     color: COLORS.primary,
-    zIndex: ZINDEX.punchBar,                 // under tab bar (1000)
+    zIndex: ZINDEX.punchBar,
   });
 
   const h = document.createElement("h2");
@@ -74,6 +73,26 @@ export function renderEarnTab() {
   sub.textContent = "Complete social actions to earn extra 🥾 punches.";
   Object.assign(sub.style, { margin: "0 0 20px", fontSize: "14px", color: COLORS.deepRed });
   wrap.appendChild(sub);
+
+  const style = document.createElement("style");
+  style.textContent = `
+    .loader {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid ${COLORS.primary};
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
 
   TASKS.forEach((t) => {
     const card = document.createElement("div");
@@ -96,7 +115,6 @@ export function renderEarnTab() {
 
     const btn = document.createElement("button");
     const done = isDone(t.id);
-    btn.textContent = done ? "✅ Done" : `+${t.reward} 🥾`;
     Object.assign(btn.style, {
       fontFamily: FONT.body,
       fontSize: "14px",
@@ -105,35 +123,76 @@ export function renderEarnTab() {
       border: "none",
       borderRadius: BORDER.radius,
       minWidth: "90px",
-      cursor: done ? "default" : "pointer",
-      background: done ? COLORS.offWhite : COLORS.primary,
-      color: done ? COLORS.deepRed : COLORS.textLight,
     });
 
-    if (!done) {
+    if (done) {
+      btn.textContent = "✅ Done";
+      btn.disabled = true;
+      btn.style.background = COLORS.offWhite;
+      btn.style.color = COLORS.deepRed;
+      btn.style.cursor = "default";
+    } else {
+      let resumeListener;
+
+      const showClaimButton = () => {
+        btn.textContent = `🎁 Claim +${t.reward} 🥾`;
+        btn.disabled = false;
+        btn.style.background = COLORS.primary;
+        btn.style.color = COLORS.textLight;
+        btn.style.cursor = "pointer";
+
+        btn.onclick = () => {
+          markDone(t.id);
+          grantReward(t.reward);
+
+          if (window.userId) {
+            fetch("https://drumpleaderboard-production.up.railway.app/tasks/complete", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                user_id: window.userId,
+                task_id: t.id,
+              }),
+            }).catch(() => {});
+          }
+
+          btn.textContent = "✅ Done";
+          btn.disabled = true;
+          btn.style.background = COLORS.offWhite;
+          btn.style.color = COLORS.deepRed;
+          btn.style.cursor = "default";
+          Telegram.WebApp.offEvent('resume', resumeListener);
+        };
+      };
+
+      const startConfirmationDelay = () => {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="loader"></span> Confirming...`;
+        btn.style.background = COLORS.badgeBg;
+        btn.style.color = COLORS.primary;
+        btn.style.cursor = "wait";
+
+        setTimeout(showClaimButton, 15000);
+      };
+
+      btn.textContent = `+${t.reward} 🥾`;
+      btn.style.background = COLORS.primary;
+      btn.style.color = COLORS.textLight;
+      btn.style.cursor = "pointer";
+
       btn.onclick = () => {
-        if (t.url.startsWith("https://t.me/")) Telegram.WebApp.openTelegramLink(t.url);
-        else window.open(t.url, "_blank");
-
-        markDone(t.id);
-        grantReward(t.reward);
-
-        // ✅ Tell backend to log the reward properly
-        if (window.userId) {
-          fetch("https://drumpleaderboard-production.up.railway.app/tasks/complete", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              user_id: window.userId,
-              task_id: t.id,
-            }),
-          }).catch(() => {});
+        if (t.url.startsWith("https://t.me/")) {
+          Telegram.WebApp.openTelegramLink(t.url);
+        } else {
+          window.open(t.url, "_blank");
         }
 
-        btn.textContent = "✅ Done";
-        btn.style.background = COLORS.offWhite;
-        btn.style.color = COLORS.deepRed;
-        btn.style.cursor = "default";
+        btn.textContent = "Waiting to return...";
+        btn.disabled = true;
+        btn.style.cursor = "wait";
+
+        resumeListener = () => startConfirmationDelay();
+        Telegram.WebApp.onEvent('resume', resumeListener);
       };
     }
 
