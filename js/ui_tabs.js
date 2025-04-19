@@ -10,11 +10,12 @@ import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
 function showTab(tab, scene = null) {
   window.activeTab = tab;
 
-  // Clean up tab-specific content only
+  // Clean up dynamic page content
   document.getElementById("page-content")?.remove();
   document.getElementById("punch-bar")?.remove();
   document.getElementById("punch-badge")?.remove();
 
+  // Create the main content wrapper
   const content = document.createElement("div");
   content.id = "page-content";
   Object.assign(content.style, {
@@ -27,7 +28,7 @@ function showTab(tab, scene = null) {
     zIndex: ZINDEX.punchBar,
   });
 
-  // Static layout: topbar and tabs never removed
+  // Always render top bar and tabs
   renderTopBar();
   renderTabs(tab);
 
@@ -55,9 +56,16 @@ function showTab(tab, scene = null) {
 
   // === GAME TAB ===
   if (tab === "game") {
-    renderPunchBar();
-    renderPunchBadge();
-    showGameUI(scene);
+    if (!document.getElementById("punch-bar")) renderPunchBar();
+    if (!document.getElementById("punch-badge")) renderPunchBadge();
+
+    // ✅ Use stored scene fallback if needed
+    const activeScene = scene || window.phaserScene;
+    if (activeScene) {
+      showGameUI(activeScene);
+    } else {
+      console.warn("⚠️ No Phaser scene available to render game.");
+    }
 
   // === LEADERBOARD TAB ===
   } else if (tab === "leaderboard") {
