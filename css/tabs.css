@@ -95,18 +95,3 @@
     background-position: 0% 50%;
   }
 }
-.task-badge {
-  position: absolute;
-  top: 4px;
-  right: 10px;
-  background: #d11b1b;
-  color: #fff;
-  font-size: 12px;
-  font-weight: bold;
-  border-radius: 12px;
-  padding: 2px 6px;
-  min-width: 20px;
-  text-align: center;
-  box-shadow: 2px 2px 0 #000;
-  animation: glossyPulse 2.4s linear infinite;
-}
