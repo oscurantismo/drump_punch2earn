@@ -12,16 +12,18 @@
 #earn-container {
   background-image: url("./drump-images/background.png");
   background-size: cover;
-  background-position: center;
+  background-repeat: no-repeat;
+  background-position: center top;
   padding: 24px 16px 140px;
   box-sizing: border-box;
   overflow-y: auto;
   position: fixed;
-  top: 100px;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   font-family: var(--font-body);
+  z-index: 999;
 }
 
 /* Section headers (e.g. Daily Quest) */
