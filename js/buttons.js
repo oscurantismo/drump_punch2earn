@@ -10,11 +10,11 @@ function createReferralAndRewardsButtons(userId) {
   referralBtn = document.createElement("button");
   referralBtn.id = "referral-button";
   referralBtn.innerHTML = `
-    👥 Refer a Friend
+    Refer a Friend
     <span class="task-badge">+1000</span>
   `;
   referralBtn.style.cssText = sharedStyle + `
-    bottom: 70px;
+    bottom: 100px;
     background: ${COLORS.primary};
     color: white;
     font-family: 'Negrita Pro', sans-serif;
@@ -27,7 +27,7 @@ const sharedStyle = `
   position: fixed;
   right: 20px;
   padding: 10px 14px;
-  font-size: 14px;
+  font-size: 16px;
   border: none;
   border-radius: 8px;
   z-index: 1001;
