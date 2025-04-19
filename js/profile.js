@@ -1,6 +1,8 @@
 import { fetchReferralHistory } from "./referral.js";
 import { createLeaderboardPopup } from "./popups.js";
 import { updatePunchDisplay } from "./ui.js";
+import { renderTopBar } from "./topbar.js";
+import { renderTabs } from "./ui.js";
 import { COLORS, FONT } from "./styles.js";
 
 function renderProfilePage() {
@@ -9,6 +11,8 @@ function renderProfilePage() {
 
   window.activeTab = "profile";
   updatePunchDisplay();
+  renderTopBar();
+  renderTabs("profile");
   createLeaderboardPopup();
 
   const container = document.createElement("div");
@@ -17,7 +21,6 @@ function renderProfilePage() {
   const section = document.createElement("div");
   section.className = "profile-section";
 
-  // === Avatar (Telegram or fallback initials) ===
   const avatar = document.createElement("div");
   avatar.className = "profile-initials";
   const photoUrl = Telegram.WebApp?.initDataUnsafe?.user?.photo_url;
@@ -55,7 +58,7 @@ function renderProfilePage() {
   const rewardBox = document.createElement("div");
   rewardBox.className = "referral-box";
   rewardBox.innerHTML = `
-    <div><b>+1000 🥾</b> per successful referral<br><small>(FRIEND MUST PUNCH 20×)</small></div>
+    <div><b>+1000 <img src="drump-images/punch.svg" alt="punch" style="height:14px;vertical-align:-2px;"></b> per successful referral<br><small>(FRIEND MUST PUNCH 20×)</small></div>
   `;
 
   const referralInput = document.createElement("input");
@@ -124,7 +127,7 @@ function renderProfilePage() {
     fontSize: "14px",
     fontWeight: "normal",
     cursor: "pointer",
-    margin: "30px auto 40px",
+    margin: "30px auto 100px",
     display: "block",
     boxShadow: "1px 2px 0px 0px #000000"
   });
@@ -196,7 +199,7 @@ function fetchClaimedRewards() {
         list.innerText = "None yet.";
       } else {
         list.innerHTML = userRewards.map(r =>
-          `<div style="margin-bottom: 6px;">✅ <b>${r.reward_type}</b>: ${r.change} 🥾 – <small>${r.timestamp.split("T")[0]}</small></div>`
+          `<div style="margin-bottom: 6px;">✅ <b>${r.reward_type}</b>: ${r.change} <img src="drump-images/punch.svg" alt="punch" style="height:14px; vertical-align:-2px;"> – <small>${r.timestamp.split("T")[0]}</small></div>`
         ).join("");
       }
     })
