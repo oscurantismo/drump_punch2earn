@@ -24,7 +24,7 @@ function renderTopBar() {
     borderRadius: "999px",
     border: "2px solid #000",
     padding: "5px 12px 5px 6px",
-    fontSize: "15px", fontWeight: "bold",
+    fontSize: "15px",
     boxShadow: "2px 2px 0 #000",
     cursor: "pointer",
   });
@@ -45,7 +45,7 @@ function renderTopBar() {
       background: "#000", color: "#FFF2C5",
       borderRadius: "50%", width: "28px", height: "28px",
       display: "flex", alignItems: "center", justifyContent: "center",
-      fontWeight: "bold", fontSize: "14px",
+      fontSize: "14px",
     });
   }
 
