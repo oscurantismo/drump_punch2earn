@@ -1,0 +1,90 @@
+/* Global shared styles */
+:root {
+  --box-shadow: 0 2px 0 #888;
+  --card-bg: #fff7d5;
+  --card-border: 2px solid #2a3493;
+  --blue-btn: #2a3493;
+  --btn-radius: 8px;
+  --font-heading: 'Negrita Pro', sans-serif;
+  --font-body: 'Commissioner', sans-serif;
+}
+
+#earn-container {
+  background-image: url("drump-images/background.png");
+  background-size: cover;
+  background-position: center;
+  padding: 24px 16px 140px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  position: fixed;
+  top: 100px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-family: var(--font-body);
+}
+
+/* Section headers (e.g. Daily Quest) */
+.task-section-heading {
+  background: var(--card-bg);
+  border: var(--card-border);
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+  padding: 8px 16px;
+  margin: 24px 0 10px;
+  font-size: 18px;
+  font-family: var(--font-heading);
+  color: #000;
+}
+
+/* Task card container */
+.task-card {
+  background: var(--card-bg);
+  border: var(--card-border);
+  border-radius: 14px;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  font-weight: bold;
+  color: #000;
+}
+
+/* Punch reward on the left */
+.punch-reward {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Punch icon */
+.punch-reward img {
+  width: 18px;
+  height: 18px;
+}
+
+/* GET / CLAIM / DONE buttons */
+.task-btn {
+  font-family: var(--font-body);
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--btn-radius);
+  cursor: pointer;
+  min-width: 72px;
+  text-transform: uppercase;
+  background: var(--blue-btn);
+  color: #fff;
+  box-shadow: var(--box-shadow);
+}
+
+.task-btn[disabled] {
+  background: var(--card-bg);
+  color: #8e0004;
+  cursor: default;
+}
