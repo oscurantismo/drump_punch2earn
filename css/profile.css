@@ -193,19 +193,5 @@
 
 /* === CLOSE PROFILE BUTTON === */
 #profile-container button:last-of-type {
-  background: #8e0004;
-  color: #fff;
-  padding: 14px 24px;
-  font-size: 15px;
   font-family: var(--font-body);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 30px auto 40px;
-  width: 100%;
-  max-width: 280px;
-  box-shadow: var(--box-shadow);
-  position: sticky;
-  bottom: 0;
-  z-index: 1;
 }
