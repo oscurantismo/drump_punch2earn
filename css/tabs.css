@@ -34,6 +34,24 @@
   cursor: pointer;
 }
 
+
+.task-badge {
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  background: #d11b1b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 2px 6px;
+  min-width: 20px;
+  text-align: center;
+  box-shadow: 2px 2px 0 #000;
+}
+
+
+
 /* Active tab — slightly lighter */
 #tab-container button.active-tab {
   background: #FFF2C5;
@@ -43,15 +61,4 @@
 #tab-container button img {
   height: 24px;
   margin-bottom: 4px;
-}
-
-/* Wiggle animation for Earn */
-@keyframes wiggle {
-  0%, 100% { transform: rotate(0); }
-  25% { transform: rotate(-3deg); }
-  50% { transform: rotate(3deg); }
-  75% { transform: rotate(-2deg); }
-}
-.jump-tab {
-  animation: wiggle 0.7s ease-in-out infinite;
 }
