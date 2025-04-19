@@ -8,13 +8,13 @@ import { COLORS, FONT } from "./styles.js";
 function renderProfilePage() {
   const existing = document.getElementById("profile-container");
   if (existing) existing.remove();
-  document.getElementById("page-content")?.remove();
 
-  // Reset and render global UI
+  document.getElementById("page-content")?.remove(); // ✅ Clean up previous tab content
+
   window.activeTab = "profile";
   updatePunchDisplay();
-  renderTopBar();     // ✅ Always visible
-  renderTabs("profile");
+  renderTopBar();
+  renderTabs();
   createLeaderboardPopup();
 
   const container = document.createElement("div");
@@ -157,7 +157,19 @@ function renderProfilePage() {
   };
 
   container.appendChild(closeBtn);
-  document.body.appendChild(container);
+  const wrap = document.createElement("div");
+  wrap.id = "page-content";
+  wrap.style.position = "fixed";
+  wrap.style.top = "60px";
+  wrap.style.bottom = "64px";
+  wrap.style.left = "0";
+  wrap.style.right = "0";
+  wrap.style.overflow = "hidden";
+  wrap.style.zIndex = ZINDEX.punchBar;
+
+  wrap.appendChild(container);
+  document.body.appendChild(wrap);
+
 
   fetchProfileData();
   fetchUserRank();
