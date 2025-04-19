@@ -23,7 +23,7 @@ function renderProfilePage() {
     left: "0",
     right: "0",
     bottom: "0",
-    background: "url('drump-images/background.png') no-repeat center center",
+    background: "url('../drump-images/background.png') no-repeat center center",
     backgroundSize: "cover",
     overflowY: "auto",
     padding: "100px 16px 120px",
