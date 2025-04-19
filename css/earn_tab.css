@@ -1,10 +1,11 @@
 /* Global shared styles */
 :root {
-  --box-shadow: 0 2px 0 #888;
+  --box-shadow: 1px 2px 0px 0px #000000;
   --card-bg: #fff7d5;
   --card-border: 2px solid #2a3493;
   --blue-btn: #2a3493;
   --btn-radius: 8px;
+  --heading-bg: #FFEDAC;
   --font-heading: 'Negrita Pro', sans-serif;
   --font-body: 'Commissioner', sans-serif;
 }
@@ -28,7 +29,7 @@
 
 /* Section headers (e.g. Daily Quest) */
 .task-section-heading {
-  background: var(--card-bg);
+  background: var(--heading-bg);
   border: var(--card-border);
   border-radius: 10px;
   box-shadow: var(--box-shadow);
@@ -38,6 +39,7 @@
   font-family: var(--font-heading);
   color: #000;
 }
+
 
 /* Task card container */
 .task-card {
