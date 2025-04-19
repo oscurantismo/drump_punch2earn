@@ -2,7 +2,7 @@ import { fetchReferralHistory } from "./referral.js";
 import { createLeaderboardPopup } from "./popups.js";
 import { updatePunchDisplay } from "./ui.js";
 import { renderTopBar } from "./topbar.js";
-import { renderTabs } from "./ui.js";
+import { renderTabs } from "./ui_tabs.js";
 import { COLORS, FONT } from "./styles.js";
 
 function renderProfilePage() {
