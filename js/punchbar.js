@@ -68,8 +68,7 @@ function renderPunchBadge() {
   badgeTextEl.id = "punch-badge-text";
 
   const count = window.punches || 0;
-  const next = Math.ceil(count / 500) * 500;
-  badgeTextEl.innerHTML = `Punches<br><span style="font-size:17px; font-weight:900">${count} / ${next}</span>`;
+  badgeTextEl.innerHTML = `Punches<br><span style="font-size:17px; font-weight:900">${count}</span>`;
 
   badge.append(icon, badgeTextEl);
   document.body.appendChild(badge);
@@ -197,7 +196,7 @@ function renderPunchBar() {
   fill.appendChild(Object.assign(document.createElement("div"), { className: "stripe-overlay" }));
   barWrap.appendChild(fill);
 
-  // === Tick Marks ===
+  // === Tick Marks with Labels ===
   const tickContainer = document.createElement("div");
   Object.assign(tickContainer.style, {
     position: "absolute",
@@ -208,42 +207,57 @@ function renderPunchBar() {
     display: "flex",
     justifyContent: "space-between",
     zIndex: 3,
-    pointerEvents: "none"
+    pointerEvents: "none",
   });
 
   for (let i = 0; i <= 5; i++) {
+    const milestone = i * 100;
+    const bonus = getBonusAmount(milestone);
+
+    const tickWrap = document.createElement("div");
+    Object.assign(tickWrap.style, {
+      position: "relative",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      width: "1px",
+    });
+
     const tick = document.createElement("div");
     Object.assign(tick.style, {
-      width: "1px",
       height: "100%",
+      width: "2px",
       background: "#000",
-      position: "relative"
+      boxShadow: "1px 1px 0 #000",
     });
 
     const labelTop = document.createElement("div");
-    labelTop.textContent = `${i * 100}`;
+    labelTop.textContent = `${milestone}`;
     Object.assign(labelTop.style, {
       position: "absolute",
-      top: "-14px",
-      left: "-10px",
+      top: "-18px",
+      left: "-12px",
       fontSize: "10px",
-      fontFamily: FONT.body,
+      fontWeight: "bold",
+      color: "#000",
+      fontFamily: FONT.heading,
     });
 
-    const bonus = getBonusAmount(i * 100);
     const labelBottom = document.createElement("div");
     labelBottom.textContent = bonus ? `+${bonus}` : "";
     Object.assign(labelBottom.style, {
       position: "absolute",
-      bottom: "-14px",
-      left: "-12px",
+      bottom: "-18px",
+      left: "-14px",
       fontSize: "10px",
       color: COLORS.deepRed,
       fontFamily: FONT.body,
     });
 
-    tick.append(labelTop, labelBottom);
-    tickContainer.appendChild(tick);
+    tickWrap.append(labelTop, tick, labelBottom);
+    tickContainer.appendChild(tickWrap);
   }
 
   barWrap.appendChild(tickContainer);
