@@ -3,6 +3,25 @@ import { updatePunchDisplay } from "./ui.js";
 
 let badgeTextEl;
 
+async function fetchPunchGap(userId) {
+  try {
+    const res = await fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard?user_id=${userId}`);
+    const data = await res.json();
+
+    if (data && typeof data.punches_to_next_rank === "number") {
+      window.punchGap = data.punches_to_next_rank;
+    } else {
+      window.punchGap = 0;
+    }
+  } catch (err) {
+    console.error("Failed to fetch punch gap:", err);
+    window.punchGap = 0;
+  }
+
+  renderPunchGapBadge(); // ✅ trigger UI refresh
+}
+
+
 function getBonusAmount(punchCount) {
   const withinCycle = punchCount % 500;
   switch (withinCycle) {
@@ -79,6 +98,32 @@ function renderPunchBadge() {
   document.body.append(iconWrap, badge);
 }
 
+function renderPunchGapBadge() {
+  document.getElementById("punch-gap-badge")?.remove();
+
+  if (!window.punchGap || window.punchGap <= 0) return;
+
+  const badge = document.createElement("div");
+  badge.id = "punch-gap-badge";
+  badge.textContent = `${window.punchGap} punches until new rank`;
+  Object.assign(badge.style, {
+    position: "fixed",
+    top: "104px", // visually above the bar
+    right: "0.75rem",
+    background: "#F21B1B",
+    color: "#FFE99B",
+    fontSize: "14px",
+    fontFamily: "'Reem Kufi Fun', sans-serif",
+    padding: "6px 14px",
+    borderRadius: "10px",
+    zIndex: ZINDEX.punchBar + 2,
+    boxShadow: "2px 2px 0 #000",
+  });
+
+  document.body.appendChild(badge);
+}
+
+
 function renderPunchBar() {
   if (window.activeTab !== "game") return;
 
@@ -135,14 +180,14 @@ function renderPunchBar() {
     top: "130px",
     left: "0.75rem",
     right: "0.75rem",
-    background: "#FFF2C5",
+    background: "#FFE99B",
     color: "#000",
-    fontFamily: FONT.body,
+    fontFamily: "'Reem Kufi Fun', sans-serif",
     fontSize: "14px",
     padding: "6px 12px",
     borderRadius: "12px",
     border: "2px solid #000",
-    zIndex: ZINDEX.punchBar,
+    zIndex: 1000,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -168,7 +213,7 @@ function renderPunchBar() {
   const title = document.createElement("div");
   title.textContent = "My Progress";
   Object.assign(title.style, {
-    fontFamily: FONT.heading,
+    fontFamily: "'Negrita Pro', sans-serif",
     fontSize: "15px",
     marginBottom: "2px",
   });
@@ -179,7 +224,7 @@ function renderPunchBar() {
     width: "100%",
     height: "16px",
     borderRadius: "999px",
-    background: "#FFE9A9",
+    background: "#FFE99B",
     overflow: "hidden",
     border: "2px solid #000",
   });
@@ -192,7 +237,7 @@ function renderPunchBar() {
     bottom: "0",
     left: "0",
     width: "0%",
-    background: COLORS.primary,
+    background: "#2a3493",
     borderRadius: "999px",
     transition: "width 0.4s ease",
     zIndex: 1,
@@ -201,7 +246,7 @@ function renderPunchBar() {
   fill.appendChild(Object.assign(document.createElement("div"), { className: "stripe-overlay" }));
   barWrap.appendChild(fill);
 
-  // === Tick Marks with Labels ===
+  // === Tick Marks with Milestone Bonuses ===
   const tickContainer = document.createElement("div");
   Object.assign(tickContainer.style, {
     position: "absolute",
@@ -216,8 +261,7 @@ function renderPunchBar() {
   });
 
   for (let i = 0; i <= 5; i++) {
-    const milestone = i * 100;
-    const bonus = getBonusAmount(milestone);
+    const bonus = getBonusAmount(i * 100);
 
     const tickWrap = document.createElement("div");
     Object.assign(tickWrap.style, {
@@ -234,20 +278,7 @@ function renderPunchBar() {
     Object.assign(tick.style, {
       height: "100%",
       width: "2px",
-      background: "#000",
-      boxShadow: "1px 1px 0 #000",
-    });
-
-    const labelTop = document.createElement("div");
-    labelTop.textContent = `${milestone}`;
-    Object.assign(labelTop.style, {
-      position: "absolute",
-      top: "-18px",
-      left: "-12px",
-      fontSize: "10px",
-      fontWeight: "bold",
-      color: "#000",
-      fontFamily: FONT.heading,
+      background: "#fff",
     });
 
     const labelBottom = document.createElement("div");
@@ -256,12 +287,12 @@ function renderPunchBar() {
       position: "absolute",
       bottom: "-18px",
       left: "-14px",
-      fontSize: "10px",
-      color: COLORS.deepRed,
-      fontFamily: FONT.body,
+      fontSize: "13px",
+      fontFamily: "'Reem Kufi Fun', sans-serif",
+      color: "#000",
     });
 
-    tickWrap.append(labelTop, tick, labelBottom);
+    tickWrap.append(tick, labelBottom);
     tickContainer.appendChild(tickWrap);
   }
 
@@ -273,6 +304,7 @@ function renderPunchBar() {
     fontSize: "13px",
     color: "#222",
     marginTop: "4px",
+    fontFamily: "'Reem Kufi Fun', sans-serif",
   });
 
   center.append(title, barWrap, punchText);
@@ -297,12 +329,38 @@ function renderPunchBar() {
     left: "50%",
     transform: "translateX(-50%)",
     pointerEvents: "none",
-    zIndex: ZINDEX.punchBar + 1,
+    zIndex: 1001,
   });
   document.body.appendChild(floatingContainer);
 
+  // === Render Punch Gap Badge ===
+  if (window.punchGap && window.punchGap > 0) {
+    const gapBadge = document.createElement("div");
+    gapBadge.id = "punch-gap-badge";
+    gapBadge.textContent = `${window.punchGap} punches until new rank`;
+    Object.assign(gapBadge.style, {
+      position: "fixed",
+      top: "104px",
+      right: "0.75rem",
+      background: "#F21B1B",
+      color: "#FFE99B",
+      fontSize: "14px",
+      fontFamily: "'Reem Kufi Fun', sans-serif",
+      padding: "6px 14px",
+      borderRadius: "10px",
+      zIndex: 1002,
+      boxShadow: "2px 2px 0 #000",
+    });
+    document.body.appendChild(gapBadge);
+  }
+
   updatePunchDisplay();
+
+  if (window.userId) {
+    fetchPunchGap(window.userId); // ✅ always fetch on game tab open
+
 }
+
 
 function showFloatingBonus(text, isBonus = false) {
   const gain = document.createElement("div");
