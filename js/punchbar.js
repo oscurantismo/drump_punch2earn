@@ -358,6 +358,7 @@ function renderPunchBar() {
 
   if (window.userId) {
     fetchPunchGap(window.userId); // ✅ always fetch on game tab open
+  }
 
 }
 
