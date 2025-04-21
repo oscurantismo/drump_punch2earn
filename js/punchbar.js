@@ -28,15 +28,17 @@ function renderPunchBadge() {
     left: "0.75rem",
     display: "flex",
     alignItems: "center",
-    padding: "6px 12px",
-    height: "48px",
+    padding: "4px 16px 4px 28px", // extra left padding for overlap
+    height: "36px",
     background: COLORS.primary,
     color: "#fff",
-    borderRadius: "24px",
+    borderRadius: "20px",
     border: "2px solid #000",
-    fontFamily: FONT.heading,
+    fontFamily: FONT.body,
+    fontSize: "14px",
     boxShadow: "2px 2px 0 #000",
     zIndex: ZINDEX.punchBar + 1,
+    position: "fixed",
   });
 
   const iconWrap = document.createElement("div");
@@ -49,44 +51,33 @@ function renderPunchBadge() {
     alignItems: "center",
     justifyContent: "center",
     boxShadow: "1px 1px 0 #000",
-    marginRight: "10px",
-    flexShrink: 0,
+    position: "absolute",
+    left: "-18px", // half width to push it outside
+    top: "0",
+    bottom: "0",
+    margin: "auto",
   });
 
   const img = document.createElement("img");
-  img.src = "drump-images/punch.svg"; // use your boxing glove icon
+  img.src = "drump-images/punch.svg";
   Object.assign(img.style, {
-    width: "22px",
-    height: "22px",
+    width: "20px",
+    height: "20px",
   });
   iconWrap.appendChild(img);
 
   badgeTextEl = document.createElement("div");
   badgeTextEl.id = "punch-badge-text";
-  badgeTextEl.style.fontFamily = FONT.heading;
-  badgeTextEl.style.display = "flex";
-  badgeTextEl.style.flexDirection = "column";
-  badgeTextEl.style.lineHeight = "1.1";
-
-  const label = document.createElement("div");
-  label.textContent = "Punches";
-  Object.assign(label.style, {
-    fontSize: "14px",
-    fontWeight: "bold",
+  badgeTextEl.textContent = (window.punches || 0).toLocaleString();
+  Object.assign(badgeTextEl.style, {
+    lineHeight: "1",
+    fontSize: "15px",
+    fontWeight: "normal",
   });
 
-  const count = document.createElement("div");
-  count.innerHTML = `${window.punches || 0}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  Object.assign(count.style, {
-    fontSize: "18px",
-    fontWeight: "900",
-  });
-
-  badgeTextEl.append(label, count);
   badge.append(iconWrap, badgeTextEl);
   document.body.appendChild(badge);
 }
-
 
 function renderPunchBar() {
   if (window.activeTab !== "game") return;
