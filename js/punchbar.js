@@ -3,12 +3,22 @@ import { updatePunchDisplay } from "./ui.js";
 
 let badgeTextEl;
 
+function getBonusAmount(punchCount) {
+  const withinCycle = punchCount % 500;
+  switch (withinCycle) {
+    case 100: return 25;
+    case 200: return 30;
+    case 300: return 35;
+    case 400: return 40;
+    case 0: return punchCount > 0 ? 50 : 0;
+    default: return 0;
+  }
+}
+
 function renderPunchBadge() {
-  // Prevent badge from rendering in profile or any non-game tab
   if (window.activeTab !== "game") return;
   if (document.getElementById("profile-container")) return;
   if (document.getElementById("punch-badge")) return;
-
 
   const badge = document.createElement("div");
   badge.id = "punch-badge";
@@ -55,7 +65,11 @@ function renderPunchBadge() {
   icon.appendChild(img);
 
   badgeTextEl = document.createElement("div");
-  badgeTextEl.innerHTML = `Punches<br><span style="font-size:17px; font-weight:900">${window.punches || 0}</span>`;
+  badgeTextEl.id = "punch-badge-text";
+
+  const count = window.punches || 0;
+  const next = Math.ceil(count / 500) * 500;
+  badgeTextEl.innerHTML = `Punches<br><span style="font-size:17px; font-weight:900">${count} / ${next}</span>`;
 
   badge.append(icon, badgeTextEl);
   document.body.appendChild(badge);
@@ -84,12 +98,10 @@ function renderPunchBar() {
         z-index: 2;
         border-radius: 999px;
       }
-
       @keyframes floatGain {
         0%   { transform: translateY(0); opacity: 1; }
         100% { transform: translateY(-32px); opacity: 0; }
       }
-
       .gain-label {
         position: absolute;
         bottom: 10px;
@@ -101,7 +113,6 @@ function renderPunchBar() {
         animation: floatGain 0.9s ease-out forwards;
         z-index: 10;
       }
-
       .gain-label.bonus {
         background: #FFCC68;
         color: #000;
@@ -164,9 +175,9 @@ function renderPunchBar() {
     width: "100%",
     height: "16px",
     borderRadius: "999px",
-    background: "#eee",
+    background: "#FFE9A9",
     overflow: "hidden",
-    border: "1px solid #999",
+    border: "2px solid #000",
   });
 
   const fill = document.createElement("div");
@@ -185,6 +196,57 @@ function renderPunchBar() {
 
   fill.appendChild(Object.assign(document.createElement("div"), { className: "stripe-overlay" }));
   barWrap.appendChild(fill);
+
+  // === Tick Marks ===
+  const tickContainer = document.createElement("div");
+  Object.assign(tickContainer.style, {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    zIndex: 3,
+    pointerEvents: "none"
+  });
+
+  for (let i = 0; i <= 5; i++) {
+    const tick = document.createElement("div");
+    Object.assign(tick.style, {
+      width: "1px",
+      height: "100%",
+      background: "#000",
+      position: "relative"
+    });
+
+    const labelTop = document.createElement("div");
+    labelTop.textContent = `${i * 100}`;
+    Object.assign(labelTop.style, {
+      position: "absolute",
+      top: "-14px",
+      left: "-10px",
+      fontSize: "10px",
+      fontFamily: FONT.body,
+    });
+
+    const bonus = getBonusAmount(i * 100);
+    const labelBottom = document.createElement("div");
+    labelBottom.textContent = bonus ? `+${bonus}` : "";
+    Object.assign(labelBottom.style, {
+      position: "absolute",
+      bottom: "-14px",
+      left: "-12px",
+      fontSize: "10px",
+      color: COLORS.deepRed,
+      fontFamily: FONT.body,
+    });
+
+    tick.append(labelTop, labelBottom);
+    tickContainer.appendChild(tick);
+  }
+
+  barWrap.appendChild(tickContainer);
 
   const punchText = document.createElement("div");
   punchText.id = "punch-progress";
