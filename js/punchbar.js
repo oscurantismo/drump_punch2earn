@@ -26,53 +26,67 @@ function renderPunchBadge() {
     position: "fixed",
     top: "60px",
     left: "0.75rem",
-    width: "144px",
-    height: "40px",
-    background: "#2a3493",
-    color: "#fff",
-    padding: "4px 10px",
-    borderRadius: "10px",
-    border: "3px solid #000",
-    fontFamily: "'Negrita Pro', sans-serif",
-    fontSize: "15px",
     display: "flex",
-    alignItems: "flex-start",
+    alignItems: "center",
+    padding: "6px 12px",
+    height: "48px",
+    background: COLORS.primary,
+    color: "#fff",
+    borderRadius: "24px",
+    border: "2px solid #000",
+    fontFamily: FONT.heading,
     boxShadow: "2px 2px 0 #000",
     zIndex: ZINDEX.punchBar + 1,
   });
 
-  const icon = document.createElement("div");
-  Object.assign(icon.style, {
-    width: "32px",
-    height: "32px",
-    minWidth: "32px",
+  const iconWrap = document.createElement("div");
+  Object.assign(iconWrap.style, {
+    width: "36px",
+    height: "36px",
     borderRadius: "50%",
-    background: "#ffedac",
-    padding: "4px",
+    background: "#FFEDAC",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: "8px",
-    boxShadow: "2px 2px 0 #000"
+    boxShadow: "1px 1px 0 #000",
+    marginRight: "10px",
+    flexShrink: 0,
   });
 
   const img = document.createElement("img");
-  img.src = "drump-images/punch.svg";
+  img.src = "drump-images/punch.svg"; // use your boxing glove icon
   Object.assign(img.style, {
-    width: "20px",
-    height: "20px",
+    width: "22px",
+    height: "22px",
   });
-  icon.appendChild(img);
+  iconWrap.appendChild(img);
 
   badgeTextEl = document.createElement("div");
   badgeTextEl.id = "punch-badge-text";
+  badgeTextEl.style.fontFamily = FONT.heading;
+  badgeTextEl.style.display = "flex";
+  badgeTextEl.style.flexDirection = "column";
+  badgeTextEl.style.lineHeight = "1.1";
 
-  const count = window.punches || 0;
-  badgeTextEl.innerHTML = `Punches<br><span style="font-size:17px; font-weight:900">${count}</span>`;
+  const label = document.createElement("div");
+  label.textContent = "Punches";
+  Object.assign(label.style, {
+    fontSize: "14px",
+    fontWeight: "bold",
+  });
 
-  badge.append(icon, badgeTextEl);
+  const count = document.createElement("div");
+  count.innerHTML = `${window.punches || 0}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  Object.assign(count.style, {
+    fontSize: "18px",
+    fontWeight: "900",
+  });
+
+  badgeTextEl.append(label, count);
+  badge.append(iconWrap, badgeTextEl);
   document.body.appendChild(badge);
 }
+
 
 function renderPunchBar() {
   if (window.activeTab !== "game") return;
