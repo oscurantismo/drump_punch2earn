@@ -28,41 +28,41 @@ function renderPunchBadge() {
     left: "0.75rem",
     display: "flex",
     alignItems: "center",
-    padding: "4px 16px 4px 28px", // extra left padding for overlap
-    height: "36px",
+    height: "40px",
     background: COLORS.primary,
     color: "#fff",
     borderRadius: "20px",
     border: "2px solid #000",
-    fontFamily: FONT.body,
-    fontSize: "14px",
+    fontFamily: FONT.heading,
+    fontSize: "15px",
     boxShadow: "2px 2px 0 #000",
     zIndex: ZINDEX.punchBar + 1,
-    position: "fixed",
+    paddingRight: "14px",
+    paddingLeft: "20px", // visually aligns with the overlap
+    marginLeft: "20px", // shifts the text block right so icon overlaps neatly
   });
 
   const iconWrap = document.createElement("div");
   Object.assign(iconWrap.style, {
-    width: "36px",
-    height: "36px",
+    width: "40px",
+    height: "40px",
     borderRadius: "50%",
-    background: "#FFEDAC",
+    background: COLORS.badgeBg,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     boxShadow: "1px 1px 0 #000",
     position: "absolute",
-    left: "-18px", // half width to push it outside
-    top: "0",
-    bottom: "0",
-    margin: "auto",
+    left: "0",
+    top: "60px", // matches badge top for clean alignment
+    zIndex: ZINDEX.punchBar + 2, // above the text block
   });
 
   const img = document.createElement("img");
   img.src = "drump-images/punch.svg";
   Object.assign(img.style, {
-    width: "20px",
-    height: "20px",
+    width: "22px",
+    height: "22px",
   });
   iconWrap.appendChild(img);
 
@@ -70,13 +70,13 @@ function renderPunchBadge() {
   badgeTextEl.id = "punch-badge-text";
   badgeTextEl.textContent = (window.punches || 0).toLocaleString();
   Object.assign(badgeTextEl.style, {
-    lineHeight: "1",
-    fontSize: "15px",
+    fontFamily: FONT.heading,
     fontWeight: "normal",
+    lineHeight: "1",
   });
 
-  badge.append(iconWrap, badgeTextEl);
-  document.body.appendChild(badge);
+  badge.append(badgeTextEl);
+  document.body.append(iconWrap, badge);
 }
 
 function renderPunchBar() {
