@@ -213,7 +213,7 @@ function renderPunchBar() {
     background: "#FFE99B",
     border: "2px solid #000",
     borderRadius: "12px",
-    padding: "10px 16px",
+    padding: "6px 12px",
     zIndex: 1000,
     fontFamily: "'Reem Kufi Fun', sans-serif",
     boxShadow: "2px 2px 0 #000",
@@ -329,17 +329,15 @@ function renderPunchBar() {
   });
 
   const milestoneData = [
-    { label: "bonus", pos: 0 },
     { label: "+25", pos: 0.2 },
     { label: "+30", pos: 0.4 },
     { label: "+35", pos: 0.6 },
     { label: "+40", pos: 0.8 },
-    { label: "+50", pos: 1 }
+    { label: "+50", pos: 1.0 }
   ];
 
-  // Add dividers directly over milestone positions (skip first/last for visual spacing)
-  milestoneData.forEach((item, i) => {
-    if (i === 0 || i === milestoneData.length - 1) return;
+  // Add dividers and labels using same positions
+  milestoneData.forEach((item) => {
     const divider = document.createElement("div");
     Object.assign(divider.style, {
       position: "absolute",
@@ -354,35 +352,30 @@ function renderPunchBar() {
     barWrap.appendChild(divider);
   });
 
-  // Render milestone labels
   const milestoneWrap = document.createElement("div");
   Object.assign(milestoneWrap.style, {
-    display: "flex",
-    justifyContent: "space-between",
-    marginTop: "2px",
-    padding: "0 2px"
+    position: "relative",
+    width: "100%",
+    height: "16px", // matches bar height
+    marginTop: "2px"
   });
 
   milestoneData.forEach((item) => {
-    const milestone = document.createElement("div");
-    Object.assign(milestone.style, {
-      flex: "1",
-      textAlign: "center",
-      position: "relative"
-    });
-
-    const labelEl = document.createElement("div");
-    labelEl.textContent = item.label;
-    Object.assign(labelEl.style, {
+    const label = document.createElement("div");
+    label.textContent = item.label;
+    Object.assign(label.style, {
+      position: "absolute",
+      top: "0",
+      left: `${item.pos * 100}%`,
+      transform: "translateX(-50%)",
       fontSize: "10px",
       fontFamily: "'Reem Kufi Fun', sans-serif",
       color: "#000",
-      marginTop: "2px"
+      textAlign: "center"
     });
-
-    milestone.appendChild(labelEl);
-    milestoneWrap.appendChild(milestone);
+    milestoneWrap.appendChild(label);
   });
+
   barColumn.append(title, barWrap, milestoneWrap);
   punchBar.append(icon, barColumn, upgradeWrap);
   document.body.appendChild(punchBar);
