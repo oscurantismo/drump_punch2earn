@@ -103,6 +103,7 @@ function renderPunchBadge() {
 
   // === Cream Circle with Rank ===
   const iconCircle = document.createElement("div");
+  iconCircle.id = "rank-badge-circle";
   Object.assign(iconCircle.style, {
     position: "fixed",
     top: "68px", // align top visually with badge
