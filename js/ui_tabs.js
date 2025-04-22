@@ -74,10 +74,6 @@ function showTab(tab, scene = null) {
       fetchPunchGap(window.userId);
     }
 
-    document.body.appendChild(content); // ✅ append only once
-  }
-
-  // === LEADERBOARD TAB ===
   } else if (tab === "leaderboard") {
     const iframe = document.createElement("iframe");
     iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`;
