@@ -410,4 +410,4 @@ function showFloatingBonus(text, isBonus = false) {
   setTimeout(() => gain.remove(), isBonus ? 1800 : 900);
 }
 
-export { renderPunchBar, showFloatingBonus, renderPunchBadge, renderPunchGapBadge, badgeTextEl };
+export { renderPunchBar, showFloatingBonus, renderPunchBadge, renderPunchGapBadge, badgeTextEl, fetchPunchGap };
