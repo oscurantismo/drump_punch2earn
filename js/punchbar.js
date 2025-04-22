@@ -142,8 +142,6 @@ function renderPunchGapBadge() {
   document.body.appendChild(badge);
 }
 
-
-
 function renderPunchBar() {
   if (window.activeTab !== "game") return;
 
@@ -204,15 +202,23 @@ function renderPunchBar() {
     color: "#000",
     fontFamily: "'Reem Kufi Fun', sans-serif",
     fontSize: "14px",
-    padding: "6px 12px",
+    padding: "6px 12px 10px 12px",
     borderRadius: "12px",
     border: "2px solid #000",
     zIndex: 1000,
     display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch",
+    boxShadow: "2px 2px 0 #000",
+    gap: "4px"
+  });
+
+  const topRow = document.createElement("div");
+  Object.assign(topRow.style, {
+    display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: "12px",
-    boxShadow: "2px 2px 0 #000",
+    gap: "12px"
   });
 
   const icon = document.createElement("img");
@@ -266,7 +272,7 @@ function renderPunchBar() {
   fill.appendChild(Object.assign(document.createElement("div"), { className: "stripe-overlay" }));
   barWrap.appendChild(fill);
 
-  // === Tick Marks with Milestone Bonuses ===
+  // === Tick Marks with Milestone Bonuses (excluding first and last) ===
   const tickContainer = document.createElement("div");
   Object.assign(tickContainer.style, {
     position: "absolute",
@@ -280,7 +286,7 @@ function renderPunchBar() {
     pointerEvents: "none",
   });
 
-  for (let i = 0; i <= 5; i++) {
+  for (let i = 1; i <= 4; i++) { // 🔁 skip 0 and 500
     const bonus = getBonusAmount(i * 100);
 
     const tickWrap = document.createElement("div");
@@ -318,16 +324,22 @@ function renderPunchBar() {
 
   barWrap.appendChild(tickContainer);
 
+  // === Punch count below the bar ===
   const punchText = document.createElement("div");
   punchText.id = "punch-progress";
   Object.assign(punchText.style, {
     fontSize: "13px",
     color: "#222",
-    marginTop: "4px",
+    textAlign: "center",
     fontFamily: "'Reem Kufi Fun', sans-serif",
+    marginTop: "4px",
   });
 
-  center.append(title, barWrap, punchText);
+  center.append(title, barWrap);
+  topRow.append(icon, center);
+
+  punchBar.appendChild(topRow);
+  punchBar.appendChild(punchText);
 
   const upgrade = document.createElement("img");
   upgrade.src = "drump-images/upgrade.svg";
@@ -337,8 +349,8 @@ function renderPunchBar() {
     cursor: "pointer",
   });
   upgrade.title = "Upgrade (coming soon)";
+  topRow.appendChild(upgrade);
 
-  punchBar.append(icon, center, upgrade);
   document.body.appendChild(punchBar);
 
   const floatingContainer = document.createElement("div");
@@ -353,33 +365,11 @@ function renderPunchBar() {
   });
   document.body.appendChild(floatingContainer);
 
-  // === Render Punch Gap Badge ===
-  if (window.punchGap && window.punchGap > 0) {
-    const gapBadge = document.createElement("div");
-    gapBadge.id = "punch-gap-badge";
-    gapBadge.textContent = `${window.punchGap} punches until new rank`;
-    Object.assign(gapBadge.style, {
-      position: "fixed",
-      top: "104px",
-      right: "0.75rem",
-      background: "#F21B1B",
-      color: "#FFE99B",
-      fontSize: "14px",
-      fontFamily: "'Reem Kufi Fun', sans-serif",
-      padding: "6px 14px",
-      borderRadius: "10px",
-      zIndex: 1002,
-      boxShadow: "2px 2px 0 #000",
-    });
-    document.body.appendChild(gapBadge);
-  }
-
   updatePunchDisplay();
 
   if (window.userId) {
     fetchPunchGap(window.userId); // ✅ always fetch on game tab open
   }
-
 }
 
 
