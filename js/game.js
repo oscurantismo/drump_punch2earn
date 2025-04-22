@@ -3,7 +3,7 @@ import { updatePunchDisplay } from "./ui.js";
 import { getIncompleteTaskCount } from "./earn_tab.js";
 import { showTab, renderTabs } from "./ui_tabs.js";
 import { renderTopBar } from "./topbar.js";
-import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
+import { renderPunchBar, fetchPunchGap } from "./punchbar.js";
 import { createReferralAndRewardsButtons } from "./buttons.js";
 import { showInfoPage } from "./popups.js";
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
@@ -87,8 +87,6 @@ function create() {
 
   updatePunchDisplay();
 
-  renderPunchBadge()
-
   renderTopBar();
 
   fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
@@ -127,6 +125,10 @@ function create() {
 
   registerUser();
   createReferralAndRewardsButtons(window.userId);
+  
+    if (window.userId) {
+      fetchPunchGap(window.userId); // ✅ fetch rank + punch gap on first load
+    }
 
   if (!localStorage.getItem("onboarding_complete")) {
     setTimeout(() => showOnboarding(), 300);
