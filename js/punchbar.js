@@ -187,6 +187,7 @@ function renderPunchBar() {
     document.head.appendChild(style);
   }
 
+  // === Container for the whole punch bar ===
   const punchBar = document.createElement("div");
   punchBar.id = "punch-bar";
   Object.assign(punchBar.style, {
@@ -198,7 +199,7 @@ function renderPunchBar() {
     color: "#000",
     fontFamily: "'Reem Kufi Fun', sans-serif",
     fontSize: "14px",
-    padding: "6px 12px 10px 12px",
+    padding: "6px 12px 12px 12px",
     borderRadius: "12px",
     border: "2px solid #000",
     zIndex: 1000,
@@ -268,7 +269,7 @@ function renderPunchBar() {
   fill.appendChild(Object.assign(document.createElement("div"), { className: "stripe-overlay" }));
   barWrap.appendChild(fill);
 
-  // === Tick Marks with Milestone Bonuses (excluding first and last) ===
+  // === Bonus Ticks (no start or end) ===
   const tickContainer = document.createElement("div");
   Object.assign(tickContainer.style, {
     position: "absolute",
@@ -282,7 +283,7 @@ function renderPunchBar() {
     pointerEvents: "none",
   });
 
-  for (let i = 1; i <= 4; i++) { // 5 sections: 0–100–200–300–400–500
+  for (let i = 1; i <= 4; i++) {
     const bonus = getBonusAmount(i * 100);
 
     const tickWrap = document.createElement("div");
@@ -304,11 +305,11 @@ function renderPunchBar() {
     });
 
     const labelBottom = document.createElement("div");
-    labelBottom.textContent = bonus ? `+${bonus}` : "";
+    labelBottom.textContent = `+${bonus}`;
     Object.assign(labelBottom.style, {
       position: "absolute",
       bottom: "-18px",
-      left: "-14px",
+      left: "-12px",
       fontSize: "13px",
       fontFamily: "'Reem Kufi Fun', sans-serif",
       color: "#000",
@@ -320,23 +321,9 @@ function renderPunchBar() {
 
   barWrap.appendChild(tickContainer);
 
-  // === Punch count below the bar ===
-  const punchText = document.createElement("div");
-  punchText.id = "punch-progress";
-  Object.assign(punchText.style, {
-    fontSize: "13px",
-    color: "#222",
-    marginTop: "8px",
-    textAlign: "center",
-    fontFamily: "'Reem Kufi Fun', sans-serif",
-  });
-
-
-  center.append(title, barWrap, punchText);
+  // === Add the elements ===
+  center.append(title, barWrap);
   topRow.append(icon, center);
-
-  punchBar.appendChild(topRow);
-  punchBar.appendChild(punchText);
 
   const upgrade = document.createElement("img");
   upgrade.src = "drump-images/upgrade.svg";
@@ -348,8 +335,23 @@ function renderPunchBar() {
   upgrade.title = "Upgrade (coming soon)";
   topRow.appendChild(upgrade);
 
+  punchBar.appendChild(topRow);
   document.body.appendChild(punchBar);
 
+  // === Punch count BELOW the bar block ===
+  const punchText = document.createElement("div");
+  punchText.id = "punch-progress";
+  Object.assign(punchText.style, {
+    position: "fixed",
+    top: "200px", // just below the bar
+    left: "0.75rem",
+    fontSize: "13px",
+    color: "#000",
+    fontFamily: "'Reem Kufi Fun', sans-serif",
+  });
+  document.body.appendChild(punchText);
+
+  // === Floating Bonus Animations ===
   const floatingContainer = document.createElement("div");
   floatingContainer.id = "punch-gain-container";
   Object.assign(floatingContainer.style, {
@@ -365,7 +367,7 @@ function renderPunchBar() {
   updatePunchDisplay();
 
   if (window.userId) {
-    fetchPunchGap(window.userId); // ✅ always fetch on game tab open
+    fetchPunchGap(window.userId); // Always fetch punch gap on game tab open
   }
 }
 
