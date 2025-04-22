@@ -13,12 +13,19 @@ async function fetchPunchGap(userId) {
     } else {
       window.punchGap = 0;
     }
+
+    if (data && typeof data.rank === "number") {
+      window.userRank = data.rank; // ✅ assign rank here
+    }
+
   } catch (err) {
-    console.error("Failed to fetch punch gap:", err);
+    console.error("❌ Failed to fetch punch gap:", err);
     window.punchGap = 0;
+    window.userRank = "-";
   }
 
-  renderPunchGapBadge(); // ✅ trigger UI refresh
+  renderPunchGapBadge();
+  renderPunchBadge(); // ✅ make sure badge updates visually too
 }
 
 
@@ -38,57 +45,60 @@ function renderPunchBadge() {
   if (window.activeTab !== "game") return;
   if (document.getElementById("punch-badge")) return;
 
+  const rank = window.userRank || "-";
+
+  // === Outer Badge Container ===
   const badge = document.createElement("div");
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    top: "70px", // higher up
-    left: "0.75rem",
+    top: "70px", // evenly between topbar and punchbar
+    left: "0.75rem", // aligned with punchbar
     display: "flex",
     alignItems: "center",
-    height: "36px", // shorter height for blue background
+    height: "36px", // smaller than icon
     background: "#2a3493",
     color: "#fff",
-    borderRadius: "18px",
+    borderRadius: "20px",
     border: "2px solid #000",
     fontFamily: "'Negrita Pro', sans-serif",
-    fontSize: "15px",
+    fontSize: "14px",
     boxShadow: "2px 2px 0 #000",
-    zIndex: ZINDEX.punchBar + 1,
-    padding: "4px 16px 4px 28px",
-    marginLeft: "20px",
+    zIndex: 1001,
+    padding: "4px 14px 4px 32px", // space for overlapping icon
   });
 
-  const iconWrap = document.createElement("div");
-  Object.assign(iconWrap.style, {
+  // === Circle with Rank Number ===
+  const iconCircle = document.createElement("div");
+  Object.assign(iconCircle.style, {
     width: "44px",
-    height: "44px", // taller cream circle
+    height: "44px",
     borderRadius: "50%",
     background: "#FFEDAC",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    fontFamily: "'Reem Kufi Fun', sans-serif",
+    fontSize: "16px",
+    fontWeight: "600",
+    color: "#000",
     boxShadow: "1px 1px 0 #000",
     position: "absolute",
-    left: "0",
-    top: "66px", // visually aligns above bar
-    zIndex: ZINDEX.punchBar + 2,
+    left: "0.75rem", // aligned with punchbar left
+    top: "66px", // vertically centered with badge
+    zIndex: 1002,
   });
+  iconCircle.textContent = `#${rank}`;
 
-  const img = document.createElement("img");
-  img.src = "drump-images/punch.svg";
-  Object.assign(img.style, {
-    width: "22px",
-    height: "22px",
-  });
-  iconWrap.appendChild(img);
-
+  // === Text (Punch Count) ===
   badgeTextEl = document.createElement("div");
   badgeTextEl.id = "punch-badge-text";
   Object.assign(badgeTextEl.style, {
+    lineHeight: "1.1",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
     fontFamily: "'Negrita Pro', sans-serif",
-    lineHeight: "1",
-    fontSize: "15px",
     fontWeight: "normal",
   });
 
@@ -96,6 +106,7 @@ function renderPunchBadge() {
   label.textContent = "Punches";
   Object.assign(label.style, {
     fontSize: "13px",
+    fontWeight: "normal",
   });
 
   const count = document.createElement("div");
@@ -107,9 +118,8 @@ function renderPunchBadge() {
 
   badgeTextEl.append(label, count);
   badge.append(badgeTextEl);
-  document.body.append(iconWrap, badge);
+  document.body.append(iconCircle, badge);
 }
-
 
 function renderPunchGapBadge() {
   const existing = document.getElementById("punch-gap-badge");
