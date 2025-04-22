@@ -55,7 +55,7 @@ function preload() {
   this.load.image("drump-images/sound_off.svg");
 }
 
-function create() {
+async function create() {
   Telegram.WebApp.ready();
 
   const initUser = Telegram.WebApp.initDataUnsafe?.user;
@@ -86,9 +86,9 @@ function create() {
   }
 
   updatePunchDisplay();
-
   renderTopBar();
 
+  // ✅ Sync server punches
   fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
     .then(res => res.json())
     .then(profile => {
@@ -120,21 +120,21 @@ function create() {
     }
   }
 
-  // ✅ Set up UI after game scene is ready
-  showTab("game", this); // ✅ now accessible
+  // ✅ Fetch rank and punch gap FIRST
+  if (window.userId) {
+    await fetchPunchGap(window.userId);
+  }
+
+  // ✅ THEN show tab
+  showTab("game", this);
 
   registerUser();
   createReferralAndRewardsButtons(window.userId);
-  
-    if (window.userId) {
-      fetchPunchGap(window.userId); // ✅ fetch rank + punch gap on first load
-    }
 
   if (!localStorage.getItem("onboarding_complete")) {
     setTimeout(() => showOnboarding(), 300);
   }
 }
-
 
 function showGameUI(scene) {
     // 1. Add background
