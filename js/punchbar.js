@@ -99,8 +99,10 @@ function renderPunchBadge() {
 }
 
 function renderPunchGapBadge() {
-  document.getElementById("punch-gap-badge")?.remove();
+  const existing = document.getElementById("punch-gap-badge");
+  if (existing) existing.remove();
 
+  if (window.activeTab !== "game") return;
   if (!window.punchGap || window.punchGap <= 0) return;
 
   const badge = document.createElement("div");
@@ -108,7 +110,7 @@ function renderPunchGapBadge() {
   badge.textContent = `${window.punchGap} punches until new rank`;
   Object.assign(badge.style, {
     position: "fixed",
-    top: "104px", // visually above the bar
+    top: "104px",
     right: "0.75rem",
     background: "#F21B1B",
     color: "#FFE99B",
@@ -122,6 +124,7 @@ function renderPunchGapBadge() {
 
   document.body.appendChild(badge);
 }
+
 
 
 function renderPunchBar() {
@@ -375,4 +378,4 @@ function showFloatingBonus(text, isBonus = false) {
   setTimeout(() => gain.remove(), isBonus ? 1800 : 900);
 }
 
-export { renderPunchBar, showFloatingBonus, renderPunchBadge, badgeTextEl };
+export { renderPunchBar, showFloatingBonus, renderPunchBadge, renderPunchGapBadge, badgeTextEl };
