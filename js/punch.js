@@ -42,6 +42,10 @@ function handlePunch() {
         window.punches = newPunches;
     }
 
+    if (typeof window.punchGap === "number" && window.punchGap > 0) {
+        window.punchGap = Math.max(0, window.punchGap - 1);
+    }
+
     const now = Date.now();
     recentPunches = recentPunches.filter(ts => now - ts < 10000);
     recentPunches.push(now);
