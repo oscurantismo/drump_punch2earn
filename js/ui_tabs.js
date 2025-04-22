@@ -13,11 +13,10 @@ function showTab(tab, scene = null) {
     scene = window.game?.scene?.scenes?.[0];
   }
 
-  document.getElementById("page-content")?.remove();
   document.getElementById("punch-bar")?.remove();
-  document.getElementById("punch-badge")?.remove();         // ✅ total punch badge
-  document.getElementById("rank-badge-circle")?.remove();   // ✅ cream circle with rank
-  document.getElementById("punch-gap-badge")?.remove();     // ✅ punch gap badge
+  document.getElementById("punch-badge")?.remove();         // ✅ remove text badge
+  document.getElementById("rank-badge-circle")?.remove();   // ✅ remove rank circle
+  document.getElementById("punch-gap-badge")?.remove();
 
 
   const content = document.createElement("div");
