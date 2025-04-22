@@ -56,7 +56,7 @@ function renderPunchBadge() {
     left: "0.75rem",
     display: "flex",
     alignItems: "center",
-    height: "48px",
+    height: "40px",
     width: "148px",
     background: "#2a3493",
     color: "#fff",
@@ -66,7 +66,7 @@ function renderPunchBadge() {
     fontSize: "14px",
     boxShadow: "2px 2px 0 #000",
     zIndex: 1001,
-    paddingLeft: "80px", // extra left padding to leave space for the circle
+    paddingLeft: "60px", // extra left padding to leave space for the circle
     paddingRight: "18px",
     paddingTop: "4px",
     paddingBottom: "4px",
