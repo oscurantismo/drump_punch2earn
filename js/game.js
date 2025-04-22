@@ -3,7 +3,7 @@ import { updatePunchDisplay } from "./ui.js";
 import { getIncompleteTaskCount } from "./earn_tab.js";
 import { showTab, renderTabs } from "./ui_tabs.js";
 import { renderTopBar } from "./topbar.js";
-import { renderPunchBar } from "./punchbar.js";
+import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
 import { createReferralAndRewardsButtons } from "./buttons.js";
 import { showInfoPage } from "./popups.js";
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
