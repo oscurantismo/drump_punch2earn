@@ -175,6 +175,7 @@ function renderPunchBar() {
         animation: stripes 1.2s linear infinite;
         pointer-events: none;
         border-radius: 999px;
+        z-index: 1;
       }
       .gain-label {
         position: absolute;
@@ -332,23 +333,24 @@ function renderPunchBar() {
       const tick = document.createElement("div");
       Object.assign(tick.style, {
         width: "2px",
-        height: "16px",
+        height: "100%",
         background: "#fff",
         position: "absolute",
-        top: "-18px",
+        top: "0px",
         left: "50%",
         transform: "translateX(-50%)",
         zIndex: 3
       });
-      milestone.appendChild(tick);
+      barWrap.appendChild(tick);
     }
 
     const labelEl = document.createElement("div");
     labelEl.textContent = label;
     Object.assign(labelEl.style, {
-      fontSize: "13px",
+      fontSize: "11px", // 👈 smaller size now
       fontFamily: "'Reem Kufi Fun', sans-serif",
-      color: "#000"
+      color: "#000",
+      marginTop: "4px"
     });
 
     milestone.appendChild(labelEl);
@@ -356,7 +358,6 @@ function renderPunchBar() {
   });
 
   barColumn.append(title, barWrap, milestoneWrap);
-
   punchBar.append(icon, barColumn, divider, upgradeWrap);
   document.body.appendChild(punchBar);
 
