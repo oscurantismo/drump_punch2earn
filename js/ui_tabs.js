@@ -62,23 +62,20 @@ function showTab(tab, scene = null) {
     renderPunchBar();
     renderPunchBadge();
 
-    if (window.userId) {
-      fetchPunchGap(window.userId); // ✅ ensures up-to-date rank and punchGap
-    }
-
-
     const activeScene =
-      scene ||
-      window.game?.scene?.scenes?.[0] || // fallback to first loaded scene
-      null;
+      scene || window.game?.scene?.scenes?.[0] || null;
 
     if (activeScene) {
       showGameUI(activeScene);
-    } else {
-      console.warn("⚠️ No Phaser scene available to render game.");
     }
 
-    document.body.appendChild(content);
+    // ✅ Always refresh punchGap and rank
+    if (window.userId) {
+      fetchPunchGap(window.userId);
+    }
+
+    document.body.appendChild(content); // ✅ append only once
+  }
 
   // === LEADERBOARD TAB ===
   } else if (tab === "leaderboard") {
