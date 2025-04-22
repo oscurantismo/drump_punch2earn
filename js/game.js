@@ -87,6 +87,8 @@ function create() {
 
   updatePunchDisplay();
 
+  renderPunchBadge()
+
   renderTopBar();
 
   fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
