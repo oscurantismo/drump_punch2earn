@@ -279,7 +279,7 @@ function renderPunchBar() {
   fill.appendChild(Object.assign(document.createElement("div"), { className: "stripe-overlay" }));
   barWrap.appendChild(fill);
 
-  // === Bonus Ticks (no start or end) ===
+  // === Tick Marks with Milestone Bonuses ===
   const tickContainer = document.createElement("div");
   Object.assign(tickContainer.style, {
     position: "absolute",
@@ -293,9 +293,15 @@ function renderPunchBar() {
     pointerEvents: "none",
   });
 
-  for (let i = 1; i <= 4; i++) {
-    const bonus = getBonusAmount(i * 100);
+  // Add 4 tick marks between 5 sections: 0–100–200–300–400–500
+  const milestones = [
+    { offset: 100, label: "+25" },
+    { offset: 200, label: "+30" },
+    { offset: 300, label: "+35" },
+    { offset: 400, label: "+40" }
+  ];
 
+  milestones.forEach((milestone, i) => {
     const tickWrap = document.createElement("div");
     Object.assign(tickWrap.style, {
       position: "relative",
@@ -305,6 +311,7 @@ function renderPunchBar() {
       flexDirection: "column",
       justifyContent: "space-between",
       width: "1px",
+      flex: 1,
     });
 
     const tick = document.createElement("div");
@@ -315,7 +322,7 @@ function renderPunchBar() {
     });
 
     const labelBottom = document.createElement("div");
-    labelBottom.textContent = `+${bonus}`;
+    labelBottom.textContent = milestone.label;
     Object.assign(labelBottom.style, {
       position: "absolute",
       bottom: "-18px",
@@ -327,7 +334,7 @@ function renderPunchBar() {
 
     tickWrap.append(tick, labelBottom);
     tickContainer.appendChild(tickWrap);
-  }
+  });
 
   barWrap.appendChild(tickContainer);
 
