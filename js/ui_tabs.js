@@ -16,7 +16,9 @@ function showTab(tab, scene = null) {
   document.getElementById("page-content")?.remove();
   document.getElementById("punch-bar")?.remove();
   document.getElementById("punch-badge")?.remove();         // ✅ total punch badge
+  document.getElementById("rank-badge-circle")?.remove();   // ✅ cream circle with rank
   document.getElementById("punch-gap-badge")?.remove();     // ✅ punch gap badge
+
 
   const content = document.createElement("div");
   content.id = "page-content";
@@ -60,6 +62,11 @@ function showTab(tab, scene = null) {
   if (tab === "game") {
     renderPunchBar();
     renderPunchBadge();
+
+    if (window.userId) {
+      fetchPunchGap(window.userId); // ✅ ensures up-to-date rank and punchGap
+    }
+
 
     const activeScene =
       scene ||
