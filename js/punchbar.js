@@ -325,7 +325,7 @@ function renderPunchBar() {
     { label: "+30", pos: 0.4 },
     { label: "+35", pos: 0.6 },
     { label: "+40", pos: 0.8 },
-    { label: "+50", pos: 1.0 }
+    { label: "+50", pos: 0.95 }
   ];
 
   // Add dividers aligned with milestones
@@ -356,24 +356,34 @@ function renderPunchBar() {
   milestoneData.forEach((item) => {
     const label = document.createElement("div");
     label.textContent = item.label;
-    Object.assign(label.style, {
-      position: "absolute",
-      top: "0",
-      left: `${item.pos * 100}%`,
-      transform: "translateX(-50%)",
-      fontSize: "10px",
-      fontFamily: "'Reem Kufi Fun', sans-serif",
-      color: "#000",
-      whiteSpace: "nowrap",
-      pointerEvents: "none"
-    });
+  Object.assign(label.style, {
+    position: "absolute",
+    bottom: "0",
+    left: `${item.pos * 100}%`,
+    transform: "translateX(-50%)",
+    fontSize: "10px",
+    fontFamily: "'Reem Kufi Fun', sans-serif",
+    color: "#000",
+    whiteSpace: "nowrap",
+    pointerEvents: "none"
+  });
+
     labelLayer.appendChild(label);
   });
 
   barColumn.append(title, barWrap);
   barColumn.append(labelLayer);
 
-  punchBar.append(icon, barColumn, upgradeWrap);
+  const separator = document.createElement("div");
+  Object.assign(separator.style, {
+    width: "1px",
+    height: "36px",
+    background: "#000",
+    margin: "0 6px"
+  });
+
+
+  punchBar.append(icon, barColumn, separator, upgradeWrap);
   document.body.appendChild(punchBar);
 
   const floatingContainer = document.createElement("div");
