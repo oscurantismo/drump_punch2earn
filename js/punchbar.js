@@ -135,10 +135,10 @@ function renderPunchGapBadge() {
 
   const badge = document.createElement("div");
   badge.id = "punch-gap-badge";
-  badge.textContent = `${window.punchGap} punches until new rank`;
+  badge.textContent = `${window.punchGap} left until new rank`;
   Object.assign(badge.style, {
     position: "fixed",
-    top: "-104px",
+    top: "104px",
     right: "0.75rem",
     background: "#F21B1B",
     color: "#FFE99B",
