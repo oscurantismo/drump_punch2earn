@@ -45,59 +45,39 @@ function renderPunchBadge() {
   if (window.activeTab !== "game") return;
   if (document.getElementById("punch-badge")) return;
 
-  const rank = window.userRank || "-";
+  const rank = typeof window.userRank === "number" ? window.userRank : "–";
 
-  // === Outer Badge Container ===
+  // === Outer Blue Badge Container ===
   const badge = document.createElement("div");
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    top: "70px", // evenly between topbar and punchbar
-    left: "0.75rem", // aligned with punchbar
+    top: "70px",
+    left: "0.75rem",
     display: "flex",
     alignItems: "center",
-    height: "36px", // smaller than icon
+    height: "44px",
     background: "#2a3493",
     color: "#fff",
-    borderRadius: "20px",
+    borderRadius: "22px",
     border: "2px solid #000",
     fontFamily: "'Negrita Pro', sans-serif",
     fontSize: "14px",
     boxShadow: "2px 2px 0 #000",
     zIndex: 1001,
-    padding: "4px 14px 4px 32px", // space for overlapping icon
+    paddingLeft: "40px", // extra left padding to leave space for the circle
+    paddingRight: "18px",
+    paddingTop: "4px",
+    paddingBottom: "4px",
   });
 
-  // === Circle with Rank Number ===
-  const iconCircle = document.createElement("div");
-  Object.assign(iconCircle.style, {
-    width: "44px",
-    height: "44px",
-    borderRadius: "50%",
-    background: "#FFEDAC",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontFamily: "'Reem Kufi Fun', sans-serif",
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#000",
-    boxShadow: "1px 1px 0 #000",
-    position: "absolute",
-    left: "0.75rem", // aligned with punchbar left
-    top: "66px", // vertically centered with badge
-    zIndex: 1002,
-  });
-  iconCircle.textContent = `#${rank}`;
-
-  // === Text (Punch Count) ===
+  // === Text Content (Punches) ===
   badgeTextEl = document.createElement("div");
   badgeTextEl.id = "punch-badge-text";
   Object.assign(badgeTextEl.style, {
-    lineHeight: "1.1",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    lineHeight: "1.1",
     fontFamily: "'Negrita Pro', sans-serif",
     fontWeight: "normal",
   });
@@ -105,20 +85,44 @@ function renderPunchBadge() {
   const label = document.createElement("div");
   label.textContent = "Punches";
   Object.assign(label.style, {
-    fontSize: "13px",
+    fontSize: "14px",
     fontWeight: "normal",
   });
 
   const count = document.createElement("div");
   count.textContent = (window.punches || 0).toLocaleString();
   Object.assign(count.style, {
-    fontSize: "16px",
+    fontSize: "18px",
     fontWeight: "normal",
   });
 
   badgeTextEl.append(label, count);
-  badge.append(badgeTextEl);
-  document.body.append(iconCircle, badge);
+  badge.appendChild(badgeTextEl);
+  document.body.appendChild(badge);
+
+  // === Cream Circle with Rank ===
+  const iconCircle = document.createElement("div");
+  Object.assign(iconCircle.style, {
+    position: "fixed",
+    top: "68px", // align top visually with badge
+    left: "0.75rem",
+    width: "48px",
+    height: "48px",
+    borderRadius: "50%",
+    background: "#FFEDAC",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: "'Reem Kufi Fun', sans-serif",
+    fontSize: "18px",
+    fontWeight: "600",
+    color: "#2a3493",
+    boxShadow: "2px 2px 0 #000",
+    zIndex: 1002,
+  });
+  iconCircle.textContent = rank;
+
+  document.body.appendChild(iconCircle);
 }
 
 function renderPunchGapBadge() {
@@ -209,7 +213,7 @@ function renderPunchBar() {
     color: "#000",
     fontFamily: "'Reem Kufi Fun', sans-serif",
     fontSize: "14px",
-    padding: "6px 12px 12px 12px",
+    padding: "6px 12px 20px 12px",
     borderRadius: "12px",
     border: "2px solid #000",
     zIndex: 1000,
@@ -304,14 +308,15 @@ function renderPunchBar() {
   milestones.forEach((milestone, i) => {
     const tickWrap = document.createElement("div");
     Object.assign(tickWrap.style, {
-      position: "relative",
+      position: "absolute",
+      top: "0",
       height: "100%",
+      left: `${(milestone.offset / 500) * 100}%`, // evenly spaced between 0–500
+      transform: "translateX(-1px)",
       display: "flex",
-      alignItems: "center",
       flexDirection: "column",
+      alignItems: "center",
       justifyContent: "space-between",
-      width: "1px",
-      flex: 1,
     });
 
     const tick = document.createElement("div");
@@ -324,12 +329,15 @@ function renderPunchBar() {
     const labelBottom = document.createElement("div");
     labelBottom.textContent = milestone.label;
     Object.assign(labelBottom.style, {
-      position: "absolute",
-      bottom: "-18px",
-      left: "-12px",
+      marginTop: "2px",
       fontSize: "13px",
       fontFamily: "'Reem Kufi Fun', sans-serif",
       color: "#000",
+      position: "absolute",
+      bottom: "-18px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      whiteSpace: "nowrap",
     });
 
     tickWrap.append(tick, labelBottom);
