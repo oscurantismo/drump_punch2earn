@@ -215,7 +215,7 @@ function renderPunchBar() {
     color: "#000",
     fontFamily: "'Reem Kufi Fun', sans-serif",
     fontSize: "14px",
-    padding: "6px 12px 20px 12px",
+    padding: "6px 12px 12px 12px",
     borderRadius: "12px",
     border: "2px solid #000",
     zIndex: 1000,
@@ -237,8 +237,8 @@ function renderPunchBar() {
   const icon = document.createElement("img");
   icon.src = "drump-images/flamepunch.svg";
   Object.assign(icon.style, {
-    width: "32px",
-    height: "32px",
+    width: "40px",
+    height: "40px",
   });
 
   const center = document.createElement("div");
@@ -285,74 +285,71 @@ function renderPunchBar() {
   fill.appendChild(Object.assign(document.createElement("div"), { className: "stripe-overlay" }));
   barWrap.appendChild(fill);
 
-  // === Tick Container: white lines inside the bar
-  const tickLineContainer = document.createElement("div");
-  Object.assign(tickLineContainer.style, {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
+  // === Milestone Tick + Label Combo ===
+  const milestoneWrap = document.createElement("div");
+  Object.assign(milestoneWrap.style, {
     display: "flex",
     justifyContent: "space-between",
-    zIndex: 3,
-    pointerEvents: "none",
-  });
-  barWrap.appendChild(tickLineContainer);
-
-  // === Bonus Label Row (separate)
-  const milestoneLabelRow = document.createElement("div");
-  Object.assign(milestoneLabelRow.style, {
+    alignItems: "flex-start",
     marginTop: "6px",
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "0 6px",
+    padding: "0 4px",
   });
 
-  // Define milestones
-  const milestones = [
-    { offset: 100, label: "+25" },
-    { offset: 200, label: "+30" },
-    { offset: 300, label: "+35" },
-    { offset: 400, label: "+40" }
+  const milestoneData = [
+    { label: "bonus", showTick: false },
+    { label: "+25", showTick: true },
+    { label: "+30", showTick: true },
+    { label: "+35", showTick: true },
+    { label: "+40", showTick: true },
+    { label: "+50", showTick: false }
   ];
 
-  // Create 5 segments (spacing)
-  for (let i = 0; i < 5; i++) {
-    const segment = document.createElement("div");
-    Object.assign(segment.style, {
-      flex: 1,
+  milestoneData.forEach((item, i) => {
+    const col = document.createElement("div");
+    Object.assign(col.style, {
+      flex: "1",
       display: "flex",
-      justifyContent: "center",
-      fontSize: "13px",
-      fontFamily: "'Reem Kufi Fun', sans-serif",
-      color: "#000",
+      flexDirection: "column",
+      alignItems: "center",
+      position: "relative",
     });
 
-    const milestone = milestones.find(m => m.offset === (i + 1) * 100);
-    segment.textContent = milestone ? milestone.label : "";
-    milestoneLabelRow.appendChild(segment);
-
-    // Also add tick mark at this spot inside the bar (except first & last)
-    if (i > 0 && i < 5) {
+    if (item.showTick) {
       const tick = document.createElement("div");
       Object.assign(tick.style, {
-        height: "100%",
         width: "2px",
+        height: "16px",
         background: "#fff",
+        position: "absolute",
+        top: "-18px",
+        zIndex: 3,
       });
-      tickLineContainer.appendChild(tick);
+      col.appendChild(tick);
     }
-  }
+
+    const label = document.createElement("div");
+    label.textContent = item.label;
+    Object.assign(label.style, {
+      fontSize: "13px",
+      color: "#000",
+      fontFamily: "'Reem Kufi Fun', sans-serif",
+      marginTop: item.showTick ? "0px" : "4px"
+    });
+
+    col.appendChild(label);
+    milestoneWrap.appendChild(col);
+  });
+
   // === Add the elements ===
-  center.append(title, barWrap, milestoneLabelRow);
+  center.append(title, barWrap, fill);
+  barWrap.appendChild(milestoneWrap);
   topRow.append(icon, center);
 
   const upgrade = document.createElement("img");
   upgrade.src = "drump-images/upgrade.svg";
   Object.assign(upgrade.style, {
-    width: "24px",
-    height: "24px",
+    width: "36px",
+    height: "36px",
     cursor: "pointer",
   });
   upgrade.title = "Upgrade (coming soon)";
