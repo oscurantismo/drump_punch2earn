@@ -15,7 +15,8 @@ function showTab(tab, scene = null) {
 
   document.getElementById("page-content")?.remove();
   document.getElementById("punch-bar")?.remove();
-  document.getElementById("punch-badge")?.remove();
+  document.getElementById("punch-badge")?.remove();         // ✅ total punch badge
+  document.getElementById("punch-gap-badge")?.remove();     // ✅ punch gap badge
 
   const content = document.createElement("div");
   content.id = "page-content";
