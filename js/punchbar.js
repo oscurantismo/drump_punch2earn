@@ -336,7 +336,7 @@ function renderPunchBar() {
     { label: "+50", pos: 1.0 }
   ];
 
-  // Add dividers and labels using same positions
+  // Add dividers aligned with milestones
   milestoneData.forEach((item) => {
     const divider = document.createElement("div");
     Object.assign(divider.style, {
@@ -347,9 +347,18 @@ function renderPunchBar() {
       width: "2px",
       background: "#fff",
       transform: "translateX(-1px)",
-      zIndex: 2,
+      zIndex: 2
     });
     barWrap.appendChild(divider);
+  });
+
+  // === New container for absolute-positioned labels ===
+  const labelLayer = document.createElement("div");
+  Object.assign(labelLayer.style, {
+    position: "relative",
+    height: "12px",
+    marginTop: "3px",
+    width: "100%"
   });
 
   milestoneData.forEach((item) => {
@@ -363,10 +372,13 @@ function renderPunchBar() {
       fontSize: "10px",
       fontFamily: "'Reem Kufi Fun', sans-serif",
       color: "#000",
-      textAlign: "center"
+      whiteSpace: "nowrap",
+      pointerEvents: "none"
     });
-    milestoneWrap.appendChild(label);
+    labelLayer.appendChild(label);
   });
+
+  barColumn.append(labelLayer);
 
   barColumn.append(title, barWrap, milestoneWrap);
   punchBar.append(icon, barColumn, upgradeWrap);
