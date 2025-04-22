@@ -57,7 +57,7 @@ function renderPunchBadge() {
     display: "flex",
     alignItems: "center",
     height: "36px",
-    width: "100px",
+    width: "80px",
     background: "#2a3493",
     color: "#fff",
     borderRadius: "22px",
