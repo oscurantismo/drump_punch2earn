@@ -285,9 +285,9 @@ function renderPunchBar() {
   fill.appendChild(Object.assign(document.createElement("div"), { className: "stripe-overlay" }));
   barWrap.appendChild(fill);
 
-  // === Tick Marks with Milestone Bonuses ===
-  const tickContainer = document.createElement("div");
-  Object.assign(tickContainer.style, {
+  // === Tick Container: white lines inside the bar
+  const tickLineContainer = document.createElement("div");
+  Object.assign(tickLineContainer.style, {
     position: "absolute",
     top: 0,
     left: 0,
@@ -298,8 +298,18 @@ function renderPunchBar() {
     zIndex: 3,
     pointerEvents: "none",
   });
+  barWrap.appendChild(tickLineContainer);
 
-  // Add 4 tick marks between 5 sections: 0–100–200–300–400–500
+  // === Bonus Label Row (separate)
+  const milestoneLabelRow = document.createElement("div");
+  Object.assign(milestoneLabelRow.style, {
+    marginTop: "6px",
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "0 6px",
+  });
+
+  // Define milestones
   const milestones = [
     { offset: 100, label: "+25" },
     { offset: 200, label: "+30" },
@@ -307,49 +317,35 @@ function renderPunchBar() {
     { offset: 400, label: "+40" }
   ];
 
-  milestones.forEach((milestone, i) => {
-    const tickWrap = document.createElement("div");
-    Object.assign(tickWrap.style, {
-      position: "absolute",
-      top: "0",
-      height: "100%",
-      left: `${(milestone.offset / 500) * 100}%`, // evenly spaced between 0–500
-      transform: "translateX(-1px)",
+  // Create 5 segments (spacing)
+  for (let i = 0; i < 5; i++) {
+    const segment = document.createElement("div");
+    Object.assign(segment.style, {
+      flex: 1,
       display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "space-between",
-    });
-
-    const tick = document.createElement("div");
-    Object.assign(tick.style, {
-      height: "100%",
-      width: "2px",
-      background: "#fff",
-    });
-
-    const labelBottom = document.createElement("div");
-    labelBottom.textContent = milestone.label;
-    Object.assign(labelBottom.style, {
-      marginTop: "2px",
+      justifyContent: "center",
       fontSize: "13px",
       fontFamily: "'Reem Kufi Fun', sans-serif",
       color: "#000",
-      position: "absolute",
-      bottom: "-18px",
-      left: "50%",
-      transform: "translateX(-50%)",
-      whiteSpace: "nowrap",
     });
 
-    tickWrap.append(tick, labelBottom);
-    tickContainer.appendChild(tickWrap);
-  });
+    const milestone = milestones.find(m => m.offset === (i + 1) * 100);
+    segment.textContent = milestone ? milestone.label : "";
+    milestoneLabelRow.appendChild(segment);
 
-  barWrap.appendChild(tickContainer);
-
+    // Also add tick mark at this spot inside the bar (except first & last)
+    if (i > 0 && i < 5) {
+      const tick = document.createElement("div");
+      Object.assign(tick.style, {
+        height: "100%",
+        width: "2px",
+        background: "#fff",
+      });
+      tickLineContainer.appendChild(tick);
+    }
+  }
   // === Add the elements ===
-  center.append(title, barWrap);
+  center.append(title, barWrap, milestoneLabelRow);
   topRow.append(icon, center);
 
   const upgrade = document.createElement("img");
