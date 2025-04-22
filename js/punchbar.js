@@ -39,42 +39,43 @@ function renderPunchBadge() {
   if (document.getElementById("profile-container")) return;
   if (document.getElementById("punch-badge")) return;
 
+  // Outer wrapper
   const badge = document.createElement("div");
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    top: "60px",
+    top: "90px", // centered between topbar and punch bar
     left: "0.75rem",
     display: "flex",
     alignItems: "center",
-    height: "40px",
-    background: COLORS.primary,
+    height: "48px",
+    background: "#2a3493", // deep blue
     color: "#fff",
-    borderRadius: "20px",
+    borderRadius: "24px",
     border: "2px solid #000",
-    fontFamily: FONT.heading,
+    fontFamily: "'Negrita Pro', sans-serif",
     fontSize: "15px",
     boxShadow: "2px 2px 0 #000",
     zIndex: ZINDEX.punchBar + 1,
-    paddingRight: "14px",
-    paddingLeft: "20px", // visually aligns with the overlap
-    marginLeft: "20px", // shifts the text block right so icon overlaps neatly
+    padding: "6px 16px 6px 28px",
+    marginLeft: "20px", // space for the icon overlap
   });
 
+  // Icon circle on the left
   const iconWrap = document.createElement("div");
   Object.assign(iconWrap.style, {
-    width: "40px",
-    height: "40px",
+    width: "48px",
+    height: "48px",
     borderRadius: "50%",
-    background: COLORS.badgeBg,
+    background: "#FFEDAC",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     boxShadow: "1px 1px 0 #000",
     position: "absolute",
     left: "0",
-    top: "60px", // matches badge top for clean alignment
-    zIndex: ZINDEX.punchBar + 2, // above the text block
+    top: "90px",
+    zIndex: ZINDEX.punchBar + 2,
   });
 
   const img = document.createElement("img");
@@ -85,15 +86,31 @@ function renderPunchBadge() {
   });
   iconWrap.appendChild(img);
 
+  // Text block
   badgeTextEl = document.createElement("div");
   badgeTextEl.id = "punch-badge-text";
-  badgeTextEl.textContent = (window.punches || 0).toLocaleString();
   Object.assign(badgeTextEl.style, {
-    fontFamily: FONT.heading,
-    fontWeight: "normal",
-    lineHeight: "1",
+    fontFamily: "'Negrita Pro', sans-serif",
+    lineHeight: "1.1",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
   });
 
+  const label = document.createElement("div");
+  label.textContent = "Punches";
+  Object.assign(label.style, {
+    fontSize: "14px",
+  });
+
+  const count = document.createElement("div");
+  count.textContent = (window.punches || 0).toLocaleString();
+  Object.assign(count.style, {
+    fontSize: "18px",
+    fontWeight: "bold",
+  });
+
+  badgeTextEl.append(label, count);
   badge.append(badgeTextEl);
   document.body.append(iconWrap, badge);
 }
