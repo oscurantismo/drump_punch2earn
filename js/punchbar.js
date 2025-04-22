@@ -238,23 +238,6 @@ function renderPunchBar() {
     justifyContent: "center"
   });
 
-  // === Add Dividers (4) ===
-  const dividers = [0.2, 0.4, 0.6, 0.8]; // % positions
-  dividers.forEach((pos) => {
-    const line = document.createElement("div");
-    Object.assign(line.style, {
-      position: "absolute",
-      top: "0",
-      bottom: "0",
-      left: `${pos * 100}%`,
-      width: "2px",
-      background: "#fff",
-      transform: "translateX(-1px)",
-      zIndex: 2,
-    });
-    barWrap.appendChild(line);
-  });
-
   const upgrade = document.createElement("img");
   upgrade.src = "drump-images/upgrade.svg";
   Object.assign(upgrade.style, {
@@ -320,6 +303,23 @@ function renderPunchBar() {
   stripes.className = "stripe-overlay";
   fill.appendChild(stripes);
   barWrap.appendChild(fill);
+
+    // === Add Dividers (4) ===
+  const dividers = [0.2, 0.4, 0.6, 0.8]; // % positions
+  dividers.forEach((pos) => {
+    const line = document.createElement("div");
+    Object.assign(line.style, {
+      position: "absolute",
+      top: "0",
+      bottom: "0",
+      left: `${pos * 100}%`,
+      width: "2px",
+      background: "#fff",
+      transform: "translateX(-1px)",
+      zIndex: 2,
+    });
+    barWrap.appendChild(line);
+  });
 
   const milestoneWrap = document.createElement("div");
   Object.assign(milestoneWrap.style, {
