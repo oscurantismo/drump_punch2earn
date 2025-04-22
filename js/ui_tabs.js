@@ -13,11 +13,14 @@ function showTab(tab, scene = null) {
     scene = window.game?.scene?.scenes?.[0];
   }
 
-  document.getElementById("punch-bar")?.remove();
-  document.getElementById("punch-badge")?.remove();         // ✅ remove text badge
-  document.getElementById("rank-badge-circle")?.remove();   // ✅ remove rank circle
-  document.getElementById("punch-gap-badge")?.remove();
+  // ✅ REMOVE previous page content
+  document.getElementById("page-content")?.remove();
 
+  // ✅ Remove punch bar-related elements
+  document.getElementById("punch-bar")?.remove();
+  document.getElementById("punch-badge")?.remove();
+  document.getElementById("rank-badge-circle")?.remove();
+  document.getElementById("punch-gap-badge")?.remove();
 
   const content = document.createElement("div");
   content.id = "page-content";
@@ -34,7 +37,7 @@ function showTab(tab, scene = null) {
   renderTopBar();
   renderTabs(tab);
 
-  // === Update tab states + task badge ===
+  // === Update tab highlight and badge
   const updateTabHighlight = () => {
     document.querySelectorAll("#tab-container button").forEach(btn => {
       const isActive = btn.dataset.tab === tab;
@@ -69,11 +72,13 @@ function showTab(tab, scene = null) {
       showGameUI(activeScene);
     }
 
-    // ✅ Always refresh punchGap and rank
     if (window.userId) {
       fetchPunchGap(window.userId);
     }
 
+    document.body.appendChild(content);
+
+  // === LEADERBOARD TAB ===
   } else if (tab === "leaderboard") {
     const iframe = document.createElement("iframe");
     iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`;
