@@ -36,34 +36,33 @@ function getBonusAmount(punchCount) {
 
 function renderPunchBadge() {
   if (window.activeTab !== "game") return;
-  if (document.getElementById("profile-container")) return;
   if (document.getElementById("punch-badge")) return;
 
   const badge = document.createElement("div");
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    top: "76px", // evenly spaced between topbar and punchbar
+    top: "70px", // higher up
     left: "0.75rem",
     display: "flex",
     alignItems: "center",
-    height: "44px",
+    height: "36px", // shorter height for blue background
     background: "#2a3493",
     color: "#fff",
-    borderRadius: "24px",
+    borderRadius: "18px",
     border: "2px solid #000",
     fontFamily: "'Negrita Pro', sans-serif",
     fontSize: "15px",
     boxShadow: "2px 2px 0 #000",
     zIndex: ZINDEX.punchBar + 1,
-    padding: "6px 16px 6px 28px",
+    padding: "4px 16px 4px 28px",
     marginLeft: "20px",
   });
 
   const iconWrap = document.createElement("div");
   Object.assign(iconWrap.style, {
     width: "44px",
-    height: "44px",
+    height: "44px", // taller cream circle
     borderRadius: "50%",
     background: "#FFEDAC",
     display: "flex",
@@ -72,7 +71,7 @@ function renderPunchBadge() {
     boxShadow: "1px 1px 0 #000",
     position: "absolute",
     left: "0",
-    top: "76px",
+    top: "66px", // visually aligns above bar
     zIndex: ZINDEX.punchBar + 2,
   });
 
@@ -89,23 +88,21 @@ function renderPunchBadge() {
   Object.assign(badgeTextEl.style, {
     fontFamily: "'Negrita Pro', sans-serif",
     lineHeight: "1",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
+    fontSize: "15px",
+    fontWeight: "normal",
   });
 
   const label = document.createElement("div");
   label.textContent = "Punches";
   Object.assign(label.style, {
-    fontSize: "14px",
-    fontWeight: "normal",
+    fontSize: "13px",
   });
 
   const count = document.createElement("div");
   count.textContent = (window.punches || 0).toLocaleString();
   Object.assign(count.style, {
     fontSize: "16px",
-    fontWeight: "normal", // ✅ no bold
+    fontWeight: "normal",
   });
 
   badgeTextEl.append(label, count);
