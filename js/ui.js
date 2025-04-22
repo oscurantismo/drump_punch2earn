@@ -3,6 +3,10 @@ import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 function updatePunchDisplay() {
   const count = window.punches || 0;
+  const nextBlock = Math.ceil(count / 500) * 500;
+  const progressText = document.getElementById("punch-progress");
+  if (progressText) progressText.textContent = `${count.toLocaleString()} / ${nextBlock.toLocaleString()} punches`;
+
   const punchTextEl = document.getElementById("punch-text");
   const fillEl = document.getElementById("punch-fill");
   const countEl = document.getElementById("punch-progress");
