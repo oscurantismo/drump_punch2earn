@@ -39,17 +39,16 @@ function renderPunchBadge() {
   if (document.getElementById("profile-container")) return;
   if (document.getElementById("punch-badge")) return;
 
-  // Outer wrapper
   const badge = document.createElement("div");
   badge.id = "punch-badge";
   Object.assign(badge.style, {
     position: "fixed",
-    top: "90px", // centered between topbar and punch bar
+    top: "76px", // evenly spaced between topbar and punchbar
     left: "0.75rem",
     display: "flex",
     alignItems: "center",
-    height: "48px",
-    background: "#2a3493", // deep blue
+    height: "44px",
+    background: "#2a3493",
     color: "#fff",
     borderRadius: "24px",
     border: "2px solid #000",
@@ -58,14 +57,13 @@ function renderPunchBadge() {
     boxShadow: "2px 2px 0 #000",
     zIndex: ZINDEX.punchBar + 1,
     padding: "6px 16px 6px 28px",
-    marginLeft: "20px", // space for the icon overlap
+    marginLeft: "20px",
   });
 
-  // Icon circle on the left
   const iconWrap = document.createElement("div");
   Object.assign(iconWrap.style, {
-    width: "48px",
-    height: "48px",
+    width: "44px",
+    height: "44px",
     borderRadius: "50%",
     background: "#FFEDAC",
     display: "flex",
@@ -74,7 +72,7 @@ function renderPunchBadge() {
     boxShadow: "1px 1px 0 #000",
     position: "absolute",
     left: "0",
-    top: "90px",
+    top: "76px",
     zIndex: ZINDEX.punchBar + 2,
   });
 
@@ -86,12 +84,11 @@ function renderPunchBadge() {
   });
   iconWrap.appendChild(img);
 
-  // Text block
   badgeTextEl = document.createElement("div");
   badgeTextEl.id = "punch-badge-text";
   Object.assign(badgeTextEl.style, {
     fontFamily: "'Negrita Pro', sans-serif",
-    lineHeight: "1.1",
+    lineHeight: "1",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -101,19 +98,21 @@ function renderPunchBadge() {
   label.textContent = "Punches";
   Object.assign(label.style, {
     fontSize: "14px",
+    fontWeight: "normal",
   });
 
   const count = document.createElement("div");
   count.textContent = (window.punches || 0).toLocaleString();
   Object.assign(count.style, {
-    fontSize: "18px",
-    fontWeight: "bold",
+    fontSize: "16px",
+    fontWeight: "normal", // ✅ no bold
   });
 
   badgeTextEl.append(label, count);
   badge.append(badgeTextEl);
   document.body.append(iconWrap, badge);
 }
+
 
 function renderPunchGapBadge() {
   const existing = document.getElementById("punch-gap-badge");
@@ -286,7 +285,7 @@ function renderPunchBar() {
     pointerEvents: "none",
   });
 
-  for (let i = 1; i <= 4; i++) { // 🔁 skip 0 and 500
+  for (let i = 1; i <= 4; i++) { // 5 sections: 0–100–200–300–400–500
     const bonus = getBonusAmount(i * 100);
 
     const tickWrap = document.createElement("div");
@@ -330,12 +329,13 @@ function renderPunchBar() {
   Object.assign(punchText.style, {
     fontSize: "13px",
     color: "#222",
+    marginTop: "8px",
     textAlign: "center",
     fontFamily: "'Reem Kufi Fun', sans-serif",
-    marginTop: "4px",
   });
 
-  center.append(title, barWrap);
+
+  center.append(title, barWrap, punchText);
   topRow.append(icon, center);
 
   punchBar.appendChild(topRow);
