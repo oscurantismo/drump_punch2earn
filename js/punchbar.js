@@ -320,14 +320,6 @@ function renderPunchBar() {
     barWrap.appendChild(line);
   });
 
-  const milestoneWrap = document.createElement("div");
-  Object.assign(milestoneWrap.style, {
-    display: "flex",
-    justifyContent: "space-between",
-    marginTop: "6px",
-    padding: "0 2px"
-  });
-
   const milestoneData = [
     { label: "+25", pos: 0.2 },
     { label: "+30", pos: 0.4 },
@@ -378,9 +370,9 @@ function renderPunchBar() {
     labelLayer.appendChild(label);
   });
 
+  barColumn.append(title, barWrap);
   barColumn.append(labelLayer);
 
-  barColumn.append(title, barWrap, milestoneWrap);
   punchBar.append(icon, barColumn, upgradeWrap);
   document.body.appendChild(punchBar);
 
