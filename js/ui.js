@@ -1,4 +1,4 @@
-import { renderPunchBadge } from "./punchbar.js";
+import { renderPunchBadge, renderPunchGapBadge } from "./punchbar.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 function updatePunchDisplay() {
@@ -27,6 +27,11 @@ function updatePunchDisplay() {
     hintEl.style.transform = `translateX(-50%) scale(${percent < 5 ? 1.2 : 1})`;
     hintEl.style.opacity = percent < 5 ? "0.6" : "1";
   }
+
+  if (typeof window.punchGap === "number") {
+    renderPunchGapBadge();
+  }
+
 }
 
 export { updatePunchDisplay };
