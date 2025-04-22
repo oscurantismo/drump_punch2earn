@@ -238,26 +238,35 @@ function renderPunchBar() {
     justifyContent: "center"
   });
 
-  const divider = document.createElement("div");
-  Object.assign(divider.style, {
-    width: "2px",
-    height: "60px",
-    background: "#000",
-    margin: "0 4px"
+  // === Add Dividers (4) ===
+  const dividers = [0.2, 0.4, 0.6, 0.8]; // % positions
+  dividers.forEach((pos) => {
+    const line = document.createElement("div");
+    Object.assign(line.style, {
+      position: "absolute",
+      top: "0",
+      bottom: "0",
+      left: `${pos * 100}%`,
+      width: "2px",
+      background: "#fff",
+      transform: "translateX(-1px)",
+      zIndex: 2,
+    });
+    barWrap.appendChild(line);
   });
 
   const upgrade = document.createElement("img");
   upgrade.src = "drump-images/upgrade.svg";
   Object.assign(upgrade.style, {
-    width: "36px",
-    height: "36px",
+    width: "32px",
+    height: "32px",
     cursor: "pointer"
   });
 
   const upgradeText = document.createElement("div");
   upgradeText.textContent = "UPGRADE";
   Object.assign(upgradeText.style, {
-    fontSize: "13px",
+    fontSize: "12px",
     fontWeight: "bold",
     color: "#000",
     marginTop: "4px"
