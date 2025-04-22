@@ -352,14 +352,6 @@ function renderPunchBar() {
     barWrap.appendChild(divider);
   });
 
-  const milestoneWrap = document.createElement("div");
-  Object.assign(milestoneWrap.style, {
-    position: "relative",
-    width: "100%",
-    height: "16px", // matches bar height
-    marginTop: "2px"
-  });
-
   milestoneData.forEach((item) => {
     const label = document.createElement("div");
     label.textContent = item.label;
