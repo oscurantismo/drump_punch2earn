@@ -304,8 +304,7 @@ function renderPunchBar() {
   fill.appendChild(stripes);
   barWrap.appendChild(fill);
 
-    // === Add Dividers (4) ===
-  const dividers = [0.2, 0.4, 0.6, 0.8]; // % positions
+  const dividers = [0.2, 0.4, 0.6, 0.8];
   dividers.forEach((pos) => {
     const line = document.createElement("div");
     Object.assign(line.style, {
@@ -330,7 +329,7 @@ function renderPunchBar() {
   });
 
   const milestoneData = ["bonus", "+25", "+30", "+35", "+40", "+50"];
-  milestoneData.forEach((label, i) => {
+  milestoneData.forEach((label) => {
     const milestone = document.createElement("div");
     Object.assign(milestone.style, {
       flex: "1",
@@ -338,25 +337,10 @@ function renderPunchBar() {
       position: "relative"
     });
 
-    if (i > 0 && i < milestoneData.length - 1) {
-      const tick = document.createElement("div");
-      Object.assign(tick.style, {
-        width: "2px",
-        height: "100%",
-        background: "#fff",
-        position: "absolute",
-        top: "0px",
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 3
-      });
-      barWrap.appendChild(tick);
-    }
-
     const labelEl = document.createElement("div");
     labelEl.textContent = label;
     Object.assign(labelEl.style, {
-      fontSize: "11px", // 👈 smaller size now
+      fontSize: "11px",
       fontFamily: "'Reem Kufi Fun', sans-serif",
       color: "#000",
       marginTop: "4px"
@@ -367,7 +351,7 @@ function renderPunchBar() {
   });
 
   barColumn.append(title, barWrap, milestoneWrap);
-  punchBar.append(icon, barColumn, divider, upgradeWrap);
+  punchBar.append(icon, barColumn, upgradeWrap);
   document.body.appendChild(punchBar);
 
   const floatingContainer = document.createElement("div");
