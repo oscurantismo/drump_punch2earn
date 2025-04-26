@@ -133,24 +133,25 @@ function showGameUI(scene) {
 function drawDrump(scene, textureKey) {
   if (drump) drump.destroy();
 
-  const maxWidth = window.innerWidth * 0.6; // 60vw
   const image = scene.textures.get(textureKey).getSourceImage();
+  const maxWidth = window.innerWidth * 0.6; // 60vw
   const aspectRatio = image.height / image.width;
   const finalWidth = Math.min(maxWidth, image.width);
   const finalHeight = finalWidth * aspectRatio;
   const scaleX = finalWidth / image.width;
   const scaleY = finalHeight / image.height;
 
+  const yPosition = scene.scale.height / 2.6 + (scene.scale.height * 0.15);
 
   drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
-      .setOrigin(0.5)
-      .setScale(scaleX, scaleY)
-      .setInteractive({ useHandCursor: true });
-
+    .setOrigin(0.5)
+    .setScale(scaleX, scaleY)
+    .setInteractive({ useHandCursor: true });
 
   drump.setInteractive(new Phaser.Geom.Rectangle(0, 0, drump.width, drump.height), Phaser.Geom.Rectangle.Contains);
-  drump.originalScale = scale;
+  drump.originalScale = scaleX; // Store original scaling
 
+  // ✅ These lines MUST be inside the function:
   drump.on("pointerdown", (pointer) => {
     const profileVisible = document.getElementById("profile-container");
     const referralVisible = document.getElementById("referral-popup");
@@ -164,6 +165,7 @@ function drawDrump(scene, textureKey) {
 
   initPunchModule({ drump, punchSounds, loadeddrumpFrames });
 }
+
 
 function createLoader() {
   const loader = document.createElement("div");
