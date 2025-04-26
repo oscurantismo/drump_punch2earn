@@ -55,6 +55,7 @@ function handlePunch() {
 
   const frames = ["Drump_1-01", "Drump_2-02", "Drump_3-03"];
   let frameIndex = 0;
+  let punchEffect = null; // Store punch.png sprite
 
   const showNextFrame = () => {
     if (frameIndex < frames.length) {
@@ -62,14 +63,35 @@ function handlePunch() {
       drump.setTexture(textureKey);
 
       if (textureKey === "Drump_2-02") {
-        // 🥊 Start punch effect IMMEDIATELY when Frame 2 shown!
-        showPunchEffect();
+        // 🥊 Start punch effect MOVING TOWARD Drump
+        punchEffect = scene.add.image(drump.x + drump.displayWidth / 1.5, drump.y, "punch")
+          .setOrigin(0.5)
+          .setScale(0.4)
+          .setAlpha(1)
+          .setDepth(9999);
+
+        scene.tweens.add({
+          targets: punchEffect,
+          x: drump.x,
+          duration: 150, // Start moving toward Drump over 150ms
+          ease: "Cubic.easeOut",
+        });
+      }
+
+      if (textureKey === "Drump_3-03" && punchEffect) {
+        // 🥊 When hitting Frame 3 (eyes closed), fade out punchEffect
+        scene.tweens.add({
+          targets: punchEffect,
+          alpha: 0,
+          duration: 100,
+          ease: "Power2",
+          onComplete: () => punchEffect.destroy(),
+        });
       }
 
       frameIndex++;
       setTimeout(showNextFrame, 80);
     } else {
-      // After frame 3
       setTimeout(() => {
         if (activeWiggleTween) {
           activeWiggleTween.stop();
@@ -78,9 +100,10 @@ function handlePunch() {
         }
 
         drump.setTexture("Drump_1-01");
+
         showPunchZapEffect();
         showFloatingBonus("+1");
-      }, 250);
+      }, 250); // Hold on Frame 3 before resetting
     }
   };
 
@@ -90,31 +113,6 @@ function handlePunch() {
   if (pendingPunches >= PUNCH_THRESHOLD || now - lastSubmitTime >= SUBMIT_INTERVAL) {
     submitPunchScore();
   }
-}
-
-function showPunchEffect() {
-  const scene = game.scene.scenes[0];
-  const punchEffect = scene.add.image(drump.x + drump.displayWidth / 2, drump.y, "punch")
-    .setOrigin(0.5)
-    .setScale(0.4)
-    .setAlpha(0)
-    .setDepth(9999);
-
-  scene.tweens.add({
-    targets: punchEffect,
-    alpha: 1,
-    x: drump.x,
-    duration: 100,
-    onComplete: () => {
-      scene.tweens.add({
-        targets: punchEffect,
-        alpha: 0,
-        duration: 150,
-        delay: 50,
-        onComplete: () => punchEffect.destroy()
-      });
-    }
-  });
 }
 
 function showPunchZapEffect() {
