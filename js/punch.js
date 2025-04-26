@@ -45,7 +45,7 @@ function handlePunch() {
     drump.setAngle(0);
   }
 
-  // Start wiggle
+  // Start new wiggle
   activeWiggleTween = scene.tweens.add({
     targets: drump,
     angle: { from: -5, to: 5 },
@@ -55,25 +55,19 @@ function handlePunch() {
     ease: "Sine.easeInOut",
   });
 
-  // Stop wiggle after 250ms (match punch effect timing)
-  setTimeout(() => {
-    if (activeWiggleTween) {
-      activeWiggleTween.stop();
-      drump.setAngle(0);
-      activeWiggleTween = null;
-    }
-  }, 250);
-  
-  ["Drump_1-01", "Drump_2-02", "Drump_3-03", "Drump_1-01"];
+  // ✅ Correctly assigned frames array
+  const frames = ["Drump_1-01", "Drump_2-02", "Drump_3-03", "Drump_1-01"];
   let frameIndex = 0;
 
   const showNextFrame = () => {
     if (frameIndex >= frames.length) {
+      // ✅ Stop wiggle ONLY after all frames finished
       if (activeWiggleTween) {
         activeWiggleTween.stop();
         drump.setAngle(0);
         activeWiggleTween = null;
       }
+
       showPunchEffect();
       showPunchZapEffect();
       showFloatingBonus("+1");
@@ -82,9 +76,9 @@ function handlePunch() {
 
     const textureKey = frames[frameIndex];
 
-    drump.setTexture(textureKey); // No dynamic loading needed! It's already preloaded.
+    drump.setTexture(textureKey); // No dynamic loading needed!
     frameIndex++;
-    setTimeout(showNextFrame, 60);
+    setTimeout(showNextFrame, 60); // 60ms between frames
   };
 
   showNextFrame();
@@ -94,7 +88,6 @@ function handlePunch() {
     submitPunchScore();
   }
 }
-
 
 function showPunchEffect() {
   const scene = game.scene.scenes[0];
