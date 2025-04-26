@@ -128,7 +128,8 @@ function showGameUI(scene) {
     0
   ).setDepth(-9);
 
-  drawDrump(scene, "Drump 1-01.png");
+  drawDrump(scene, "Drump_1-01");
+
 }
 
 function drawDrump(scene, textureKey) {
