@@ -138,18 +138,16 @@ function drawDrump(scene, textureKey) {
   const maxWidth = window.innerWidth * 0.6; // 60vw
   const yPosition = scene.scale.height / 2.6 + (scene.scale.height * 0.15);
 
-  const image = scene.textures.get(textureKey).getSourceImage(); // ✅ Add this line!
-  const aspectRatio = image.height / image.width;
+  const image = scene.textures.get(textureKey).getSourceImage();
+  const naturalWidth = image.width;
+  const scaleFactor = Math.min(1, maxWidth / naturalWidth);
 
   drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
     .setOrigin(0.5)
-    .setDisplaySize(maxWidth, maxWidth * aspectRatio) // ✅ Now aspect ratio works!
+    .setScale(scaleFactor) // ✅ Scale proportionally
     .setInteractive({ useHandCursor: true });
 
   drump.setInteractive(new Phaser.Geom.Rectangle(0, 0, drump.width, drump.height), Phaser.Geom.Rectangle.Contains);
-
-  // ✅ This line should be REMOVED because no scaleX anymore
-  // drump.originalScale = scaleX; 
 
   drump.on("pointerdown", (pointer) => {
     const profileVisible = document.getElementById("profile-container");
