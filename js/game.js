@@ -144,7 +144,9 @@ function drawDrump(scene, textureKey) {
 
   drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
     .setOrigin(0.5)
-    .setScale(scaleFactor) // ✅ Scale proportionally
+    .setScale(scaleFactor)
+    .setPipeline('TextureTintPipeline') // ✅ Keep sharp tinting
+    .setScaleMode(Phaser.ScaleModes.NEAREST) // ✅ Disable smoothing completely
     .setInteractive({ useHandCursor: true });
 
   drump.setInteractive(new Phaser.Geom.Rectangle(0, 0, drump.width, drump.height), Phaser.Geom.Rectangle.Contains);
