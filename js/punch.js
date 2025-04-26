@@ -27,9 +27,7 @@ function initPunchModule(config) {
 }
 
 function handlePunch() {
-  if (!drump || hitCooldown || window.activeTab !== "game" || window.isPopupOpen?.()) return;
-
-  hitCooldown = true;
+  if (!drump || window.activeTab !== "game" || window.isPopupOpen?.()) return;
 
   const previousPunches = window.punches || 0;
   const newPunches = previousPunches + 1;
@@ -47,7 +45,7 @@ function handlePunch() {
 
   const scene = game.scene.scenes[0];
 
-  // Stop any previous wiggle first
+  // Stop previous wiggle first
   if (activeWiggleTween) {
     activeWiggleTween.stop();
     drump.setAngle(0);
@@ -63,8 +61,7 @@ function handlePunch() {
     ease: "Sine.easeInOut",
   });
 
-
-  // Animate frames: 1 -> 2 -> 3
+  // Animate frames: 1 → 2 → 3
   const frames = ["drump-images/Drump 1-01.png", "drump-images/Drump 2-02.png", "drump-images/Drump 3-03.png"];
   let frameIndex = 0;
 
@@ -75,11 +72,9 @@ function handlePunch() {
         drump.setAngle(0);
         activeWiggleTween = null;
       }
-
       showPunchEffect();
       showPunchZapEffect();
       showFloatingBonus("+1");
-      setTimeout(() => { hitCooldown = false; }, 50);
       return;
     }
 
@@ -109,6 +104,7 @@ function handlePunch() {
     submitPunchScore();
   }
 }
+
 
 function showPunchEffect() {
   const scene = game.scene.scenes[0];
