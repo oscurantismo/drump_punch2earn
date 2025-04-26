@@ -179,3 +179,5 @@ function drawDrump(scene, textureKey) {
 
   initPunchModule({ drump, punchSounds, loadeddrumpFrames });
 }
+
+export { game, showGameUI, drawDrump };
