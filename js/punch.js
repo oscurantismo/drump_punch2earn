@@ -45,7 +45,7 @@ function handlePunch() {
     drump.setAngle(0);
   }
 
-  // Start new wiggle immediately
+  // Start wiggle
   activeWiggleTween = scene.tweens.add({
     targets: drump,
     angle: { from: -5, to: 5 },
@@ -55,7 +55,16 @@ function handlePunch() {
     ease: "Sine.easeInOut",
   });
 
-  const frames = ["Drump_1-01", "Drump_2-02", "Drump_3-03"];
+  // Stop wiggle after 250ms (match punch effect timing)
+  setTimeout(() => {
+    if (activeWiggleTween) {
+      activeWiggleTween.stop();
+      drump.setAngle(0);
+      activeWiggleTween = null;
+    }
+  }, 250);
+  
+  ["Drump_1-01", "Drump_2-02", "Drump_3-03", "Drump_1-01"];
   let frameIndex = 0;
 
   const showNextFrame = () => {
