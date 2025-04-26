@@ -39,13 +39,11 @@ function handlePunch() {
 
   const scene = game.scene.scenes[0];
 
-  // Stop any previous wiggle
   if (activeWiggleTween) {
     activeWiggleTween.stop();
     drump.setAngle(0);
   }
 
-  // Start new wiggle
   activeWiggleTween = scene.tweens.add({
     targets: drump,
     angle: { from: -5, to: 5 },
@@ -55,30 +53,29 @@ function handlePunch() {
     ease: "Sine.easeInOut",
   });
 
-  // ✅ Correctly assigned frames array
-  const frames = ["Drump_1-01", "Drump_2-02", "Drump_3-03", "Drump_1-01"];
+  const frames = ["Drump_1-01", "Drump_2-02", "Drump_3-03"];
   let frameIndex = 0;
 
   const showNextFrame = () => {
-    if (frameIndex >= frames.length) {
-      // ✅ Stop wiggle ONLY after all frames finished
-      if (activeWiggleTween) {
-        activeWiggleTween.stop();
-        drump.setAngle(0);
-        activeWiggleTween = null;
-      }
+    if (frameIndex < frames.length) {
+      drump.setTexture(frames[frameIndex]);
+      frameIndex++;
+      setTimeout(showNextFrame, 80); // Switch every 80ms
+    } else {
+      // After reaching frame 3, hold, then reset
+      setTimeout(() => {
+        if (activeWiggleTween) {
+          activeWiggleTween.stop();
+          drump.setAngle(0);
+          activeWiggleTween = null;
+        }
+        drump.setTexture("Drump_1-01");
 
-      showPunchEffect();
-      showPunchZapEffect();
-      showFloatingBonus("+1");
-      return;
+        showPunchEffect();
+        showPunchZapEffect();
+        showFloatingBonus("+1");
+      }, 250); // Hold for 250ms
     }
-
-    const textureKey = frames[frameIndex];
-
-    drump.setTexture(textureKey); // No dynamic loading needed!
-    frameIndex++;
-    setTimeout(showNextFrame, 60); // 60ms between frames
   };
 
   showNextFrame();
