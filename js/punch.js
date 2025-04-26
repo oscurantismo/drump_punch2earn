@@ -39,13 +39,13 @@ function handlePunch() {
 
   const scene = game.scene.scenes[0];
 
-  // Stop any previous wiggle first
+  // Stop any previous wiggle
   if (activeWiggleTween) {
     activeWiggleTween.stop();
     drump.setAngle(0);
   }
 
-  // Start new wiggle
+  // Start new wiggle immediately
   activeWiggleTween = scene.tweens.add({
     targets: drump,
     angle: { from: -5, to: 5 },
@@ -55,8 +55,7 @@ function handlePunch() {
     ease: "Sine.easeInOut",
   });
 
-  // Animate frames: Drump 1-01 → Drump 2-02 → Drump 3-03
-  const frames = ["Drump 1-01", "Drump 2-02", "Drump 3-03"];
+  const frames = ["Drump_1-01", "Drump_2-02", "Drump_3-03"];
   let frameIndex = 0;
 
   const showNextFrame = () => {
@@ -74,20 +73,9 @@ function handlePunch() {
 
     const textureKey = frames[frameIndex];
 
-    if (!loadeddrumpFrames.has(textureKey)) {
-      scene.load.image(textureKey, `drump-images/${textureKey}`);
-      scene.load.once(`filecomplete-image-${textureKey}`, () => {
-        loadeddrumpFrames.add(textureKey);
-        drump.setTexture(textureKey);
-        frameIndex++;
-        setTimeout(showNextFrame, 60);
-      });
-      scene.load.start();
-    } else {
-      drump.setTexture(textureKey);
-      frameIndex++;
-      setTimeout(showNextFrame, 60);
-    }
+    drump.setTexture(textureKey); // No dynamic loading needed! It's already preloaded.
+    frameIndex++;
+    setTimeout(showNextFrame, 60);
   };
 
   showNextFrame();
@@ -97,6 +85,7 @@ function handlePunch() {
     submitPunchScore();
   }
 }
+
 
 function showPunchEffect() {
   const scene = game.scene.scenes[0];
