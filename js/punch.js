@@ -58,23 +58,29 @@ function handlePunch() {
 
   const showNextFrame = () => {
     if (frameIndex < frames.length) {
-      drump.setTexture(frames[frameIndex]);
+      const textureKey = frames[frameIndex];
+      drump.setTexture(textureKey);
+
+      if (textureKey === "Drump_2-02") {
+        // 🥊 Start punch effect IMMEDIATELY when Frame 2 shown!
+        showPunchEffect();
+      }
+
       frameIndex++;
-      setTimeout(showNextFrame, 80); // Switch every 80ms
+      setTimeout(showNextFrame, 80);
     } else {
-      // After reaching frame 3, hold, then reset
+      // After frame 3
       setTimeout(() => {
         if (activeWiggleTween) {
           activeWiggleTween.stop();
           drump.setAngle(0);
           activeWiggleTween = null;
         }
-        drump.setTexture("Drump_1-01");
 
-        showPunchEffect();
+        drump.setTexture("Drump_1-01");
         showPunchZapEffect();
         showFloatingBonus("+1");
-      }, 250); // Hold for 250ms
+      }, 250);
     }
   };
 
