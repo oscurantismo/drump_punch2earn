@@ -8,6 +8,7 @@ let hitCooldown = false;
 let lastPunchTime = 0;
 let lastOofTime = 0;
 let recentPunches = [];
+let activeWiggleTween = null;
 
 const OOF_MIN_INTERVAL = 12000;
 const SUBMIT_INTERVAL = 15000;
@@ -46,8 +47,14 @@ function handlePunch() {
 
   const scene = game.scene.scenes[0];
 
-  // Start wiggle immediately
-  const wiggleTween = scene.tweens.add({
+  // Stop any previous wiggle first
+  if (activeWiggleTween) {
+    activeWiggleTween.stop();
+    drump.setAngle(0);
+  }
+
+  // Start new wiggle
+  activeWiggleTween = scene.tweens.add({
     targets: drump,
     angle: { from: -5, to: 5 },
     duration: 80,
@@ -56,14 +63,19 @@ function handlePunch() {
     ease: "Sine.easeInOut",
   });
 
+
   // Animate frames: 1 -> 2 -> 3
   const frames = ["drump-images/Drump 1-01.png", "drump-images/Drump 2-02.png", "drump-images/Drump 3-03.png"];
   let frameIndex = 0;
 
   const showNextFrame = () => {
     if (frameIndex >= frames.length) {
-      wiggleTween.stop();
-      drump.setAngle(0);
+      if (activeWiggleTween) {
+        activeWiggleTween.stop();
+        drump.setAngle(0);
+        activeWiggleTween = null;
+      }
+
       showPunchEffect();
       showPunchZapEffect();
       showFloatingBonus("+1");
