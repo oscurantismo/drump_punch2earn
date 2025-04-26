@@ -38,18 +38,16 @@ function createGame() {
 }
 
 function preload() {
-  this.load.image("drump1", "drump-images/Drump 1-01.png");
-  this.load.image("drump2", "drump-images/Drump 2-02.png");
-  this.load.image("drump3", "drump-images/Drump 3-03.png");
+  this.load.image("Drump 1-01.png", "drump-images/Drump 1-01.png");
+  this.load.image("Drump 2-02.png", "drump-images/Drump 2-02.png");
+  this.load.image("Drump 3-03.png", "drump-images/Drump 3-03.png");
   this.load.image("background", "drump-images/background.png");
   this.load.image("punch", "drump-images/punch.png");
   this.load.audio("laugh", "laugh1.mp3");
   this.load.audio("oof", "oof1.mp3");
-
   for (let i = 1; i <= 4; i++) {
     this.load.audio("punch" + i, `punch${i}.mp3`);
   }
-
   this.load.image("drump-images/sound_on.svg");
   this.load.image("drump-images/sound_off.svg");
 }
@@ -61,10 +59,7 @@ async function create() {
     const fallbackUsername = initUser.username || "Anonymous";
     const firstName = initUser.first_name || "";
     const lastName = initUser.last_name || "";
-    let displayName = "Anonymous";
-    if (firstName.trim()) displayName = firstName;
-    else if (lastName.trim()) displayName = lastName;
-    else displayName = fallbackUsername;
+    let displayName = firstName.trim() || lastName.trim() || fallbackUsername;
     window.storedUsername = displayName;
     window.telegramUsername = fallbackUsername;
     window.userId = initUser.id.toString();
@@ -123,7 +118,7 @@ function showGameUI(scene) {
     .setDisplaySize(scene.scale.width, scene.scale.height)
     .setDepth(-10);
 
-  const darkOverlay = scene.add.rectangle(
+  scene.add.rectangle(
     scene.scale.width / 2,
     scene.scale.height / 2,
     scene.scale.width,
@@ -132,29 +127,15 @@ function showGameUI(scene) {
     0
   ).setDepth(-9);
 
-  const textureKey = `Drump 1-01.png`;
-  if (!loadeddrumpFrames.has(textureKey)) {
-    scene.load.image(textureKey, `drump-images/${textureKey}`);
-    scene.load.once(`filecomplete-image-${textureKey}`, () => {
-      loadeddrumpFrames.add(textureKey);
-      drawDrump(scene, textureKey);
-    });
-    scene.load.start();
-  } else {
-    drawDrump(scene, textureKey);
-  }
+  drawDrump(scene, "Drump 1-01.png");
 }
 
 function drawDrump(scene, textureKey) {
-  const image = scene.textures.get(textureKey).getSourceImage();
-  if (!image) return;
-
-  const maxWidth = window.innerWidth * 0.75;
-  const scale = Math.min(maxWidth / image.width, window.innerHeight / image.height);
-
   if (drump) drump.destroy();
 
+  const maxWidth = window.innerWidth * 0.75;
   const yPosition = scene.scale.height / 2.6 + (scene.scale.height * 0.15);
+  const scale = Math.min(maxWidth / 512, window.innerHeight / 512); // Approximate default
 
   drump = scene.add.image(scene.scale.width / 2, yPosition, textureKey)
     .setScale(scale)
@@ -167,17 +148,130 @@ function drawDrump(scene, textureKey) {
   drump.on("pointerdown", (pointer) => {
     const profileVisible = document.getElementById("profile-container");
     const referralVisible = document.getElementById("referral-popup");
-
     if (window.activeTab !== "game" || profileVisible || referralVisible) return;
 
     const bounds = drump.getBounds();
     if (Phaser.Geom.Rectangle.Contains(bounds, pointer.x, pointer.y)) {
       handlePunch();
     }
-    // ❌ No wiggle or laugh on missed tap
   });
 
   initPunchModule({ drump, punchSounds, loadeddrumpFrames });
 }
+
+function createLoader() {
+  const loader = document.createElement("div");
+  loader.id = "loader";
+  loader.style.position = "fixed";
+  loader.style.top = "0";
+  loader.style.left = "0";
+  loader.style.width = "100%";
+  loader.style.height = "100%";
+  loader.style.display = "flex";
+  loader.style.flexDirection = "column";
+  loader.style.alignItems = "center";
+  loader.style.justifyContent = "center";
+  loader.style.background = COLORS.badgeBg;
+  loader.style.zIndex = ZINDEX.modal;
+  loader.innerHTML = `
+    <div class="spinner"></div>
+    <p style="font-family: ${FONT.body}, sans-serif; font-size: 14px; color: ${COLORS.primary}; margin-top: 20px;">
+      Made with ❤️ and collaboration from 🇨🇦
+    </p>
+    <style>
+    .spinner {
+      border: 6px solid ${COLORS.primary};
+      border-top: 6px solid ${COLORS.badgeBg};
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    </style>
+  `;
+  document.body.appendChild(loader);
+
+  setTimeout(() => {
+    const el = document.getElementById("loader");
+    if (el) el.remove();
+  }, 3000);
+}
+
+function registerUser() {
+  const url = "https://drumpleaderboard-production.up.railway.app/register";
+  const referrerId = new URLSearchParams(window.location.search).get("start")?.replace("referral_", "");
+
+  const body = {
+    username: window.storedUsername,
+    user_id: window.userId,
+    ...(referrerId ? { referrer_id: referrerId } : {})
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(res => console.log("User registration:", res))
+    .catch(console.error);
+
+  fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
+    .then(res => res.json())
+    .then(profile => {
+      if (profile.already_claimed_referral) {
+        showPopupMessage("Oops, seems like you already claimed a referral bonus. Read more about referral rules in the \"Info\" tab.");
+      }
+    });
+}
+
+function showPopupMessage(message) {
+  const popup = document.createElement("div");
+  popup.innerText = message;
+  popup.style.position = "fixed";
+  popup.style.top = "50%";
+  popup.style.left = "50%";
+  popup.style.transform = "translate(-50%, -50%)";
+  popup.style.background = COLORS.offWhite;
+  popup.style.border = "2px solid COLORS.primary";
+  popup.style.color = COLORS.primary;
+  popup.style.fontFamily = FONT.body;
+  popup.style.fontSize = "16px";
+  popup.style.padding = "20px 24px";
+  popup.style.borderRadius = "12px";
+  popup.style.boxShadow = "0 0 12px rgba(0,0,0,0.3)";
+  popup.style.zIndex = "3000";
+
+  const dismiss = document.createElement("button");
+  dismiss.innerText = "Got it!";
+  dismiss.style.marginTop = "12px";
+  dismiss.style.padding = "6px 14px";
+  dismiss.style.background = COLORS.primary;
+  dismiss.style.color = COLORS.offWhite;
+  dismiss.style.border = "none";
+  dismiss.style.borderRadius = "8px";
+  dismiss.onclick = () => popup.remove();
+
+  popup.appendChild(document.createElement("br"));
+  popup.appendChild(dismiss);
+  document.body.appendChild(popup);
+}
+
+window.onbeforeunload = () => {
+  if (window.punches && pendingPunches > 0) {
+    navigator.sendBeacon(
+      "https://drumpleaderboard-production.up.railway.app/submit",
+      new Blob([JSON.stringify({
+        username: window.storedUsername,
+        user_id: window.userId,
+        score: window.punches
+      })], { type: "application/json" })
+    );
+  }
+};
 
 export { game, showGameUI, drawDrump };
