@@ -57,7 +57,7 @@ function handlePunch() {
   });
 
   // Animate frames: 1 -> 2 -> 3
-  const frames = ["drump-images/1-01.png", "drump-images/2-02.png", "drump-images/3-03.png"];
+  const frames = ["drump-images/Drump 1-01.png", "drump-images/Drump 2-02.png", "drump-images/Drump 3-03.png"];
   let frameIndex = 0;
 
   const showNextFrame = () => {
