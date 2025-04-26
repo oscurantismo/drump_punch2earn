@@ -56,7 +56,7 @@ function handlePunch() {
   });
 
   // Animate frames: Drump 1-01 → Drump 2-02 → Drump 3-03
-  const frames = ["Drump 1-01.png", "Drump 2-02.png", "Drump 3-03.png"];
+  const frames = ["Drump 1-01", "Drump 2-02", "Drump 3-03"];
   let frameIndex = 0;
 
   const showNextFrame = () => {
