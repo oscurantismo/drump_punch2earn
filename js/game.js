@@ -38,9 +38,10 @@ function createGame() {
 }
 
 function preload() {
-  this.load.image("Drump 1-01.png", "drump-images/Drump 1-01.png");
-  this.load.image("Drump 2-02.png", "drump-images/Drump 2-02.png");
-  this.load.image("Drump 3-03.png", "drump-images/Drump 3-03.png");
+  this.load.image("Drump 1-01", "drump-images/Drump 1-01.png");
+  this.load.image("Drump 2-02", "drump-images/Drump 2-02.png");
+  this.load.image("Drump 3-03", "drump-images/Drump 3-03.png");
+
   this.load.image("background", "drump-images/background.png");
   this.load.image("punch", "drump-images/punch.png");
   this.load.audio("laugh", "laugh1.mp3");
