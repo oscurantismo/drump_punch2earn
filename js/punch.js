@@ -20,8 +20,13 @@ function initPunchModule(config) {
   }
 }
 
+let isAnimatingPunch = false; // 🔥 Add globally
+
 function handlePunch() {
   if (!drump || window.activeTab !== "game" || window.isPopupOpen?.()) return;
+  if (isAnimatingPunch) return; // 🔥 Failsafe: Ignore if already animating punch!
+
+  isAnimatingPunch = true; // 🔥 Start locking animation
 
   const previousPunches = window.punches || 0;
   const newPunches = previousPunches + 1;
@@ -55,7 +60,7 @@ function handlePunch() {
 
   const frames = ["Drump_1-01", "Drump_2-02", "Drump_3-03"];
   let frameIndex = 0;
-  let punchEffect = null; // Store punch.png sprite
+  let punchEffect = null;
 
   const showNextFrame = () => {
     if (frameIndex < frames.length) {
@@ -63,7 +68,6 @@ function handlePunch() {
       drump.setTexture(textureKey);
 
       if (textureKey === "Drump_2-02") {
-        // 🥊 Start punch effect MOVING TOWARD Drump
         punchEffect = scene.add.image(drump.x + drump.displayWidth / 1.5, drump.y, "punch")
           .setOrigin(0.5)
           .setScale(0.4)
@@ -73,13 +77,12 @@ function handlePunch() {
         scene.tweens.add({
           targets: punchEffect,
           x: drump.x,
-          duration: 150, // Start moving toward Drump over 150ms
+          duration: 150,
           ease: "Cubic.easeOut",
         });
       }
 
       if (textureKey === "Drump_3-03" && punchEffect) {
-        // 🥊 When hitting Frame 3 (eyes closed), fade out punchEffect
         scene.tweens.add({
           targets: punchEffect,
           alpha: 0,
@@ -103,7 +106,9 @@ function handlePunch() {
 
         showPunchZapEffect();
         showFloatingBonus("+1");
-      }, 250); // Hold on Frame 3 before resetting
+
+        isAnimatingPunch = false; // 🔥 UNLOCK after animation finishes!
+      }, 250);
     }
   };
 
@@ -114,6 +119,7 @@ function handlePunch() {
     submitPunchScore();
   }
 }
+
 
 function showPunchZapEffect() {
   const scene = game.scene.scenes[0];
