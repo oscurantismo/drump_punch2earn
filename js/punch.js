@@ -1,21 +1,15 @@
-// ✅ Fully cleaned up and updated punch.js
-
+// ✅ Final cleaned and fixed punch.js
 import { updatePunchDisplay } from "./ui.js";
 import { showFloatingBonus } from "./punchbar.js";
 
 let drump, punchSounds, loadeddrumpFrames;
-let hitCooldown = false;
 let lastPunchTime = 0;
-let lastOofTime = 0;
-let recentPunches = [];
-let activeWiggleTween = null;
-
-const OOF_MIN_INTERVAL = 12000;
-const SUBMIT_INTERVAL = 15000;
-const PUNCH_THRESHOLD = 10;
-
 let pendingPunches = 0;
 let lastSubmitTime = 0;
+let activeWiggleTween = null;
+
+const SUBMIT_INTERVAL = 15000;
+const PUNCH_THRESHOLD = 10;
 
 function initPunchModule(config) {
   drump = config.drump;
@@ -45,7 +39,7 @@ function handlePunch() {
 
   const scene = game.scene.scenes[0];
 
-  // Stop previous wiggle first
+  // Stop any previous wiggle first
   if (activeWiggleTween) {
     activeWiggleTween.stop();
     drump.setAngle(0);
@@ -61,8 +55,8 @@ function handlePunch() {
     ease: "Sine.easeInOut",
   });
 
-  // Animate frames: 1 → 2 → 3
-  const frames = ["drump-images/Drump 1-01.png", "drump-images/Drump 2-02.png", "drump-images/Drump 3-03.png"];
+  // Animate frames: Drump 1-01 → Drump 2-02 → Drump 3-03
+  const frames = ["Drump 1-01.png", "Drump 2-02.png", "Drump 3-03.png"];
   let frameIndex = 0;
 
   const showNextFrame = () => {
@@ -78,11 +72,10 @@ function handlePunch() {
       return;
     }
 
-    const key = frames[frameIndex];
-    const textureKey = key.split("/").pop();
+    const textureKey = frames[frameIndex];
 
     if (!loadeddrumpFrames.has(textureKey)) {
-      scene.load.image(textureKey, key);
+      scene.load.image(textureKey, `drump-images/${textureKey}`);
       scene.load.once(`filecomplete-image-${textureKey}`, () => {
         loadeddrumpFrames.add(textureKey);
         drump.setTexture(textureKey);
@@ -104,7 +97,6 @@ function handlePunch() {
     submitPunchScore();
   }
 }
-
 
 function showPunchEffect() {
   const scene = game.scene.scenes[0];
