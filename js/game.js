@@ -11,7 +11,7 @@ import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 let game;
 let drump;
 let punchSounds = [];
-let loadeddrumpFrames = new Set(["drump-images/Drump 1-01.png"]);
+let loadeddrumpFrames = new Set(["drump-images/Drump_1-01.png"]);
 window.soundEnabled = true;
 
 let pendingPunches = 0;
@@ -38,9 +38,9 @@ function createGame() {
 }
 
 function preload() {
-  this.load.image("Drump 1-01", "drump-images/Drump 1-01.png");
-  this.load.image("Drump 2-02", "drump-images/Drump 2-02.png");
-  this.load.image("Drump 3-03", "drump-images/Drump 3-03.png");
+  this.load.image("Drump_1-01", "drump-images/Drump_1-01.png");
+  this.load.image("Drump_2-02", "drump-images/Drump_2-02.png");
+  this.load.image("Drump_3-03", "drump-images/Drump_3-03.png");
 
   this.load.image("background", "drump-images/background.png");
   this.load.image("punch", "drump-images/punch.png");
