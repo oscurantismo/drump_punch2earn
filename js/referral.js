@@ -66,7 +66,7 @@ function renderReferralHistory(data) {
     fontFamily: FONT.heading,
     fontSize: "18px",
     marginBottom: "12px",
-    color: "#2a3493"
+    color: COLORS.primary
   });
   container.appendChild(header);
 
@@ -89,7 +89,7 @@ function renderReferralHistory(data) {
     data.forEach(ref => {
       const box = document.createElement("div");
       Object.assign(box.style, {
-        background: "#fff9d6",
+        background: COLORS.badgeBg,
         border: "2px solid #000",
         borderRadius: "12px",
         padding: "12px",
@@ -99,7 +99,8 @@ function renderReferralHistory(data) {
         boxShadow: "1px 2px 0 0 #000",
         display: "flex",
         flexDirection: "column",
-        gap: "6px"
+        gap: "8px",
+        position: "relative"
       });
 
       const user = document.createElement("div");
@@ -111,9 +112,31 @@ function renderReferralHistory(data) {
       const time = document.createElement("div");
       time.innerHTML = `<b>Time:</b> ${new Date(ref.timestamp).toLocaleDateString()}`;
 
+      // Claimed Button (non-clickable)
+      const claimedBtn = document.createElement("div");
+      claimedBtn.innerText = "CLAIMED";
+      Object.assign(claimedBtn.style, {
+        position: "absolute",
+        top: "10px",
+        right: "12px",
+        background: "#2a3493",
+        color: "#fff",
+        fontSize: "12px",
+        fontWeight: "bold",
+        borderRadius: "999px",
+        padding: "4px 10px",
+        fontFamily: FONT.body,
+        border: "2px solid #000",
+        boxShadow: "1px 2px 0 0 #000",
+        pointerEvents: "none", // ✅ Non-clickable
+        userSelect: "none",
+        textTransform: "uppercase"
+      });
+
       box.appendChild(user);
       box.appendChild(reward);
       box.appendChild(time);
+      box.appendChild(claimedBtn); // Add claimed badge
 
       listWrap.appendChild(box);
     });
@@ -121,12 +144,10 @@ function renderReferralHistory(data) {
 
   container.appendChild(listWrap);
 
-  // Append to profile container
   const profile = document.getElementById("profile-container");
   if (profile) {
     profile.appendChild(container);
   }
 }
-
 
 export { checkAndSendReferral, fetchReferralHistory, renderReferralHistory };
