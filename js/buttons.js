@@ -1,94 +1,71 @@
-import { COLORS, FONT, BORDER } from "./styles.js";
-import { createLeaderboardPopup } from "./popups.js";
+import { COLORS, FONT } from "./styles.js";
+import { showReferralPopup } from "./popups.js";
 
-function createReferralButton(userId) {
-    // Clean up previous buttons if they exist
+function createReferralButton() {
+    // ✅ Remove existing referral button if it exists
     document.getElementById("referral-button")?.remove();
-    document.getElementById("rewards-button")?.remove();
 
-    // === REFERRAL BUTTON ===
-    const referral = document.createElement("button");
-    referral.id = "referral-button";
-    referral.innerText = "INVITE & EARN";
-    Object.assign(referral.style, {
+    // ✅ Create the main button
+    const btn = document.createElement("button");
+    btn.id = "referral-button";
+    btn.innerText = "REFER A FRIEND";
+    Object.assign(btn.style, {
         position: "fixed",
-        bottom: "80px",
+        bottom: "80px", // ✅ Above bottom nav bar
         left: "20px",
-        padding: "10px 16px",
+        padding: "12px 20px",
         background: "#fff9d6",
         color: "#2a3493",
         fontFamily: FONT.body,
         fontSize: "14px",
+        fontWeight: "normal",
         textTransform: "uppercase",
         border: "2px solid #000",
         borderRadius: "10px",
         boxShadow: "2px 2px 0 #000",
         cursor: "pointer",
         zIndex: "1100",
-        transition: "transform 0.15s ease" // ✅ smooth hover effect
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        transition: "transform 0.15s ease"
     });
 
-    referral.onclick = (e) => {
+    // ✅ Stop propagation to avoid accidental punch submission
+    btn.onclick = (e) => {
         e.stopPropagation();
-        import("./profile.js").then(module => {
-            module.renderProfilePage();
-        });
+        showReferralPopup();
     };
 
-    referral.onmouseover = () => { referral.style.transform = "scale(1.04)"; };
-    referral.onmouseout = () => { referral.style.transform = "scale(1)"; };
-    referral.ontouchstart = () => { referral.style.transform = "scale(1.04)"; };
-    referral.ontouchend = () => { referral.style.transform = "scale(1)"; };
+    // ✅ Hover/tap slight animation
+    btn.onmouseover = () => { btn.style.transform = "scale(1.04)"; };
+    btn.onmouseout = () => { btn.style.transform = "scale(1)"; };
+    btn.ontouchstart = () => { btn.style.transform = "scale(1.04)"; };
+    btn.ontouchend = () => { btn.style.transform = "scale(1)"; };
 
-    document.body.appendChild(referral);
+    document.body.appendChild(btn);
 
-    // === LEADERBOARD REWARDS BUTTON ===
-    const rewards = document.createElement("button");
-    rewards.id = "rewards-button";
-    rewards.innerText = "🏆 REWARDS";
-    Object.assign(rewards.style, {
-        position: "fixed",
-        bottom: "80px",
-        right: "20px",
-        padding: "10px 16px",
-        background: COLORS.primary,
-        color: COLORS.offWhite,
+    // ✅ Create +1000 badge
+    const badge = document.createElement("div");
+    badge.id = "referral-badge";
+    badge.innerText = "+1000";
+    Object.assign(badge.style, {
+        position: "absolute",
+        top: "-8px",
+        right: "-8px",
+        background: "#FFCC68",
+        color: "#000",
+        fontSize: "12px",
+        padding: "2px 6px",
+        borderRadius: "999px",
+        border: "2px solid #000",
+        boxShadow: "1px 2px 0 #000",
         fontFamily: FONT.body,
-        fontSize: "14px",
-        textTransform: "uppercase",
-        border: "2px solid #000",
-        borderRadius: "10px",
-        boxShadow: "2px 2px 0 #000",
-        cursor: "pointer",
-        zIndex: "1100",
-        transition: "transform 0.15s ease" // ✅ smooth hover effect
+        zIndex: "1101",
     });
 
-    rewards.onclick = (e) => {
-        e.stopPropagation();
-        const popup = document.getElementById("leaderboard-reward-popup");
-        if (popup) {
-            popup.style.display = "flex";
-        } else {
-            setTimeout(() => {
-                if (!document.getElementById("leaderboard-reward-popup")) {
-                    createLeaderboardPopup();
-                }
-                const popupEl = document.getElementById("leaderboard-reward-popup");
-                if (popupEl) {
-                    popupEl.style.display = "flex";
-                }
-            }, 200);
-        }
-    };
-
-
-    rewards.onmouseover = () => { rewards.style.transform = "scale(1.04)"; };
-    rewards.onmouseout = () => { rewards.style.transform = "scale(1)"; };
-    rewards.ontouchstart = () => { rewards.style.transform = "scale(1.04)"; };
-    rewards.ontouchend = () => { rewards.style.transform = "scale(1)"; };
-
-    document.body.appendChild(rewards);
+    btn.appendChild(badge);
 }
 
 export { createReferralButton };
