@@ -1,55 +1,72 @@
 import { COLORS, FONT, BORDER } from "./styles.js";
 
-// Create a referral button group (for popups, profile, anywhere)
 function createReferralButtons(link) {
     const wrapper = document.createElement("div");
     Object.assign(wrapper.style, {
         display: "flex",
-        gap: "10px",
+        gap: "12px",
         marginTop: "16px",
         justifyContent: "center"
     });
 
     const copyBtn = document.createElement("button");
-    copyBtn.innerText = "Copy Link";
+    copyBtn.innerText = "COPY";
     Object.assign(copyBtn.style, {
         flex: "1",
-        padding: "10px",
-        fontSize: "14px",
-        background: COLORS.primary,
-        color: COLORS.offWhite,
-        border: "none",
-        borderRadius: "8px",
+        minWidth: "120px",
+        padding: "12px",
+        fontSize: "16px",
+        background: "#2a3493",
+        color: "#fff",
+        border: "2px solid #000",
+        borderRadius: "10px",
         fontFamily: FONT.body,
-        boxShadow: "1px 2px 0 #000",
-        cursor: "pointer"
+        fontWeight: "normal",
+        textTransform: "uppercase",
+        boxShadow: "2px 2px 0 #000",
+        cursor: "pointer",
+        transition: "transform 0.15s ease"
     });
 
     const shareBtn = document.createElement("button");
-    shareBtn.innerText = "Share";
+    shareBtn.innerText = "SHARE";
     Object.assign(shareBtn.style, {
         flex: "1",
-        padding: "10px",
-        fontSize: "14px",
-        background: COLORS.primary,
-        color: COLORS.offWhite,
-        border: "none",
-        borderRadius: "8px",
+        minWidth: "120px",
+        padding: "12px",
+        fontSize: "16px",
+        background: "#d11b1b",
+        color: "#fff",
+        border: "2px solid #000",
+        borderRadius: "10px",
         fontFamily: FONT.body,
-        boxShadow: "1px 2px 0 #000",
-        cursor: "pointer"
+        fontWeight: "normal",
+        textTransform: "uppercase",
+        boxShadow: "2px 2px 0 #000",
+        cursor: "pointer",
+        transition: "transform 0.15s ease"
     });
 
+    // Hover/Tap Animation
+    [copyBtn, shareBtn].forEach(btn => {
+        btn.onmouseover = () => { btn.style.transform = "scale(1.04)"; };
+        btn.onmouseout = () => { btn.style.transform = "scale(1)"; };
+        btn.ontouchstart = () => { btn.style.transform = "scale(1.04)"; };
+        btn.ontouchend = () => { btn.style.transform = "scale(1)"; };
+    });
+
+    // Copy Logic
     copyBtn.onclick = (e) => {
         e.stopPropagation();
         if (!link) return;
         navigator.clipboard.writeText(link);
-        copyBtn.innerText = "Copied";
+        copyBtn.innerText = "COPIED";
         setTimeout(() => {
-            copyBtn.innerText = "Copy Link";
+            copyBtn.innerText = "COPY";
         }, 2000);
     };
 
+    // Share Logic
     shareBtn.onclick = (e) => {
         e.stopPropagation();
         if (!link) return;
@@ -78,7 +95,7 @@ function createReferralButtons(link) {
     return wrapper;
 }
 
-// Create a full standalone referral card if needed (example use: profile page)
+// Optional full card wrapper
 function createReferralCard(link) {
     const card = document.createElement("div");
     Object.assign(card.style, {
@@ -107,13 +124,19 @@ function createReferralCard(link) {
     input.readOnly = true;
     input.value = link;
     Object.assign(input.style, {
-        width: "100%",
+        width: "80%",
         padding: "10px",
         fontSize: "13px",
         border: "2px solid #000",
         borderRadius: "10px",
         marginBottom: "16px",
-        background: "#fff"
+        background: "#fff",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        textAlign: "center",
+        boxSizing: "border-box",
+        maxWidth: "260px"
     });
 
     const buttons = createReferralButtons(link);
