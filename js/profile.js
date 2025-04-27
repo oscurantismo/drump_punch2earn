@@ -56,6 +56,20 @@ function renderProfilePage() {
 
     container.appendChild(section);
 
+    const claimedRewardsContainer = document.createElement("div");
+    claimedRewardsContainer.id = "claimed-rewards-section";
+    claimedRewardsContainer.style.marginTop = "24px";
+    claimedRewardsContainer.innerHTML = `
+      <b style="font-family: ${FONT.heading}; font-size:18px; color: ${COLORS.primary}; display:block; margin-bottom:12px;">
+        CLAIMED REWARDS:
+      </b>
+      <div id="claimed-rewards-list" style="font-size:14px; color:#777; text-align:center;">
+        No Claimed Rewards Yet.
+      </div>
+    `;
+    container.appendChild(claimedRewardsContainer);
+
+
     // === Referral Box with Black Heading ===
     const rewardBox = document.createElement("div");
     rewardBox.className = "referral-box";
@@ -155,18 +169,6 @@ function renderProfilePage() {
     actionRow.appendChild(copyBtn);
     actionRow.appendChild(shareBtn);
     container.appendChild(actionRow);
-
-    // === Claimed Rewards
-    const rewardsBox = document.createElement("div");
-    rewardsBox.className = "referral-history";
-    rewardsBox.style.marginTop = "24px";
-    rewardsBox.innerHTML = `
-      <b>CLAIMED REWARDS:</b>
-      <div id="claimed-rewards-list" style="margin-top: 8px; font-size: 14px; color: #777;">
-        No Claimed Rewards Yet.
-      </div>
-    `;
-
 
     // === Referral History (will be appended dynamically)
     fetchReferralHistory();
