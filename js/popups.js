@@ -1,4 +1,4 @@
-import { COLORS, FONT, BORDER } from "./styles.js";
+import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 
 // ✅ Global popup blocker
 window.isPopupOpen = () => {
@@ -24,39 +24,48 @@ function createLeaderboardPopup() {
         display: "none",
         alignItems: "center",
         justifyContent: "center",
-        zIndex: "4000"
+        zIndex: ZINDEX.modal
     });
 
     const card = document.createElement("div");
     Object.assign(card.style, {
-        background: COLORS.offWhite,
-        padding: "24px",
+        background: "var(--card-bg)",
+        border: "var(--card-border)",
         borderRadius: BORDER.radius,
+        padding: "24px",
         maxWidth: "360px",
         width: "90%",
         fontFamily: FONT.body,
         color: COLORS.primary,
         textAlign: "left",
-        boxShadow: "0 0 16px rgba(0,0,0,0.3)",
+        boxShadow: "var(--box-shadow)",
         position: "relative"
     });
 
     card.innerHTML = `
-        <h3 style="text-align:center; color:${COLORS.primary}; font-family:${FONT.heading};">🏆 Leaderboard Rewards</h3>
-        <ul style="font-size:14px; line-height:1.6; padding-left:18px; margin-top: 12px;">
+        <h3 style="
+            text-align: center;
+            color: var(--blue-btn);
+            font-family: var(--font-heading);
+            font-size: 18px;
+            margin: 0 0 12px;
+        ">
+            🏆 Leaderboard Rewards
+        </h3>
+        <ul style="font-size:14px; line-height:1.6; padding-left:18px; margin:0;">
             <li><b>Top-25</b>: +250 punches (once)</li>
             <li><b>Top-10</b>: +550 punches (once)</li>
             <li><b>Top-3</b>: +1000 | <b>Top-2</b>: +2000 | <b>Top-1</b>: +4000</li>
             <li><b>Drops:</b></li>
-            <li>Left Top-10: -200</li>
-            <li>Left Top-3/2/1: -600</li>
-            <li>Left Top-25: -100</li>
+            <li style="margin-left:12px;">Left Top-10: -200</li>
+            <li style="margin-left:12px;">Left Top-3/2/1: -600</li>
+            <li style="margin-left:12px;">Left Top-25: -100</li>
         </ul>
-        <button class="leaderboard-popup-close"
-            style="margin-top: 18px; display:block; margin-left:auto; margin-right:auto;
-                   background:${COLORS.primary}; color:${COLORS.offWhite}; padding:10px 16px;
-                   border:none; border-radius:${BORDER.radius};
-                   font-size:15px; cursor:pointer;">
+        <button class="task-btn leaderboard-popup-close" style="
+            margin: 18px auto 0;
+            display: block;
+            font-size: 15px;
+        ">
             Close
         </button>
     `;
@@ -86,45 +95,52 @@ function showReferralPopup() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        zIndex: "4000"
+        zIndex: ZINDEX.modal
     });
 
     const card = document.createElement("div");
     Object.assign(card.style, {
-        background: COLORS.offWhite,
-        padding: "24px",
+        background: "var(--card-bg)",
+        border: "var(--card-border)",
         borderRadius: BORDER.radius,
+        padding: "24px",
         maxWidth: "360px",
         width: "90%",
         fontFamily: FONT.body,
         color: COLORS.primary,
         textAlign: "center",
-        boxShadow: "0 0 16px rgba(0,0,0,0.3)",
+        boxShadow: "var(--box-shadow)",
         position: "relative"
     });
 
     card.innerHTML = `
-        <h3 style="font-family:${FONT.heading}; margin-bottom: 10px;">🎁 Refer a Friend</h3>
-        <p style="font-size: 14px;">
+        <h3 style="
+            font-family: var(--font-heading);
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--blue-btn);
+        ">🎁 Refer a Friend</h3>
+        <p style="font-size:14px; margin:0;">
             Invite a friend and you both get <b>+1000 punches</b>!
         </p>
-        <p style="font-size: 13px; margin-top: 10px;">Your unique referral link:</p>
+        <p style="font-size:13px; margin:12px 0 4px;">Your unique referral link:</p>
         <input id="referral-link" value="https://t.me/Drump_punch_bot?start=referral_${window.userId}" readonly
-               style="width: 100%; font-size: 13px; padding: 8px; margin-top: 8px;
-                      border: 1px solid #ccc; border-radius: 6px;" />
+               style="
+                 width:100%;
+                 font-size:13px;
+                 padding:8px;
+                 border: var(--card-border);
+                 border-radius: var(--btn-radius);
+                 background: var(--offWhite);
+               " />
     `;
 
     const copyBtn = document.createElement("button");
     copyBtn.innerText = "📋 Copy Link";
+    copyBtn.className = "task-btn";
     Object.assign(copyBtn.style, {
         marginTop: "14px",
-        marginRight: "6px",
-        padding: "8px 12px",
-        border: "none",
-        borderRadius: BORDER.radius,
-        background: COLORS.primary,
-        color: COLORS.offWhite,
-        cursor: "pointer"
+        marginRight: "6px"
     });
     copyBtn.onclick = () => {
         const linkInput = document.getElementById("referral-link");
@@ -136,14 +152,9 @@ function showReferralPopup() {
 
     const shareBtn = document.createElement("button");
     shareBtn.innerText = "📣 Share";
+    shareBtn.className = "task-btn";
     Object.assign(shareBtn.style, {
-        marginTop: "14px",
-        padding: "8px 12px",
-        border: "none",
-        borderRadius: BORDER.radius,
-        background: "#0077cc",
-        color: COLORS.offWhite,
-        cursor: "pointer"
+        marginTop: "14px"
     });
     shareBtn.onclick = () => {
         const msg = `Punch to earn! Start here ➡️ https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
@@ -217,7 +228,7 @@ function showInfoPage() {
         bottom: "0",
         backgroundColor: "rgba(0,0,0,0.6)",
         fontFamily: FONT.body,
-        zIndex: "4000",
+        zIndex: ZINDEX.modal,
         display: "flex",
         alignItems: "center",
         justifyContent: "center"
@@ -225,39 +236,61 @@ function showInfoPage() {
 
     const info = document.createElement("div");
     Object.assign(info.style, {
-        background: COLORS.offWhite,
-        padding: "24px",
+        background: "var(--card-bg)",
+        border: "var(--card-border)",
         borderRadius: BORDER.radius,
+        padding: "24px",
         width: "90%",
         maxWidth: "360px",
         maxHeight: "90vh",
         overflowY: "auto",
-        boxShadow: "0 0 16px rgba(0,0,0,0.3)",
+        boxShadow: "var(--box-shadow)",
         position: "relative",
         fontFamily: FONT.body,
-        color: COLORS.primary
+        color: COLORS.primary,
+        textAlign: "left"
     });
 
     info.innerHTML = `
-        <h2 style="color:${COLORS.primary}; font-size:22px; font-family:${FONT.heading};">🥊 Drump | Punch2Earn</h2>
-        <p style="font-size:14px; line-height:1.5;">
+        <h2 style="
+            color: var(--blue-btn);
+            font-size: 22px;
+            font-family: var(--font-heading);
+            margin: 0 0 12px;
+        ">🥊 Drump | Punch2Earn</h2>
+        <p style="font-size:14px; line-height:1.5; margin:0;">
             Punch Drump. Score punches. Simple as that. From like-minded cryptonerds tired of unpredictability.
         </p>
 
-        <h3 style="margin-top:24px; color:${COLORS.primary}; font-family:${FONT.heading};">🎮 How to Play</h3>
-        <p style="font-size:14px;">
+        <h3 style="
+            margin-top:24px;
+            color: var(--blue-btn);
+            font-family: var(--font-heading);
+            margin-bottom: 8px;
+        ">🎮 How to Play</h3>
+        <p style="font-size:14px; margin:0;">
             Punch to earn. The more you punch, the higher the reward. Climb the leaderboard. Invite friends for extra bonuses.
         </p>
 
-        <h3 style="margin-top:24px; color:${COLORS.primary}; font-family:${FONT.heading};">🎁 Referral Bonus</h3>
-        <ul style="font-size:14px; padding-left:20px; line-height:1.6;">
+        <h3 style="
+            margin-top:24px;
+            color: var(--blue-btn);
+            font-family: var(--font-heading);
+            margin-bottom: 8px;
+        ">🎁 Referral Bonus</h3>
+        <ul style="font-size:14px; padding-left:20px; line-height:1.6; margin:0;">
             <li>Get +1000 punches when your referred friend scores 20+ punches.</li>
             <li>Both sides receive 1000 punches.</li>
             <li>Referral must be a new player to be valid.</li>
             <li>Check your referral history in the Profile tab.</li>
         </ul>
 
-        <h3 style="margin-top:28px; color:${COLORS.primary}; font-family:${FONT.heading};">🧠 FAQ</h3>
+        <h3 style="
+            margin-top:28px;
+            color: var(--blue-btn);
+            font-family: var(--font-heading);
+            margin-bottom: 8px;
+        ">🧠 FAQ</h3>
         <div class="faq">
             ${faqItem("How do I earn punches?", "Punch Drump on the game screen. Each tap counts as 1 punch.")}
             ${faqItem("What happens when I reach 100 punches?", "You get a +25 punch bonus! Bonuses apply at every 100-punch milestone.")}
@@ -267,9 +300,7 @@ function showInfoPage() {
         </div>
 
         <div style="text-align:center; margin-top: 30px;">
-            <button id="close-info"
-                style="background:${COLORS.primary}; color:${COLORS.offWhite}; padding:10px 16px;
-                       border:none; border-radius:${BORDER.radius}; font-size:16px; cursor:pointer;">
+            <button id="close-info" class="task-btn" style="padding:10px 16px;">
                 Close
             </button>
         </div>
@@ -279,8 +310,8 @@ function showInfoPage() {
     style.innerHTML = `
         .faq-item {
             margin-bottom: 14px;
-            border: 1px solid #dde5ff;
-            border-radius: 8px;
+            border: var(--card-border);
+            border-radius: var(--btn-radius);
             overflow: hidden;
         }
         .faq-question {
