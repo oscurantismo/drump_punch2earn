@@ -7,7 +7,7 @@ function createReferralButton() {
 
     const btn = document.createElement("button");
     btn.id = "referral-button";
-    btn.innerText = "REFER A FRIEND";
+    btn.innerText = "Refer a Friend";
     Object.assign(btn.style, {
         position: "fixed",
         bottom: "80px",
@@ -15,10 +15,9 @@ function createReferralButton() {
         padding: "12px 20px",
         background: "#293391", // ✅ Deep blue background
         color: "#fff",
-        fontFamily: FONT.body,
+        fontFamily: FONT.heading,
         fontSize: "14px",
         textTransform: "uppercase",
-        border: "2px solid #000",
         borderRadius: "10px",
         boxShadow: "1px 2px 0 0 #000",
         cursor: "pointer",
@@ -55,12 +54,11 @@ function createReferralButton() {
         fontSize: "12px",
         padding: "2px 6px",
         borderRadius: "999px",
-        border: "2px solid #000",
         boxShadow: "1px 2px 0 0 #000",
         fontFamily: FONT.body,
         fontWeight: "bold",
         zIndex: "1101",
-        animation: "glossyPulse 2s infinite", // ✅ Apply glossyPulse animation
+        animation: "glossyPulse 2.5s linear infinite", // ✅ Apply glossyPulse animation
         backgroundSize: "200% 200%", // ✅ Needed for animation
         backgroundPosition: "0% 50%" // ✅ Start position
     });
