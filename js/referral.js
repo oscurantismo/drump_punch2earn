@@ -70,79 +70,69 @@ function renderReferralHistory(data) {
   });
   container.appendChild(header);
 
-  const listWrap = document.createElement("div");
-  listWrap.style.display = "flex";
-  listWrap.style.flexDirection = "column";
-  listWrap.style.gap = "12px";
+  const tableWrap = document.createElement("div");
+  tableWrap.className = "table-container";
+  tableWrap.style.overflowX = "auto";
+
+  const table = document.createElement("table");
+  Object.assign(table.style, {
+    width: "100%",
+    borderCollapse: "collapse",
+    fontFamily: FONT.body,
+    fontSize: "14px",
+    boxShadow: "1px 2px 0 0 #000"
+  });
+
+  const thead = document.createElement("thead");
+  thead.innerHTML = `
+    <tr style="background:${COLORS.badgeBg};">
+      <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">User</th>
+      <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Reward</th>
+      <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Status</th>
+    </tr>
+  `;
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
 
   if (data.length === 0) {
-    const empty = document.createElement("div");
-    empty.innerText = "No Referral Rewards Yet.";
-    Object.assign(empty.style, {
-      color: "#777",
-      fontStyle: "italic",
-      fontSize: "14px",
-      textAlign: "center"
-    });
-    listWrap.appendChild(empty);
+    const emptyRow = document.createElement("tr");
+    emptyRow.innerHTML = `
+      <td colspan="3" style="padding:12px; text-align:center; color:#777;">No Referral Rewards Yet.</td>
+    `;
+    tbody.appendChild(emptyRow);
   } else {
     data.forEach(ref => {
-      const box = document.createElement("div");
-      Object.assign(box.style, {
-        background: COLORS.badgeBg,
-        border: "2px solid #000",
-        borderRadius: "12px",
-        padding: "12px",
-        fontFamily: FONT.body,
-        fontSize: "14px",
-        color: "#000",
-        boxShadow: "1px 2px 0 0 #000",
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-        position: "relative"
-      });
+      const row = document.createElement("tr");
 
-      const user = document.createElement("div");
-      user.innerHTML = `<b>Friend:</b> ${ref.ref_username}`;
-
-      const reward = document.createElement("div");
-      reward.innerHTML = `<b>Reward:</b> +${ref.reward} <img src="drump-images/punch.svg" alt="punch" style="height:14px;vertical-align:-2px;">`;
-
-      const time = document.createElement("div");
-      time.innerHTML = `<b>Time:</b> ${new Date(ref.timestamp).toLocaleDateString()}`;
-
-      // Claimed Button (non-clickable)
-      const claimedBtn = document.createElement("div");
-      claimedBtn.innerText = "CLAIMED";
-      Object.assign(claimedBtn.style, {
-        position: "absolute",
-        top: "10px",
-        right: "12px",
-        background: "#2a3493",
-        color: "#fff",
-        fontSize: "12px",
-        fontWeight: "bold",
-        borderRadius: "999px",
-        padding: "4px 10px",
-        fontFamily: FONT.body,
-        border: "2px solid #000",
-        boxShadow: "1px 2px 0 0 #000",
-        pointerEvents: "none", // ✅ Non-clickable
-        userSelect: "none",
-        textTransform: "uppercase"
-      });
-
-      box.appendChild(user);
-      box.appendChild(reward);
-      box.appendChild(time);
-      box.appendChild(claimedBtn); // Add claimed badge
-
-      listWrap.appendChild(box);
+      row.innerHTML = `
+        <td style="padding:8px; border-bottom:1px solid #eee;">${ref.ref_username}</td>
+        <td style="padding:8px; border-bottom:1px solid #eee;">+${ref.reward} <img src="drump-images/punch.svg" style="height:14px;vertical-align:-2px;"></td>
+        <td style="padding:8px; border-bottom:1px solid #eee;">
+          <div style="
+            background: #2a3493;
+            color: #fff;
+            border: 2px solid #000;
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 1px 2px 0 0 #000;
+            text-align: center;
+            width: fit-content;
+            user-select: none;
+          ">
+            CLAIMED
+          </div>
+        </td>
+      `;
+      tbody.appendChild(row);
     });
   }
 
-  container.appendChild(listWrap);
+  table.appendChild(tbody);
+  tableWrap.appendChild(table);
+  container.appendChild(tableWrap);
 
   const profile = document.getElementById("profile-container");
   if (profile) {
