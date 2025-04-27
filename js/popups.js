@@ -1,3 +1,4 @@
+import { createReferralButtons } from "./buttons.js";
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 
 window.isPopupOpen = () => {
@@ -84,97 +85,91 @@ function showReferralPopup() {
     Object.assign(card.style, {
         background: COLORS.badgeBg,
         border: BORDER.style,
-        borderRadius: BORDER.radius,
-        padding: "24px",
+        borderRadius: "16px",
+        padding: "0 0 24px 0",
         width: "90%",
         maxWidth: "340px",
         fontFamily: FONT.body,
         textAlign: "center",
-        boxShadow: "2px 2px 0 #000"
+        boxShadow: "2px 2px 0 #000",
+        position: "relative",
+        overflow: "hidden"
     });
 
-    card.innerHTML = `
-        <h2 style="font-size:18px; margin:0 0 10px; font-family:${FONT.heading}; font-weight:normal; color:${COLORS.primary};">
-            Invite Friends
-        </h2>
-        <p style="font-size:14px; margin-bottom:16px; color:${COLORS.primary};">
-            Share your referral link and earn bonus punches!
-        </p>
-        <input id="referral-link" readonly value="https://t.me/Drump_punch_bot?start=referral_${window.userId}" 
-            style="
-                width:100%;
-                padding:10px;
-                font-size:13px;
-                border:2px solid #000;
-                border-radius:10px;
-                background:#fff;
-                margin-bottom:16px;
-            " />
-        <div style="display:flex; gap:10px; justify-content:center;">
-            <button id="copy-link" style="
-                flex:1;
-                padding:10px;
-                font-size:14px;
-                background:${COLORS.primary};
-                color:${COLORS.offWhite};
-                border:none;
-                border-radius:8px;
-                font-family:${FONT.body};
-                box-shadow:1px 2px 0 #000;
-                cursor:pointer;
-            ">
-                Copy Link
-            </button>
-            <button id="share-link" style="
-                flex:1;
-                padding:10px;
-                font-size:14px;
-                background:${COLORS.primary};
-                color:${COLORS.offWhite};
-                border:none;
-                border-radius:8px;
-                font-family:${FONT.body};
-                box-shadow:1px 2px 0 #000;
-                cursor:pointer;
-            ">
-                Share
-            </button>
-        </div>
+    // Black Heading Bar
+    const heading = document.createElement("div");
+    heading.innerText = "INVITE & EARN";
+    Object.assign(heading.style, {
+        background: "#000",
+        color: "#fff",
+        fontSize: "20px",
+        fontFamily: FONT.heading,
+        padding: "14px",
+        borderTopLeftRadius: "16px",
+        borderTopRightRadius: "16px",
+        fontWeight: "normal"
+    });
+
+    // Close (X) Button
+    const closeBtn = document.createElement("div");
+    closeBtn.innerText = "✕";
+    Object.assign(closeBtn.style, {
+        position: "absolute",
+        top: "8px",
+        right: "12px",
+        fontSize: "20px",
+        color: "#888",
+        cursor: "pointer",
+        userSelect: "none"
+    });
+    closeBtn.onclick = (e) => {
+        e.stopPropagation();
+        popup.remove();
+    };
+
+    // Description Text
+    const description = document.createElement("div");
+    description.innerHTML = `
+      <div style="font-size:16px;margin:16px 12px 6px;line-height:1.5;color:#000;">
+        +1000 <img src="drump-images/punch.svg" alt="punch" style="height:16px;vertical-align:-2px;"> per successful referral
+      </div>
+      <div style="font-size:15px;margin-bottom:16px;line-height:1.2;color:#000;">
+        (FRIEND MUST PUNCH 20X)
+      </div>
     `;
+
+    // Referral Link Field
+    const linkField = document.createElement("input");
+    linkField.type = "text";
+    linkField.readOnly = true;
+    linkField.value = `https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
+    Object.assign(linkField.style, {
+        width: "80%",
+        padding: "10px",
+        fontSize: "13px",
+        border: "2px solid #000",
+        borderRadius: "10px",
+        background: "#fff",
+        marginBottom: "18px",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        textAlign: "center",
+        boxSizing: "border-box",
+        maxWidth: "260px"
+    });
+
+    // Buttons (Copy / Share)
+    const btnGroup = createReferralButtons(linkField.value);
+
+    card.appendChild(heading);
+    card.appendChild(closeBtn);
+    card.appendChild(description);
+    card.appendChild(linkField);
+    card.appendChild(btnGroup);
 
     popup.onclick = (e) => {
         if (e.target === popup) popup.remove();
-    };
-
-    card.querySelector("#copy-link").onclick = (e) => {
-        e.stopPropagation();
-        const input = document.getElementById("referral-link");
-        navigator.clipboard.writeText(input.value);
-        card.querySelector("#copy-link").innerText = "Copied";
-        setTimeout(() => {
-            card.querySelector("#copy-link").innerText = "Copy Link";
-        }, 2000);
-    };
-
-    card.querySelector("#share-link").onclick = (e) => {
-        e.stopPropagation();
-        const msg = `Punch to earn! Start here ➡️ https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
-        Telegram.WebApp.showPopup({
-            title: "Share referral link",
-            message: "Choose where to share:",
-            buttons: [
-                { id: "telegram", type: "default", text: "Telegram" },
-                { id: "x", type: "default", text: "X (Twitter)" },
-                { id: "whatsapp", type: "default", text: "WhatsApp" }
-            ]
-        }, (btnId) => {
-            const links = {
-                telegram: `https://t.me/share/url?url=${encodeURIComponent(msg)}`,
-                whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`,
-                x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(msg)}`
-            };
-            if (btnId && links[btnId]) window.open(links[btnId], "_blank");
-        });
     };
 
     popup.appendChild(card);
