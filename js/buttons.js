@@ -24,7 +24,8 @@ function createReferralAndRewardsButtons(userId) {
         borderRadius: "10px",
         boxShadow: "2px 2px 0 #000",
         cursor: "pointer",
-        zIndex: "1100"
+        zIndex: "1100",
+        transition: "transform 0.15s ease" // ✅ smooth hover effect
     });
 
     referral.onclick = (e) => {
@@ -33,6 +34,11 @@ function createReferralAndRewardsButtons(userId) {
             module.renderProfilePage();
         });
     };
+
+    referral.onmouseover = () => { referral.style.transform = "scale(1.04)"; };
+    referral.onmouseout = () => { referral.style.transform = "scale(1)"; };
+    referral.ontouchstart = () => { referral.style.transform = "scale(1.04)"; };
+    referral.ontouchend = () => { referral.style.transform = "scale(1)"; };
 
     document.body.appendChild(referral);
 
@@ -54,7 +60,8 @@ function createReferralAndRewardsButtons(userId) {
         borderRadius: "10px",
         boxShadow: "2px 2px 0 #000",
         cursor: "pointer",
-        zIndex: "1100"
+        zIndex: "1100",
+        transition: "transform 0.15s ease" // ✅ smooth hover effect
     });
 
     rewards.onclick = (e) => {
@@ -69,6 +76,11 @@ function createReferralAndRewardsButtons(userId) {
             }, 200);
         }
     };
+
+    rewards.onmouseover = () => { rewards.style.transform = "scale(1.04)"; };
+    rewards.onmouseout = () => { rewards.style.transform = "scale(1)"; };
+    rewards.ontouchstart = () => { rewards.style.transform = "scale(1.04)"; };
+    rewards.ontouchend = () => { rewards.style.transform = "scale(1)"; };
 
     document.body.appendChild(rewards);
 }
