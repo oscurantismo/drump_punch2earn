@@ -74,10 +74,14 @@ function createReferralAndRewardsButtons(userId) {
                 if (!document.getElementById("leaderboard-reward-popup")) {
                     createLeaderboardPopup();
                 }
-                document.getElementById("leaderboard-reward-popup")?.style.display = "flex";
+                const popupEl = document.getElementById("leaderboard-reward-popup");
+                if (popupEl) {
+                    popupEl.style.display = "flex";
+                }
             }, 200);
         }
     };
+
 
     rewards.onmouseover = () => { rewards.style.transform = "scale(1.04)"; };
     rewards.onmouseout = () => { rewards.style.transform = "scale(1)"; };
