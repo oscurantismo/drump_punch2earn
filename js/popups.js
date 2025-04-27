@@ -1,71 +1,5 @@
-import { createReferralButton } from "./buttons.js";
+import { createReferralButton } from "./buttons.js"; // for floating button, NOT for inside popup
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
-
-window.isPopupOpen = () => {
-    return (
-        document.getElementById("leaderboard-reward-popup")?.style.display === "flex" ||
-        !!document.getElementById("referral-popup") ||
-        !!document.getElementById("info-container")
-    );
-};
-
-function createLeaderboardPopup() {
-    if (document.getElementById("leaderboard-reward-popup")) return;
-
-    const popup = document.createElement("div");
-    popup.id = "leaderboard-reward-popup";
-    Object.assign(popup.style, {
-        position: "fixed",
-        top: "0", left: "0", right: "0", bottom: "0",
-        backgroundColor: "rgba(0,0,0,0.6)",
-        display: "none",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: ZINDEX.modal
-    });
-
-    const card = document.createElement("div");
-    Object.assign(card.style, {
-        background: COLORS.badgeBg,
-        border: BORDER.style,
-        borderRadius: BORDER.radius,
-        padding: "24px",
-        width: "90%",
-        maxWidth: "340px",
-        fontFamily: FONT.body,
-        textAlign: "center",
-        boxShadow: "2px 2px 0 #000"
-    });
-
-    card.innerHTML = `
-        <h2 style="font-size:18px; margin:0 0 12px; color:${COLORS.primary}; font-family:${FONT.heading}; font-weight:normal;">
-            🏆 Leaderboard Rewards
-        </h2>
-        <p style="font-size:14px; margin-bottom:18px;">
-            Climb the ranks and win extra punches!
-        </p>
-        <button id="close-leaderboard-popup" style="
-            margin-top:10px;
-            padding:10px 20px;
-            font-family:${FONT.body};
-            font-size:15px;
-            background:${COLORS.primary};
-            color:${COLORS.offWhite};
-            border:none;
-            border-radius:10px;
-            box-shadow:1px 2px 0px #000;
-            cursor:pointer;
-        ">Close</button>
-    `;
-
-    popup.appendChild(card);
-    popup.onclick = (e) => {
-        if (e.target === popup) popup.style.display = "none";
-    };
-    card.querySelector("#close-leaderboard-popup").onclick = () => popup.style.display = "none";
-
-    document.body.appendChild(popup);
-}
 
 function showReferralPopup() {
     const popup = document.createElement("div");
@@ -96,7 +30,7 @@ function showReferralPopup() {
         overflow: "hidden"
     });
 
-    // Black Heading Bar
+    // === Black Heading Bar ===
     const heading = document.createElement("div");
     heading.innerText = "INVITE & EARN";
     Object.assign(heading.style, {
@@ -107,10 +41,11 @@ function showReferralPopup() {
         padding: "14px",
         borderTopLeftRadius: "16px",
         borderTopRightRadius: "16px",
-        fontWeight: "normal"
+        fontWeight: "normal",
+        letterSpacing: "1px"
     });
 
-    // Close (X) Button
+    // === Close (X) Button ===
     const closeBtn = document.createElement("div");
     closeBtn.innerText = "✕";
     Object.assign(closeBtn.style, {
@@ -127,10 +62,10 @@ function showReferralPopup() {
         popup.remove();
     };
 
-    // Description Text
+    // === Bonus description
     const description = document.createElement("div");
     description.innerHTML = `
-      <div style="font-size:16px;margin:16px 12px 6px;line-height:1.5;color:#000;">
+      <div style="font-size:16px;margin:16px 12px 4px;line-height:1.5;color:#000;">
         +1000 <img src="drump-images/punch.svg" alt="punch" style="height:16px;vertical-align:-2px;"> per successful referral
       </div>
       <div style="font-size:15px;margin-bottom:16px;line-height:1.2;color:#000;">
@@ -138,7 +73,7 @@ function showReferralPopup() {
       </div>
     `;
 
-    // Referral Link Field
+    // === Referral Link Field
     const linkField = document.createElement("input");
     linkField.type = "text";
     linkField.readOnly = true;
@@ -159,9 +94,84 @@ function showReferralPopup() {
         maxWidth: "260px"
     });
 
-    // Buttons (Copy / Share)
-    const btnGroup = createReferralButton(linkField.value);
+    // === Copy and Share buttons manually created
+    const btnGroup = document.createElement("div");
+    Object.assign(btnGroup.style, {
+        display: "flex",
+        justifyContent: "center",
+        gap: "12px",
+        marginTop: "16px"
+    });
 
+    const copyBtn = document.createElement("button");
+    copyBtn.innerText = "COPY";
+    copyBtn.className = "copy-btn";
+    Object.assign(copyBtn.style, {
+        background: "#2a3493",
+        color: "#fff",
+        border: "2px solid #000",
+        borderRadius: "10px",
+        padding: "10px",
+        minWidth: "110px",
+        fontSize: "14px",
+        fontFamily: FONT.body,
+        boxShadow: "2px 2px 0 #000",
+        cursor: "pointer",
+        textTransform: "uppercase"
+    });
+
+    copyBtn.onclick = (e) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(linkField.value);
+        copyBtn.innerText = "COPIED";
+        setTimeout(() => {
+            copyBtn.innerText = "COPY";
+        }, 2000);
+    };
+
+    const shareBtn = document.createElement("button");
+    shareBtn.innerText = "SHARE";
+    shareBtn.className = "share-btn";
+    Object.assign(shareBtn.style, {
+        background: "#d60000",
+        color: "#fff",
+        border: "2px solid #000",
+        borderRadius: "10px",
+        padding: "10px",
+        minWidth: "110px",
+        fontSize: "14px",
+        fontFamily: FONT.body,
+        boxShadow: "2px 2px 0 #000",
+        cursor: "pointer",
+        textTransform: "uppercase"
+    });
+
+    shareBtn.onclick = (e) => {
+        e.stopPropagation();
+        const msg = `🥊 Join me on Drump | Punch2Earn!\n\nUse my referral: ${linkField.value}`;
+        Telegram.WebApp.showPopup({
+            title: "Share referral link",
+            message: "Choose where to share:",
+            buttons: [
+                { id: "telegram", type: "default", text: "Telegram" },
+                { id: "x", type: "default", text: "X (Twitter)" },
+                { id: "whatsapp", type: "default", text: "WhatsApp" }
+            ]
+        }, (id) => {
+            const encoded = encodeURIComponent(msg);
+            const url = ({
+                telegram: `https://t.me/share/url?url=${encoded}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${encoded}`,
+                x: `https://twitter.com/intent/tweet?text=${encoded}`
+            })[id];
+            if (url) window.open(url, "_blank");
+        });
+    };
+
+    btnGroup.appendChild(copyBtn);
+    btnGroup.appendChild(shareBtn);
+
+    // === Assemble everything
     card.appendChild(heading);
     card.appendChild(closeBtn);
     card.appendChild(description);
@@ -176,17 +186,4 @@ function showReferralPopup() {
     document.body.appendChild(popup);
 }
 
-function faqItem(question, answer) {
-    return `
-        <div class="faq-item">
-            <div class="faq-question">${question}</div>
-            <div class="faq-answer">${answer}</div>
-        </div>
-    `;
-}
-
-function showInfoPage() {
-    // (✅ Your info page stays good – no change needed based on current version)
-}
-
-export { showInfoPage, createLeaderboardPopup, showReferralPopup, faqItem };
+export { showReferralPopup };
