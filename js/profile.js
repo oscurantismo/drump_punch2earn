@@ -1,5 +1,4 @@
 import { fetchReferralHistory } from "./referral.js";
-import { createLeaderboardPopup } from "./popups.js";
 import { renderTopBar } from "./topbar.js";
 import { renderTabs } from "./ui_tabs.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
@@ -16,7 +15,6 @@ function renderProfilePage() {
 
   renderTopBar();
   renderTabs();
-  createLeaderboardPopup();
 
   const container = document.createElement("div");
   container.id = "profile-container";
