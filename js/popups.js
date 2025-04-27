@@ -20,7 +20,7 @@ function showReferralPopup() {
         background: COLORS.badgeBg,
         border: BORDER.style,
         borderRadius: "16px",
-        padding: "0 0 24px 0",
+        padding: "24px",
         width: "90%",
         maxWidth: "340px",
         fontFamily: FONT.body,
@@ -38,7 +38,7 @@ function showReferralPopup() {
         color: "#fff",
         fontSize: "20px",
         fontFamily: FONT.heading,
-        padding: "14px",
+        padding: "24px",
         borderTopLeftRadius: "16px",
         borderTopRightRadius: "16px",
         fontWeight: "normal",
@@ -53,7 +53,7 @@ function showReferralPopup() {
         top: "8px",
         right: "12px",
         fontSize: "20px",
-        color: "#888",
+        color: "F6020F",
         cursor: "pointer",
         userSelect: "none"
     });
@@ -66,10 +66,10 @@ function showReferralPopup() {
     const description = document.createElement("div");
     description.innerHTML = `
       <div style="font-size:16px;margin:16px 12px 4px;line-height:1.5;color:#000;">
-        +1000 <img src="drump-images/punch.svg" alt="punch" style="height:16px;vertical-align:-2px;"> per successful referral
+        +1000 <img src="drump-images/punch.svg" alt="punch" style="height:16px;vertical-align:-2px;"> for you and your friend per successful referral
       </div>
       <div style="font-size:15px;margin-bottom:16px;line-height:1.2;color:#000;">
-        (FRIEND MUST PUNCH 20X)
+        (Friend must punch 20+ to receive the reward)
       </div>
     `;
 
@@ -107,26 +107,27 @@ function showReferralPopup() {
     copyBtn.innerText = "COPY";
     copyBtn.className = "copy-btn";
     Object.assign(copyBtn.style, {
-        background: "#2a3493",
+       background: "#2a3493",
         color: "#fff",
-        border: "2px solid #000",
+        border: "1px solid #000",
         borderRadius: "10px",
-        padding: "10px",
-        minWidth: "110px",
+        padding: "8px 14px",
         fontSize: "14px",
+        minWidth: "90px",
+        boxShadow: "1px 2px 0 0 #000",
         fontFamily: FONT.body,
-        boxShadow: "2px 2px 0 #000",
-        cursor: "pointer",
-        textTransform: "uppercase"
+        textTransform: "uppercase",
+        cursor: "pointer"
     });
 
     copyBtn.onclick = (e) => {
         e.stopPropagation();
-        navigator.clipboard.writeText(linkField.value);
-        copyBtn.innerText = "COPIED";
-        setTimeout(() => {
-            copyBtn.innerText = "COPY";
-        }, 2000);
+        navigator.clipboard.writeText(linkField.value).then(() => {
+            copyBtn.innerText = "✅ Copied";
+            setTimeout(() => {
+                copyBtn.innerText = "COPY";
+            }, 3000); // ✅ keep it visible for 3s
+        });
     };
 
     const shareBtn = document.createElement("button");
@@ -137,13 +138,13 @@ function showReferralPopup() {
         color: "#fff",
         border: "2px solid #000",
         borderRadius: "10px",
-        padding: "10px",
-        minWidth: "110px",
+        padding: "8px 14px",
         fontSize: "14px",
+        minWidth: "90px",
+        boxShadow: "1px 2px 0 0 #000",
         fontFamily: FONT.body,
-        boxShadow: "2px 2px 0 #000",
-        cursor: "pointer",
-        textTransform: "uppercase"
+        textTransform: "uppercase",
+        cursor: "pointer"
     });
 
     shareBtn.onclick = (e) => {
@@ -186,6 +187,8 @@ function showReferralPopup() {
     document.body.appendChild(popup);
 }
 
+import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
+
 function faqItem(question, answer) {
     return `
         <div class="faq-item">
@@ -207,9 +210,9 @@ function showInfoPage() {
         left: "0",
         right: "0",
         bottom: "0",
-        backgroundColor: "rgba(0,0,0,0.6)",
+        background: "url('./drump-images/background.png') center center / cover no-repeat", // ✅ background.png
         fontFamily: FONT.body,
-        zIndex: "4000",
+        zIndex: ZINDEX.modal,
         display: "flex",
         alignItems: "center",
         justifyContent: "center"
@@ -224,25 +227,27 @@ function showInfoPage() {
         maxWidth: "360px",
         maxHeight: "90vh",
         overflowY: "auto",
-        boxShadow: "0 0 16px rgba(0,0,0,0.3)",
+        boxShadow: "1px 2px 0 0 #000", // ✅ correct box shadow
         position: "relative",
         fontFamily: FONT.body,
         color: COLORS.primary
     });
 
     info.innerHTML = `
-        <h2 style="color:${COLORS.primary}; font-size:22px; font-family:${FONT.heading};">🥊 Drump | Punch2Earn</h2>
-        <p style="font-size:14px; line-height:1.5;">
+        <h2 style="color:${COLORS.primary}; font-size:22px; font-family:${FONT.heading}; text-align:center; margin-bottom:16px;">
+            🥊 Drump | Punch2Earn
+        </h2>
+        <p style="font-size:14px; line-height:1.5; text-align:center; margin-bottom:16px;">
             Punch Drump. Score punches. Simple as that. From like-minded cryptonerds tired of unpredictability.
         </p>
 
         <h3 style="margin-top:24px; color:${COLORS.primary}; font-family:${FONT.heading};">🎮 How to Play</h3>
-        <p style="font-size:14px;">
+        <p style="font-size:14px; margin-bottom:12px;">
             Punch to earn. The more you punch, the higher the reward. Climb the leaderboard. Invite friends for extra bonuses.
         </p>
 
         <h3 style="margin-top:24px; color:${COLORS.primary}; font-family:${FONT.heading};">🎁 Referral Bonus</h3>
-        <ul style="font-size:14px; padding-left:20px; line-height:1.6;">
+        <ul style="font-size:14px; padding-left:20px; line-height:1.6; margin-bottom:12px;">
             <li>Get +1000 punches when your referred friend scores 20+ punches.</li>
             <li>Both sides receive 1000 punches.</li>
             <li>Referral must be a new player to be valid.</li>
@@ -261,7 +266,8 @@ function showInfoPage() {
         <div style="text-align:center; margin-top: 30px;">
             <button id="close-info"
                 style="background:${COLORS.primary}; color:${COLORS.offWhite}; padding:10px 16px;
-                       border:none; border-radius:${BORDER.radius}; font-size:16px; cursor:pointer;">
+                       border:none; border-radius:${BORDER.radius}; font-size:16px; font-family:${FONT.body};
+                       box-shadow:1px 2px 0 0 #000; cursor:pointer;">
                 Close
             </button>
         </div>
@@ -271,23 +277,26 @@ function showInfoPage() {
     style.innerHTML = `
         .faq-item {
             margin-bottom: 14px;
-            border: 1px solid #dde5ff;
-            border-radius: 8px;
+            border: ${BORDER.style};
+            border-radius: ${BORDER.radius};
+            background: ${COLORS.badgeBg};
             overflow: hidden;
+            box-shadow: 1px 2px 0 0 #000;
         }
         .faq-question {
-            background: #f0f4ff;
+            background: ${COLORS.offWhite};
             padding: 12px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: bold;
+            border-bottom: 1px solid ${COLORS.primary};
         }
         .faq-answer {
             padding: 10px 14px;
             display: none;
-            color: #444;
-            background: #fdfdfd;
+            color: #333;
+            background: #fff;
             font-size: 13px;
-            border-top: 1px solid #dde5ff;
         }
         .faq-answer.open {
             display: block;
