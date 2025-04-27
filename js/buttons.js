@@ -1,7 +1,7 @@
 import { COLORS, FONT, BORDER } from "./styles.js";
 import { createLeaderboardPopup } from "./popups.js";
 
-function createReferralAndRewardsButtons(userId) {
+function createReferralButton(userId) {
     // Clean up previous buttons if they exist
     document.getElementById("referral-button")?.remove();
     document.getElementById("rewards-button")?.remove();
@@ -91,4 +91,4 @@ function createReferralAndRewardsButtons(userId) {
     document.body.appendChild(rewards);
 }
 
-export { createReferralAndRewardsButtons };
+export { createReferralButton };
