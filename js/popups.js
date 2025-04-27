@@ -187,8 +187,6 @@ function showReferralPopup() {
     document.body.appendChild(popup);
 }
 
-import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
-
 function faqItem(question, answer) {
     return `
         <div class="faq-item">
