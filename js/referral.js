@@ -77,11 +77,12 @@ function renderReferralHistory(data) {
 
   if (data.length === 0) {
     const empty = document.createElement("div");
-    empty.innerText = "No referrals yet. Invite friends!";
+    empty.innerText = "No Referral Rewards Yet.";
     Object.assign(empty.style, {
       color: "#777",
       fontStyle: "italic",
-      fontSize: "14px"
+      fontSize: "14px",
+      textAlign: "center"
     });
     listWrap.appendChild(empty);
   } else {
