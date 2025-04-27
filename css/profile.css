@@ -1,5 +1,5 @@
 :root {
-  --box-shadow: 1px 2px 0px 0px #000000;
+  --box-shadow: 2px 2px 0px 0px #000000;
   --font-body: 'Negrita Pro', sans-serif;
 }
 
@@ -91,6 +91,7 @@
   margin-bottom: 18px;
   box-shadow: var(--box-shadow);
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 /* === REFERRAL BOX CONTAINER === */
@@ -98,7 +99,7 @@
   background: #fff9d6;
   border: 2px solid #000;
   border-radius: 12px;
-  padding: 16px;
+  padding: 24px 18px;
   font-size: 14px;
   text-align: center;
   margin-bottom: 20px;
@@ -106,52 +107,61 @@
   word-break: break-word;
 }
 
+.referral-box > div:first-child {
+  font-size: 17px;
+  margin-bottom: 4px;
+  color: #000;
+  line-height: 1.4;
+}
+
+.referral-box small {
+  font-size: 14px;
+  color: #000;
+  display: block;
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
 /* === REFERRAL INPUT LINK === */
 .referral-link {
-  margin-top: 12px;
-  font-size: 13px;
+  margin-top: 16px;
+  font-size: 14px;
   background: #fff;
-  border: 1px solid #000;
-  padding: 8px 10px;
-  border-radius: 6px;
-  width: 100%;
+  border: 2px solid #000;
+  padding: 10px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 260px;
   box-sizing: border-box;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   font-family: var(--font-body);
   box-shadow: var(--box-shadow);
+  text-align: center;
 }
-
 
 /* === COPY + SHARE ACTIONS === */
 .referral-actions {
   display: flex;
   justify-content: center;
-  align-items: center; /* 🔧 force vertical alignment */
-  gap: 10px;
-  margin-top: 14px;
+  gap: 12px;
+  margin-top: 18px;
 }
 
-.referral-actions button {
+.copy-btn, .share-btn {
   flex: 1;
-  padding: 10px;
-  height: 42px;
+  min-width: 120px;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #000;
   border-radius: 10px;
-  border: none;
-  font-family: var(--font-body);
-  font-size: 14px;
   box-shadow: var(--box-shadow);
   cursor: pointer;
-  transition: background 0.25s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  max-width: 140px;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  transition: transform 0.2s ease;
 }
-
-
 
 .copy-btn {
   background: #2a3493;
@@ -161,6 +171,10 @@
 .share-btn {
   background: #d60000;
   color: #fff;
+}
+
+.copy-btn:hover, .share-btn:hover {
+  transform: scale(1.04);
 }
 
 /* === REWARDS / HISTORY CONTAINER === */
