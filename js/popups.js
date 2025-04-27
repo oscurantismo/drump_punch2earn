@@ -1,4 +1,4 @@
-import { createReferralButtons } from "./buttons.js";
+import { createReferralButton } from "./buttons.js";
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 
 window.isPopupOpen = () => {
