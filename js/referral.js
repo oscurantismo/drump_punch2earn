@@ -1,3 +1,5 @@
+import { COLORS, FONT, ZINDEX } from "./styles.js";
+
 let hasReportedReferral = false;
 
 function checkAndSendReferral(userId, punches) {
