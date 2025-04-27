@@ -9,7 +9,7 @@ function renderProfilePage() {
 
   document.getElementById("page-content")?.remove();
   document.getElementById("punch-bar")?.remove();
-  document.getElementById("punch-badge")?.remove();
+  document.getElementById("punch-gap-badge")?.remove();
 
   window.activeTab = "profile";
 
