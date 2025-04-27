@@ -160,8 +160,13 @@ function renderProfilePage() {
     const rewardsBox = document.createElement("div");
     rewardsBox.className = "referral-history";
     rewardsBox.style.marginTop = "24px";
-    rewardsBox.innerHTML = `<b>CLAIMED REWARDS:</b><div id="claimed-rewards-list" style="margin-top: 8px;"></div>`;
-    container.appendChild(rewardsBox);
+    rewardsBox.innerHTML = `
+      <b>CLAIMED REWARDS:</b>
+      <div id="claimed-rewards-list" style="margin-top: 8px; font-size: 14px; color: #777;">
+        No Claimed Rewards Yet.
+      </div>
+    `;
+
 
     // === Referral History (will be appended dynamically)
     fetchReferralHistory();
@@ -211,8 +216,6 @@ function renderProfilePage() {
 
     wrap.appendChild(container);
     document.body.appendChild(wrap);
-
-    fetchClaimedRewards();
 }
 
 function getUserInitials(name = "") {
