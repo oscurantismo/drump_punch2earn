@@ -8,8 +8,8 @@ function renderProfilePage() {
   const existing = document.getElementById("profile-container");
   if (existing) existing.remove();
 
-  document.getElementById("page-content")?.remove(); // ✅ Clean up previous tab content
-  document.getElementById("punch-bar")?.remove();    // 🧼 Extra cleanup
+  document.getElementById("page-content")?.remove();
+  document.getElementById("punch-bar")?.remove();
   document.getElementById("punch-badge")?.remove();
 
   window.activeTab = "profile";
@@ -41,9 +41,11 @@ function renderProfilePage() {
   const photoUrl = Telegram.WebApp?.initDataUnsafe?.user?.photo_url;
   if (photoUrl) {
     avatar.style.backgroundImage = `url(${photoUrl})`;
-    avatar.style.backgroundSize = "cover";
-    avatar.style.backgroundPosition = "center";
-    avatar.style.border = "3px solid #000";
+    Object.assign(avatar.style, {
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      border: "2px solid #000",
+    });
     avatar.textContent = "";
   } else {
     avatar.textContent = getUserInitials(window.storedUsername);
@@ -68,11 +70,17 @@ function renderProfilePage() {
 
   container.appendChild(section);
 
+  // --- Referral Box ---
   const rewardBox = document.createElement("div");
   rewardBox.className = "referral-box";
-  rewardBox.innerHTML = `
-    <div><b>+1000 <img src="drump-images/punch.svg" alt="punch" style="height:14px;vertical-align:-2px;"></b> per successful referral<br><small>(FRIEND MUST PUNCH 20×)</small></div>
-  `;
+
+  const bonusLine = document.createElement("div");
+  bonusLine.innerHTML = `+1000 <img src="drump-images/punch.svg" alt="punch" style="height:16px;vertical-align:-2px;"> per successful referral`;
+  rewardBox.appendChild(bonusLine);
+
+  const note = document.createElement("small");
+  note.textContent = "(FRIEND MUST PUNCH 20X)";
+  rewardBox.appendChild(note);
 
   const referralInput = document.createElement("input");
   referralInput.type = "text";
@@ -87,15 +95,20 @@ function renderProfilePage() {
   const copyBtn = document.createElement("button");
   copyBtn.className = "copy-btn";
   copyBtn.textContent = "COPY";
-  copyBtn.onclick = () => {
+  copyBtn.onclick = (e) => {
+    e.stopPropagation();
     navigator.clipboard.writeText(referralInput.value);
-    alert("Referral link copied!");
+    copyBtn.innerText = "COPIED";
+    setTimeout(() => {
+      copyBtn.innerText = "COPY";
+    }, 2000);
   };
 
   const shareBtn = document.createElement("button");
   shareBtn.className = "share-btn";
   shareBtn.textContent = "SHARE";
-  shareBtn.onclick = () => {
+  shareBtn.onclick = (e) => {
+    e.stopPropagation();
     const msg = `🥊 Join me on Drump | Punch2Earn!\n\nUse my referral: ${referralInput.value}`;
     Telegram.WebApp.showPopup({
       title: "Share your invite",
@@ -140,7 +153,7 @@ function renderProfilePage() {
     cursor: "pointer",
     margin: "30px auto 40px",
     display: "block",
-    boxShadow: "1px 2px 0px 0px #000000",
+    boxShadow: "2px 2px 0px 0px #000",
     width: "100%",
     maxWidth: "280px"
   });
@@ -178,61 +191,3 @@ function renderProfilePage() {
     fetchClaimedRewards();
   }
 }
-
-function getUserInitials(name = "") {
-  const parts = name.trim().split(" ");
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[1][0]).toUpperCase();
-}
-
-function fetchProfileData() {
-  if (!window.userId) return;
-  fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
-    .then(res => res.json())
-    .then(data => {
-      if (typeof data.punches === "number") {
-        window.punches = data.punches;
-        const stat = document.getElementById("punchProfileStat");
-        if (stat) stat.textContent = window.punches;
-      }
-    })
-    .catch(err => console.error("Error fetching profile data:", err));
-}
-
-function fetchUserRank() {
-  fetch("https://drumpleaderboard-production.up.railway.app/leaderboard")
-    .then(res => res.json())
-    .then(data => {
-      const index = data.findIndex(entry => entry.user_id === window.userId);
-      const rank = index >= 0 ? `#${index + 1}` : ">100";
-      const avatar = document.querySelector(".profile-initials");
-      if (avatar && !Telegram.WebApp?.initDataUnsafe?.user?.photo_url) {
-        avatar.textContent = rank;
-      }
-    })
-    .catch(err => console.error("Error fetching rank:", err));
-}
-
-function fetchClaimedRewards() {
-  fetch("https://drumpleaderboard-production.up.railway.app/rewards")
-    .then(res => res.json())
-    .then(data => {
-      const list = document.getElementById("claimed-rewards-list");
-      if (!Array.isArray(data) || !list) return (list.innerText = "None yet.");
-      const userRewards = data.filter(r => r.user_id === window.userId);
-      if (userRewards.length === 0) {
-        list.innerText = "None yet.";
-      } else {
-        list.innerHTML = userRewards.map(r =>
-          `<div>✅ <b>${r.reward_type}</b>: ${r.change} <img src="drump-images/punch.svg" alt="punch" style="height:14px; vertical-align:-2px;"> <small style="float:right;">${r.timestamp.split("T")[0]}</small></div>`
-        ).join("");
-      }
-    })
-    .catch(err => {
-      const list = document.getElementById("claimed-rewards-list");
-      if (list) list.innerText = "Unable to load rewards.";
-      console.error("Error fetching rewards:", err);
-    });
-}
-
-export { renderProfilePage };
