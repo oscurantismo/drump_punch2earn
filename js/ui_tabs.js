@@ -7,9 +7,6 @@ import { renderTopBar } from "./topbar.js";
 import { renderPunchBar, renderPunchBadge, fetchPunchGap } from "./punchbar.js";
 import { createReferralAndRewardsButtons } from "./buttons.js";
 
-
-import { createReferralAndRewardsButtons } from "./buttons.js"; // ✅ import at top
-
 function showTab(tab, scene = null) {
   window.activeTab = tab;
 
