@@ -191,3 +191,5 @@ function renderProfilePage() {
     fetchClaimedRewards();
   }
 }
+
+export { renderProfilePage };
