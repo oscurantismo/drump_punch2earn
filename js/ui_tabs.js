@@ -5,7 +5,7 @@ import { renderEarnTab, getIncompleteTaskCount } from "./earn_tab.js";
 import { COLORS, ZINDEX } from "./styles.js";
 import { renderTopBar } from "./topbar.js";
 import { renderPunchBar, renderPunchBadge, fetchPunchGap } from "./punchbar.js";
-import { createReferralAndRewardsButtons } from "./buttons.js";
+import { createReferralButton } from "./buttons.js";
 
 function showTab(tab, scene = null) {
   window.activeTab = tab;
@@ -67,7 +67,7 @@ function showTab(tab, scene = null) {
 
   // === Show referral and rewards buttons (except profile)
   if (tab !== "profile" && window.userId) {
-    createReferralAndRewardsButtons(window.userId);
+    createReferralButton(window.userId);
   }
 
   // === GAME TAB ===
