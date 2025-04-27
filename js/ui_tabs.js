@@ -5,6 +5,10 @@ import { renderEarnTab, getIncompleteTaskCount } from "./earn_tab.js";
 import { COLORS, ZINDEX } from "./styles.js";
 import { renderTopBar } from "./topbar.js";
 import { renderPunchBar, renderPunchBadge, fetchPunchGap } from "./punchbar.js";
+import { createReferralAndRewardsButtons } from "./buttons.js";
+
+
+import { createReferralAndRewardsButtons } from "./buttons.js"; // ✅ import at top
 
 function showTab(tab, scene = null) {
   window.activeTab = tab;
@@ -21,6 +25,10 @@ function showTab(tab, scene = null) {
   document.getElementById("punch-badge")?.remove();
   document.getElementById("rank-badge-circle")?.remove();
   document.getElementById("punch-gap-badge")?.remove();
+
+  // ✅ Remove referral and rewards buttons
+  document.getElementById("referral-button")?.remove();
+  document.getElementById("rewards-button")?.remove();
 
   const content = document.createElement("div");
   content.id = "page-content";
@@ -59,6 +67,11 @@ function showTab(tab, scene = null) {
   };
 
   setTimeout(updateTabHighlight, 50);
+
+  // === Show referral and rewards buttons (except profile)
+  if (tab !== "profile" && window.userId) {
+    createReferralAndRewardsButtons(window.userId);
+  }
 
   // === GAME TAB ===
   if (tab === "game") {
