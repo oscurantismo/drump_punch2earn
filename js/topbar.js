@@ -1,4 +1,5 @@
 import { renderProfilePage } from "./profile.js";
+import { showInfoPage } from "./popups.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 function renderTopBar() {
