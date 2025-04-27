@@ -56,33 +56,6 @@ function renderProfilePage() {
 
     container.appendChild(section);
 
-    const claimedRewardsContainer = document.createElement("div");
-    claimedRewardsContainer.id = "claimed-rewards-section";
-    claimedRewardsContainer.style.marginTop = "24px";
-
-    claimedRewardsContainer.innerHTML = `
-      <b style="font-family: ${FONT.heading}; font-size:18px; color:${COLORS.primary}; display:block; margin-bottom:12px;">
-        CLAIMED REWARDS:
-      </b>
-      <div class="table-container" style="overflow-x: auto;">
-        <table style="width:100%; border-collapse:collapse; font-size:14px; font-family:${FONT.body}; box-shadow: 1px 2px 0 0 #000;">
-          <thead>
-            <tr style="background:${COLORS.badgeBg};">
-              <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Task</th>
-              <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Reward</th>
-              <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Status</th>
-            </tr>
-          </thead>
-          <tbody id="claimed-rewards-list">
-            <tr>
-              <td colspan="3" style="padding:12px; text-align:center; color:#777;">No Claimed Rewards Yet.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    `;
-    container.appendChild(claimedRewardsContainer);
-
     // === Referral Box with Black Heading ===
     const rewardBox = document.createElement("div");
     rewardBox.className = "referral-box";
@@ -182,6 +155,33 @@ function renderProfilePage() {
     actionRow.appendChild(copyBtn);
     actionRow.appendChild(shareBtn);
     container.appendChild(actionRow);
+
+    const claimedRewardsContainer = document.createElement("div");
+    claimedRewardsContainer.id = "claimed-rewards-section";
+    claimedRewardsContainer.style.marginTop = "24px";
+
+    claimedRewardsContainer.innerHTML = `
+      <b style="font-family: ${FONT.heading}; font-size:18px; color:${COLORS.primary}; display:block; margin-bottom:12px;">
+        CLAIMED REWARDS:
+      </b>
+      <div class="table-container" style="overflow-x: auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:14px; font-family:${FONT.body}; box-shadow: 1px 2px 0 0 #000;">
+          <thead>
+            <tr style="background:${COLORS.badgeBg};">
+              <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Task</th>
+              <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Reward</th>
+              <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Status</th>
+            </tr>
+          </thead>
+          <tbody id="claimed-rewards-list">
+            <tr>
+              <td colspan="3" style="padding:12px; text-align:center; color:#777;">No Claimed Rewards Yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `;
+    container.appendChild(claimedRewardsContainer);
 
     // === Referral History (will be appended dynamically)
     fetchReferralHistory();
