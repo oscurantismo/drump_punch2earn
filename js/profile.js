@@ -70,18 +70,58 @@ function renderProfilePage() {
 
   container.appendChild(section);
 
-  // --- Referral Box ---
   const rewardBox = document.createElement("div");
   rewardBox.className = "referral-box";
+  Object.assign(rewardBox.style, {
+    position: "relative", // 🔥 important for heading overlap
+    paddingTop: "50px"
+  });
 
+  // === Black Heading Bar ===
+  const heading = document.createElement("div");
+  heading.innerText = "INVITE & EARN";
+  Object.assign(heading.style, {
+    position: "absolute",
+    top: "-24px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    background: "#000",
+    color: "#fff",
+    padding: "10px 24px",
+    fontSize: "18px",
+    fontFamily: FONT.heading,
+    borderRadius: "12px",
+    textAlign: "center",
+    boxShadow: "2px 2px 0 #000",
+    textTransform: "uppercase",
+    fontWeight: "normal"
+  });
+  rewardBox.appendChild(heading);
+
+  // === Bonus Text ===
   const bonusLine = document.createElement("div");
   bonusLine.innerHTML = `+1000 <img src="drump-images/punch.svg" alt="punch" style="height:16px;vertical-align:-2px;"> per successful referral`;
+  Object.assign(bonusLine.style, {
+    fontSize: "16px",
+    marginBottom: "4px",
+    color: "#000",
+    fontFamily: FONT.body,
+  });
   rewardBox.appendChild(bonusLine);
 
+  // === Note Text ===
   const note = document.createElement("small");
   note.textContent = "(FRIEND MUST PUNCH 20X)";
+  Object.assign(note.style, {
+    fontSize: "15px",
+    textTransform: "uppercase",
+    color: "#000",
+    display: "block",
+    marginBottom: "16px"
+  });
   rewardBox.appendChild(note);
 
+  // === Referral Link Field ===
   const referralInput = document.createElement("input");
   referralInput.type = "text";
   referralInput.readOnly = true;
@@ -89,12 +129,15 @@ function renderProfilePage() {
   referralInput.value = `https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
   rewardBox.appendChild(referralInput);
 
+  container.appendChild(rewardBox);
+
+  // === Buttons outside the box ===
   const actionRow = document.createElement("div");
   actionRow.className = "referral-actions";
 
   const copyBtn = document.createElement("button");
   copyBtn.className = "copy-btn";
-  copyBtn.textContent = "COPY";
+  copyBtn.innerText = "COPY";
   copyBtn.onclick = (e) => {
     e.stopPropagation();
     navigator.clipboard.writeText(referralInput.value);
@@ -106,7 +149,7 @@ function renderProfilePage() {
 
   const shareBtn = document.createElement("button");
   shareBtn.className = "share-btn";
-  shareBtn.textContent = "SHARE";
+  shareBtn.innerText = "SHARE";
   shareBtn.onclick = (e) => {
     e.stopPropagation();
     const msg = `🥊 Join me on Drump | Punch2Earn!\n\nUse my referral: ${referralInput.value}`;
@@ -131,8 +174,7 @@ function renderProfilePage() {
 
   actionRow.appendChild(copyBtn);
   actionRow.appendChild(shareBtn);
-  rewardBox.appendChild(actionRow);
-  container.appendChild(rewardBox);
+  container.appendChild(actionRow);
 
   const rewardsBox = document.createElement("div");
   rewardsBox.className = "referral-history";
@@ -191,5 +233,20 @@ function renderProfilePage() {
     fetchClaimedRewards();
   }
 }
+
+function fetchProfileData() {
+  if (!window.userId) return;
+  fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
+    .then(res => res.json())
+    .then(data => {
+      if (typeof data.punches === "number") {
+        window.punches = data.punches;
+        const stat = document.getElementById("punchProfileStat");
+        if (stat) stat.textContent = window.punches;
+      }
+    })
+    .catch(err => console.error("Error fetching profile data:", err));
+}
+
 
 export { renderProfilePage };
