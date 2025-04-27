@@ -160,7 +160,7 @@ function showReferralPopup() {
     });
 
     // Buttons (Copy / Share)
-    const btnGroup = createReferralButtons(linkField.value);
+    const btnGroup = createReferralButton(linkField.value);
 
     card.appendChild(heading);
     card.appendChild(closeBtn);
