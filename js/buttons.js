@@ -70,8 +70,10 @@ function createReferralAndRewardsButtons(userId) {
         if (popup) {
             popup.style.display = "flex";
         } else {
-            createLeaderboardPopup();
             setTimeout(() => {
+                if (!document.getElementById("leaderboard-reward-popup")) {
+                    createLeaderboardPopup();
+                }
                 document.getElementById("leaderboard-reward-popup")?.style.display = "flex";
             }, 200);
         }
