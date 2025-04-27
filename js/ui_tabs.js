@@ -1,6 +1,5 @@
 import { renderProfilePage } from "./profile.js";
 import { showGameUI } from "./game.js";
-import { createLeaderboardPopup } from "./popups.js";
 import { renderEarnTab, getIncompleteTaskCount } from "./earn_tab.js";
 import { COLORS, ZINDEX } from "./styles.js";
 import { renderTopBar } from "./topbar.js";
