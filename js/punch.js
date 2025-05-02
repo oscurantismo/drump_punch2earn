@@ -147,29 +147,27 @@ function handlePunch() {
   }
 }
 
-function showBonusCoin(text = "+25") {
+function showBonusCoin(text = "+50") {
   const coin = document.createElement("div");
   coin.className = "bonus-coin";
-  coin.textContent = text;
+  coin.innerHTML = `<span class="bonus-text">${text}</span>`;
 
   Object.assign(coin.style, {
     position: "fixed",
-    top: "125px", // 👈 slightly below the punchbar
+    top: "180px", // ✅ lower than +1 (which is ~125px)
     left: "50%",
     transform: "translateX(-50%)",
     zIndex: "5000",
-    background: `url('drump-images/coin.png') center center / cover no-repeat`,
-    color: "#fff",
-    fontFamily: "'Negrita Pro', sans-serif",
-    fontSize: "18px",
-    fontWeight: "bold",
-    width: "56px",
-    height: "56px",
-    lineHeight: "76px",
+    width: "84px",
+    height: "84px",
     borderRadius: "50%",
-    textAlign: "center",
-    animation: "bounceCoin 2s ease forwards",
-    pointerEvents: "none"
+    background: `url('drump-images/coin.png') center center / 90% no-repeat`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    pointerEvents: "none",
+    animation: "bounceCoin 2.5s ease-out forwards",
+    willChange: "transform, opacity"
   });
 
   document.body.appendChild(coin);
@@ -178,12 +176,10 @@ function showBonusCoin(text = "+25") {
     coin.style.transition = "opacity 0.8s ease, transform 1.2s ease";
     coin.style.opacity = "0";
     coin.style.transform = "translateX(-50%) translateY(-100px)";
-  }, 2000); // 👈 wait before floating up
+  }, 1800); // 🕒 display time before floating
 
   setTimeout(() => coin.remove(), 3200);
 }
-
-
 
 function showPunchZapEffect() {
   const scene = game.scene.scenes[0];
