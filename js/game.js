@@ -68,6 +68,12 @@ async function create() {
     window.userId = initUser.id.toString();
   }
 
+  const cachedGap = localStorage.getItem("punchGap");
+  if (cachedGap) {
+    window.punchGap = parseInt(cachedGap);
+  }
+
+
   window.activeTab = "game";
 
   const cached = localStorage.getItem(`score_${window.userId}`);
