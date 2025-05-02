@@ -41,6 +41,3 @@ function updatePunchDisplay() {
 }
 
 export { updatePunchDisplay };
-
-
-export { updatePunchDisplay };
