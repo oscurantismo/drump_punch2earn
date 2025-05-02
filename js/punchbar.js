@@ -21,21 +21,28 @@ async function fetchPunchGap(userId) {
     const res = await fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard?user_id=${userId}`);
     const data = await res.json();
 
-    if (data && typeof data.punches_to_next_rank === "number") {
-      const newGap = data.punches_to_next_rank;
-
-      // ✅ Only update if it's a smaller value or first time
-      if (typeof window.punchGap !== "number" || newGap < window.punchGap) {
-        window.punchGap = newGap;
-        localStorage.setItem("punchGap", newGap);
+    if (data) {
+      // ✅ Update punch gap always
+      if (typeof data.punches_to_next_rank === "number") {
+        window.punchGap = data.punches_to_next_rank;
+        localStorage.setItem("punchGap", data.punches_to_next_rank);
         renderPunchGapBadge();
+      }
+
+      // ✅ Update rank badge
+      if (typeof data.rank === "number") {
+        window.userRank = data.rank;
+
+        const icon = document.getElementById("rank-badge-circle");
+        if (icon) {
+          icon.textContent = data.rank;
+        }
       }
     }
   } catch (err) {
-    console.error("❌ Failed to fetch punch gap:", err);
+    console.error("❌ Failed to fetch punch gap or rank:", err);
   }
 }
-
 
 function renderPunchBadge() {
   if (window.activeTab !== "game") return;
@@ -90,8 +97,12 @@ function renderPunchBadge() {
   count.textContent = (window.punches || 0).toLocaleString();
   Object.assign(count.style, {
     fontSize: "18px",
-    fontWeight: "normal",
+    fontWeight: "normal", // already correct
+    fontFamily: "'Negrita Pro', sans-serif",
+    lineHeight: "1",
+    letterSpacing: "0.5px"
   });
+
 
   badgeTextEl.append(label, count);
   badge.appendChild(badgeTextEl);
@@ -210,7 +221,7 @@ function renderPunchBar() {
     border: "2px solid #000",
     borderRadius: "12px",
     padding: "6px 12px",
-    zIndex: 1000,
+    zIndex: 999,
     fontFamily: "'Reem Kufi Fun', sans-serif",
     boxShadow: "2px 2px 0 #000",
     display: "flex",
