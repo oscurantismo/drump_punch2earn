@@ -141,42 +141,49 @@ function handlePunch() {
 function showBonusCoin(floatingText = "+25") {
   const scene = game.scene.scenes[0];
 
-  const coin = scene.add.text(
-    drump.x,
-    drump.y + drump.displayHeight / 2 + 80, // 👈 BELOW the punchbar
-    floatingText,
-    {
-      fontFamily: "'Negrita Pro', sans-serif",
-      fontSize: "24px",
-      backgroundColor: "#D10000", // vivid red from screenshot
-      color: "#fff",
-      padding: { x: 22, y: 14 },
-      align: "center",
-      stroke: "#000",
-      strokeThickness: 4,
-      fixedWidth: 84,
-      fixedHeight: 84,
-    }
-  )
-    .setOrigin(0.5)
-    .setDepth(10001)
-    .setAlpha(0.95)
-    .setScrollFactor(0);
+  // === Position under punch bar and above Drump's head ===
+  const x = scene.scale.width / 2;
+  const y = 200; // 💡 Position near punch bar (tweak if needed)
 
-  coin.setStyle({
+  const coin = scene.add.text(x, y, floatingText, {
+    fontFamily: "'Negrita Pro', sans-serif",
+    fontSize: "22px",
     backgroundColor: "#D10000",
-    borderRadius: "50%"
-  });
+    color: "#fff",
+    padding: { x: 20, y: 14 },
+    align: "center",
+    stroke: "#000",
+    strokeThickness: 3,
+    fixedWidth: 84,
+    fixedHeight: 84
+  })
+    .setOrigin(0.5)
+    .setAlpha(1)
+    .setDepth(10001);
 
-  // 🪄 Circle styling (Phaser lacks borderRadius, so we mimic a circle with padding)
+  // 🧿 Make text look circular
+  coin.setStyle({ backgroundColor: "#D10000" });
+
+  // 🟠 Optional: simulate roundness via scale or container if needed
   coin.setScale(1);
+
+  // === Bounce, then float upward and fade out ===
   scene.tweens.add({
     targets: coin,
-    y: coin.y - 160,       // 👈 long upward float
-    alpha: 0,
-    duration: 2200,        // 👈 longer duration for better visibility
-    ease: "Cubic.easeOut",
-    onComplete: () => coin.destroy()
+    y: y - 10,
+    ease: "Back.easeOut", // subtle bounce
+    duration: 300,
+    onComplete: () => {
+      scene.tweens.add({
+        targets: coin,
+        y: y - 140,
+        alpha: 0,
+        ease: "Cubic.easeIn",
+        duration: 1600,
+        delay: 300,
+        onComplete: () => coin.destroy()
+      });
+    }
   });
 }
 
