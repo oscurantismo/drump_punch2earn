@@ -47,10 +47,17 @@ function handlePunch() {
   const newPunches = rawPunches + bonus;
   window.punches = newPunches;
 
+  if (typeof window.punchGap === "number" && window.punchGap > 0) {
+    window.punchGap--;  // Simulate local progress
+    renderPunchGapBadge(); // Update visual
+  }
+
   const now = Date.now();
   lastPunchTime = now;
   updatePunchDisplay();
   localStorage.setItem(`score_${window.userId}`, window.punches);
+
+  maybeRefreshPunchGap();
 
   if (window.soundEnabled && punchSounds.length > 0) {
     const sound = Phaser.Math.RND.pick(punchSounds);
@@ -122,8 +129,7 @@ function handlePunch() {
         showPunchZapEffect();
         showFloatingBonus("+1");
         
-        if (bonus > 0) showBonusCoin(`+${bonus}`);
-
+        if (bonus > 0) showBonusCoin(`+${bonus}`)
 
         isAnimatingPunch = false; // 🔥 UNLOCK after animation finishes!
       }, 250);
