@@ -23,8 +23,9 @@ function updatePunchDisplay() {
 
   if (punchTextEl) punchTextEl.innerHTML = `🥊 Punches: ${count}`;
   if (badgeTextEl) {
-    badgeTextEl.innerHTML = `Punches<br><span style="font-size:18px">${count}</span>`;
+    badgeTextEl.innerHTML = `Punches<br><span style="font-size:17px; font-weight:900">${(count).toLocaleString()}</span>`;
   }
+
 
   const cycle = 500;
   const cyclePunches = count % cycle || cycle; // ✅ Treat 500 as full bar, not 0
