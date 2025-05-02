@@ -147,55 +147,43 @@ function handlePunch() {
   }
 }
 
-function showBonusCoin(bonusText = "+25") {
-  const scene = game.scene.scenes[0];
+function showBonusCoin(text = "+25") {
+  const coin = document.createElement("div");
+  coin.className = "bonus-coin";
+  coin.textContent = text;
 
-  const centerX = scene.scale.width / 2;
-  const centerY = 235; // 🧭 Position below punchbar, above Drump
-
-  const coinImg = scene.add.image(centerX, centerY, "bonusCoin")
-    .setOrigin(0.5)
-    .setDepth(10002)
-    .setScale(0.80) // ✅ Smaller visual size
-    .setAlpha(1);
-
-  const coinLabel = scene.add.text(centerX, centerY, bonusText, {
+  Object.assign(coin.style, {
+    position: "fixed",
+    top: "125px", // 👈 slightly below the punchbar
+    left: "50%",
+    transform: "translateX(-50%)",
+    zIndex: "5000",
+    background: `url('drump-images/coin.png') center center / cover no-repeat`,
+    color: "#fff",
     fontFamily: "'Negrita Pro', sans-serif",
     fontSize: "18px",
-    color: "#fff",
-    stroke: "#000",
-    strokeThickness: 1,
-    align: "center"
-  })
-    .setOrigin(0.5)
-    .setDepth(10003);
-
-  // === First pause before animation (let human notice)
-  scene.time.delayedCall(1000, () => {
-    // === Small bounce down
-    scene.tweens.add({
-      targets: [coinImg, coinLabel],
-      y: centerY - 10,
-      ease: "Back.easeOut",
-      duration: 400,
-      onComplete: () => {
-        // === Float up and fade out
-        scene.tweens.add({
-          targets: [coinImg, coinLabel],
-          y: centerY - 130,
-          alpha: 0,
-          duration: 1100,
-          delay: 300,
-          ease: "Cubic.easeIn",
-          onComplete: () => {
-            coinImg.destroy();
-            coinLabel.destroy();
-          }
-        });
-      }
-    });
+    fontWeight: "bold",
+    width: "76px",
+    height: "76px",
+    lineHeight: "76px",
+    borderRadius: "50%",
+    textAlign: "center",
+    boxShadow: "2px 2px 0 #000",
+    animation: "bounceCoin 2s ease forwards",
+    pointerEvents: "none"
   });
+
+  document.body.appendChild(coin);
+
+  setTimeout(() => {
+    coin.style.transition = "opacity 0.8s ease, transform 1.2s ease";
+    coin.style.opacity = "0";
+    coin.style.transform = "translateX(-50%) translateY(-100px)";
+  }, 2000); // 👈 wait before floating up
+
+  setTimeout(() => coin.remove(), 3200);
 }
+
 
 
 function showPunchZapEffect() {
