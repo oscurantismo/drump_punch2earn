@@ -22,6 +22,19 @@ function initPunchModule(config) {
 
 let isAnimatingPunch = false; // 🔥 Add globally
 
+function getBonusAmount(punchCount) {
+  const withinCycle = punchCount % 500;
+  switch (withinCycle) {
+    case 100: return 25;
+    case 200: return 30;
+    case 300: return 35;
+    case 400: return 40;
+    case 0: return punchCount > 0 ? 50 : 0;
+    default: return 0;
+  }
+}
+
+
 function handlePunch() {
   if (!drump || window.activeTab !== "game" || window.isPopupOpen?.()) return;
   if (isAnimatingPunch) return; // 🔥 Failsafe: Ignore if already animating punch!
@@ -29,7 +42,9 @@ function handlePunch() {
   isAnimatingPunch = true; // 🔥 Start locking animation
 
   const previousPunches = window.punches || 0;
-  const newPunches = previousPunches + 1;
+  const rawPunches = previousPunches + 1;
+  const bonus = getBonusAmount(rawPunches);
+  const newPunches = rawPunches + bonus;
   window.punches = newPunches;
 
   const now = Date.now();
@@ -106,6 +121,9 @@ function handlePunch() {
 
         showPunchZapEffect();
         showFloatingBonus("+1");
+        
+        if (bonus > 0) showBonusCoin(`+${bonus}`);
+
 
         isAnimatingPunch = false; // 🔥 UNLOCK after animation finishes!
       }, 250);
@@ -118,6 +136,30 @@ function handlePunch() {
   if (pendingPunches >= PUNCH_THRESHOLD || now - lastSubmitTime >= SUBMIT_INTERVAL) {
     submitPunchScore();
   }
+}
+
+function showBonusCoin(floatingText = "+25") {
+  const scene = game.scene.scenes[0];
+  const coin = scene.add.text(drump.x, drump.y - drump.displayHeight / 2 - 20, floatingText, {
+    fontFamily: "'Negrita Pro', sans-serif",
+    fontSize: "22px",
+    backgroundColor: "#FFCC68",
+    color: "#000",
+    padding: { x: 14, y: 6 },
+    align: "center",
+    stroke: "#000",
+    strokeThickness: 2,
+    borderRadius: 999
+  }).setOrigin(0.5).setDepth(10001);
+
+  scene.tweens.add({
+    targets: coin,
+    y: coin.y - 80,
+    alpha: 0,
+    duration: 1200,
+    ease: "Cubic.easeOut",
+    onComplete: () => coin.destroy()
+  });
 }
 
 
