@@ -1,6 +1,19 @@
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 import { updatePunchDisplay } from "./ui.js";
 
+let lastGapFetch = 0;
+
+function maybeRefreshPunchGap() {
+  const now = Date.now();
+  const refreshInterval = 10000; // 10 seconds (adjust as needed)
+
+  if (now - lastGapFetch > refreshInterval) {
+    lastGapFetch = now;
+    if (window.userId) fetchPunchGap(window.userId);
+  }
+}
+
+
 let badgeTextEl;
 
 async function fetchPunchGap(userId) {
