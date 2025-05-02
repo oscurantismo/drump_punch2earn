@@ -1,4 +1,4 @@
-import { handlePunch, initPunchModule } from "./punch.js";
+import { handlePunch, initPunchModule, showBonusCoin } from "./punch.js";
 import { updatePunchDisplay } from "./ui.js";
 import { getIncompleteTaskCount } from "./earn_tab.js";
 import { showTab, renderTabs } from "./ui_tabs.js";
@@ -291,3 +291,6 @@ window.onbeforeunload = () => {
 };
 
 export { game, showGameUI, drawDrump };
+
+// ✅ DEV ONLY: expose bonus coin to console
+window.showBonusCoin = showBonusCoin;
