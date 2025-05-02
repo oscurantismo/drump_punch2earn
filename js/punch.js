@@ -1,6 +1,6 @@
 // ✅ Final cleaned and fixed punch.js
 import { updatePunchDisplay } from "./ui.js";
-import { showFloatingBonus } from "./punchbar.js";
+import { showFloatingBonus, renderPunchGapBadge } from "./punchbar.js";
 
 let drump, punchSounds, loadeddrumpFrames;
 let lastPunchTime = 0;
