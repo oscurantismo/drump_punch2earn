@@ -291,29 +291,14 @@ function renderPunchBar() {
   fill.appendChild(stripes);
   barWrap.appendChild(fill);
 
-  const dividers = [0.2, 0.4, 0.6, 0.8];
-  dividers.forEach((pos) => {
-    const line = document.createElement("div");
-    Object.assign(line.style, {
-      position: "absolute",
-      top: "0",
-      bottom: "0",
-      left: `${pos * 100}%`,
-      width: "2px",
-      background: "#fff",
-      transform: "translateX(-1px)",
-      zIndex: 2,
-    });
-    barWrap.appendChild(line);
-  });
-
   const milestoneData = [
     { label: "+25", pos: 0.2 },
     { label: "+30", pos: 0.4 },
     { label: "+35", pos: 0.6 },
     { label: "+40", pos: 0.8 },
-    { label: "+50", pos: 0.95 }
+    { label: "+50", pos: 1.0 } // 🔁 previously 0.95 — now correctly ends at full bar
   ];
+
 
   // Add dividers aligned with milestones
   milestoneData.forEach((item) => {
