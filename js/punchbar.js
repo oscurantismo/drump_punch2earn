@@ -189,13 +189,13 @@ function renderPunchBar() {
       }
       .gain-label {
         position: absolute;
-        bottom: 10px;
+        bottom: 5px;
         left: 50%;
         transform: translateX(-50%);
         font-family: 'Commissioner', sans-serif;
-        color: #fff;
-        font-size: 14px;
-        animation: floatGain 0.9s ease-out forwards;
+        color: #000;
+        font-size: 16px;
+        animation: floatGain 2s ease-out forwards;
         z-index: 10;
       }
       @keyframes floatGain {
@@ -205,7 +205,7 @@ function renderPunchBar() {
       .gain-label.bonus {
         background: #FFCC68;
         color: #000;
-        padding: 8px 16px;
+        padding: 12px 18px;
         border-radius: 20px;
         font-size: 16px;
       }
