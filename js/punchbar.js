@@ -400,16 +400,34 @@ function renderPunchBar() {
   }
 }
 
-function showFloatingBonus(text, isBonus = false) {
+function showFloatingBonus(text = "+1") {
   const gain = document.createElement("div");
-  gain.className = "gain-label";
-  if (isBonus) gain.classList.add("bonus");
-  gain.textContent = text;
+  gain.className = "floating-bonus";
+  gain.innerHTML = `<span class="floating-text">${text}</span>`;
+
+  Object.assign(gain.style, {
+    position: "absolute",
+    top: "0",
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "48px",
+    height: "48px",
+    background: COLORS.primary,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    pointerEvents: "none",
+    zIndex: 1002,
+    animation: "floatBonus 1.2s ease-out forwards",
+    boxShadow: "2px 2px 0 #000"
+  });
 
   const container = document.getElementById("punch-gain-container");
   container.appendChild(gain);
 
-  setTimeout(() => gain.remove(), isBonus ? 1800 : 900);
+  setTimeout(() => gain.remove(), 1200);
 }
+
 
 export { renderPunchBar, showFloatingBonus, renderPunchBadge, renderPunchGapBadge, badgeTextEl, fetchPunchGap, maybeRefreshPunchGap };
