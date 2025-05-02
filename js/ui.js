@@ -1,9 +1,6 @@
 import { renderPunchBadge, renderPunchGapBadge } from "./punchbar.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 
-import { renderPunchBadge, renderPunchGapBadge } from "./punchbar.js";
-import { COLORS, FONT, ZINDEX } from "./styles.js";
-
 function updatePunchDisplay() {
   const count = window.punches || 0;
   const punchTextEl = document.getElementById("punch-text");
