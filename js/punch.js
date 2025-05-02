@@ -163,12 +163,11 @@ function showBonusCoin(text = "+25") {
     fontFamily: "'Negrita Pro', sans-serif",
     fontSize: "18px",
     fontWeight: "bold",
-    width: "76px",
-    height: "76px",
+    width: "56px",
+    height: "56px",
     lineHeight: "76px",
     borderRadius: "50%",
     textAlign: "center",
-    boxShadow: "2px 2px 0 #000",
     animation: "bounceCoin 2s ease forwards",
     pointerEvents: "none"
   });
