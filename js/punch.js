@@ -156,7 +156,7 @@ function showBonusCoin(bonusText = "+25") {
   const coinImg = scene.add.image(centerX, centerY, "bonusCoin")
     .setOrigin(0.5)
     .setDepth(10002)
-    .setScale(0.68) // ✅ Smaller visual size
+    .setScale(0.80) // ✅ Smaller visual size
     .setAlpha(1);
 
   const coinLabel = scene.add.text(centerX, centerY, bonusText, {
@@ -164,7 +164,7 @@ function showBonusCoin(bonusText = "+25") {
     fontSize: "18px",
     color: "#fff",
     stroke: "#000",
-    strokeThickness: 4,
+    strokeThickness: 1,
     align: "center"
   })
     .setOrigin(0.5)
@@ -270,3 +270,6 @@ function submitPunchScore(retry = false) {
 }
 
 export { initPunchModule, handlePunch };
+
+// DEV ONLY: Allow testing from console
+window.showBonusCoin = showBonusCoin;
