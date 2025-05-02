@@ -41,7 +41,7 @@
   margin: 0;
   padding: 0;
   line-height: 1; /* ✅ removes vertical skew */
-  transform: translateY(5px);
+  transform: translateY(-5px);
 }
 
 @keyframes floatBonus {
