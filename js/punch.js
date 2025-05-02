@@ -161,7 +161,7 @@ function showBonusCoin(text = "+25") {
     width: "76px",
     height: "76px",
     borderRadius: "50%",
-    background: "#FFCC68", // ✅ same as badge background
+    background: "#F6020F", // ✅ same as badge background
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
