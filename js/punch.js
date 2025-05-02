@@ -269,7 +269,7 @@ function submitPunchScore(retry = false) {
   });
 }
 
-export { initPunchModule, handlePunch };
+export { initPunchModule, handlePunch, showBonusCoin };
 
 // DEV ONLY: Allow testing from console
 window.showBonusCoin = showBonusCoin;
