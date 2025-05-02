@@ -147,15 +147,15 @@ function handlePunch() {
   }
 }
 
-function showBonusCoin(text = "+50") {
+function showBonusCoin(text = "+25") {
   const coin = document.createElement("div");
-  coin.className = "bonus-coin animate__animated animate__flip"; // ✅ entry animation
+  coin.className = "bonus-coin animate__animated animate__flip";
   coin.innerHTML = `<span class="bonus-text">${text}</span>`;
 
   Object.assign(coin.style, {
     position: "fixed",
     top: "180px",
-    left: "50%",
+    left: "25%", // ✅ Left third of screen
     transform: "translateX(-50%)",
     zIndex: "5000",
     width: "76px",
@@ -166,21 +166,26 @@ function showBonusCoin(text = "+50") {
     alignItems: "center",
     justifyContent: "center",
     pointerEvents: "none",
-    boxShadow: "2px 2px 0 #000"
+    boxShadow: "2px 2px 0 #000",
+    opacity: "1",
+    transition: "opacity 0.3s ease-in"
   });
 
   document.body.appendChild(coin);
 
-  // ✨ after entry finishes, replace with exit animation
+  // 🧊 Slight pause after flip, then zoom out with smoother fade
   setTimeout(() => {
     coin.classList.remove("animate__flip");
     coin.classList.add("animate__zoomOutUp");
-  }, 1400); // duration of entry animation
+    coin.style.opacity = "0.8"; // fade slightly before leaving
+  }, 1200);
 
-  // Remove after exit finishes
-  setTimeout(() => coin.remove(), 2800);
+  setTimeout(() => {
+    coin.style.opacity = "0";
+  }, 1800); // fade out after zoom begins
+
+  setTimeout(() => coin.remove(), 2600);
 }
-
 
 function showPunchZapEffect() {
   const scene = game.scene.scenes[0];
