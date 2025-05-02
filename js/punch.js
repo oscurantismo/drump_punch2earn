@@ -138,50 +138,49 @@ function handlePunch() {
   }
 }
 
-function showBonusCoin(floatingText = "+25") {
+function showBonusCoin(bonusText = "+25") {
   const scene = game.scene.scenes[0];
 
-  // === Position under punch bar and above Drump's head ===
-  const x = scene.scale.width / 2;
-  const y = 200; // 💡 Position near punch bar (tweak if needed)
+  const centerX = scene.scale.width / 2;
+  const centerY = 195; // ✅ Appears just below the punchbar
 
-  const coin = scene.add.text(x, y, floatingText, {
+  // === Base coin image
+  const coinImg = scene.add.image(centerX, centerY, "bonusCoin")
+    .setOrigin(0.5)
+    .setDepth(10002)
+    .setScale(0.85)
+    .setAlpha(1);
+
+  // === Bonus text on top
+  const coinLabel = scene.add.text(centerX, centerY, bonusText, {
     fontFamily: "'Negrita Pro', sans-serif",
-    fontSize: "22px",
-    backgroundColor: "#D10000",
+    fontSize: "24px",
     color: "#fff",
-    padding: { x: 20, y: 14 },
-    align: "center",
     stroke: "#000",
-    strokeThickness: 3,
-    fixedWidth: 84,
-    fixedHeight: 84
+    strokeThickness: 4,
+    align: "center"
   })
     .setOrigin(0.5)
-    .setAlpha(1)
-    .setDepth(10001);
+    .setDepth(10003);
 
-  // 🧿 Make text look circular
-  coin.setStyle({ backgroundColor: "#D10000" });
-
-  // 🟠 Optional: simulate roundness via scale or container if needed
-  coin.setScale(1);
-
-  // === Bounce, then float upward and fade out ===
+  // === Bounce + float animation
   scene.tweens.add({
-    targets: coin,
-    y: y - 10,
-    ease: "Back.easeOut", // subtle bounce
+    targets: [coinImg, coinLabel],
+    y: centerY - 10,
+    ease: "Back.easeOut",
     duration: 300,
     onComplete: () => {
       scene.tweens.add({
-        targets: coin,
-        y: y - 140,
+        targets: [coinImg, coinLabel],
+        y: centerY - 120,
         alpha: 0,
-        ease: "Cubic.easeIn",
         duration: 1600,
-        delay: 300,
-        onComplete: () => coin.destroy()
+        delay: 250,
+        ease: "Cubic.easeIn",
+        onComplete: () => {
+          coinImg.destroy();
+          coinLabel.destroy();
+        }
       });
     }
   });
