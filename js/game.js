@@ -137,7 +137,7 @@ function showGameUI(scene) {
   ).setDepth(-9);
 
   drawDrump(scene, "Drump_1-01");
-
+  /*
   const debugBtn = document.createElement("button");
   debugBtn.textContent = "Trigger Bonus Coin";
   Object.assign(debugBtn.style, {
@@ -162,7 +162,7 @@ function showGameUI(scene) {
   };
 
   document.body.appendChild(debugBtn);
-
+  */
 }
 
 function drawDrump(scene, textureKey) {
