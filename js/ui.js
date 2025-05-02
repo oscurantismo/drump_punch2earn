@@ -23,7 +23,7 @@ function updatePunchDisplay() {
 
   if (punchTextEl) punchTextEl.innerHTML = `🥊 Punches: ${count}`;
   if (badgeTextEl) {
-    badgeTextEl.innerHTML = `Punches<br><span style="font-size:17px; font-weight:900">${count}</span>`;
+    badgeTextEl.innerHTML = `Punches<br><span style="font-size:18px">${count}</span>`;
   }
 
   const cycle = 500;
