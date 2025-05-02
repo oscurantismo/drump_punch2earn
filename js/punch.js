@@ -244,7 +244,15 @@ function submitPunchScore(retry = false) {
     if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
     return res.json();
   })
-  .then(() => console.log("✅ Punch score submitted"))
+  .then((data) => {
+    console.log("✅ Punch score submitted");
+
+    if (data && typeof data.punches_to_next_rank === "number") {
+      localStorage.setItem("punchGap", data.punches_to_next_rank);
+      window.punchGap = data.punches_to_next_rank;
+      renderPunchGapBadge(); // ✅ Update immediately
+    }
+  })
   .catch(err => {
     console.error("❌ Punch submit failed:", err);
     if (!retry) setTimeout(() => submitPunchScore(true), 2000);
