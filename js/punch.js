@@ -147,54 +147,42 @@ function handlePunch() {
   }
 }
 
-function showBonusCoin(bonusText = "+25") {
-  const scene = game.scene.scenes[0];
+function showBonusCoin(text = "+25") {
+  const coin = document.createElement("div");
+  coin.className = "bonus-coin";
+  coin.textContent = text;
 
-  const centerX = scene.scale.width / 2;
-  const centerY = 195; // ✅ Appears just below the punchbar
-
-  // === Base coin image
-  const coinImg = scene.add.image(centerX, centerY, "bonusCoin")
-    .setOrigin(0.5)
-    .setDepth(10002)
-    .setScale(0.85)
-    .setAlpha(1);
-
-  // === Bonus text on top
-  const coinLabel = scene.add.text(centerX, centerY, bonusText, {
-    fontFamily: "'Negrita Pro', sans-serif",
-    fontSize: "24px",
+  Object.assign(coin.style, {
+    position: "fixed",
+    top: "125px", // just below punchbar
+    left: "50%",
+    transform: "translateX(-50%)",
+    zIndex: 1003,
+    background: "#D10000 url('drump-images/coin.png') center center / cover no-repeat",
     color: "#fff",
-    stroke: "#000",
-    strokeThickness: 4,
-    align: "center"
-  })
-    .setOrigin(0.5)
-    .setDepth(10003);
-
-  // === Bounce + float animation
-  scene.tweens.add({
-    targets: [coinImg, coinLabel],
-    y: centerY - 10,
-    ease: "Back.easeOut",
-    duration: 300,
-    onComplete: () => {
-      scene.tweens.add({
-        targets: [coinImg, coinLabel],
-        y: centerY - 120,
-        alpha: 0,
-        duration: 1600,
-        delay: 250,
-        ease: "Cubic.easeIn",
-        onComplete: () => {
-          coinImg.destroy();
-          coinLabel.destroy();
-        }
-      });
-    }
+    fontFamily: "'Negrita Pro', sans-serif",
+    fontSize: "18px",
+    fontWeight: "bold",
+    borderRadius: "50%",
+    width: "84px",
+    height: "84px",
+    lineHeight: "84px",
+    textAlign: "center",
+    boxShadow: "2px 2px 0 #000",
+    opacity: 1,
+    transition: "all 0.8s ease-out"
   });
-}
 
+  document.body.appendChild(coin);
+
+  // Animate up and fade out
+  requestAnimationFrame(() => {
+    coin.style.top = "60px";
+    coin.style.opacity = "0";
+  });
+
+  setTimeout(() => coin.remove(), 1200);
+}
 
 function showPunchZapEffect() {
   const scene = game.scene.scenes[0];
