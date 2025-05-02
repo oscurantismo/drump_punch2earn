@@ -16,3 +16,13 @@
 .bonus-coin {
   will-change: transform, opacity;
 }
+
+.bonus-text {
+  font-family: 'Negrita Pro', sans-serif;
+  font-size: 18px;
+  font-weight: normal; /* ✅ not bold */
+  color: white;
+  text-align: center;
+  line-height: 1;
+}
+
