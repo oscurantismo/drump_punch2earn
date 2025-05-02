@@ -4,6 +4,13 @@ import { updatePunchDisplay } from "./ui.js";
 let badgeTextEl;
 
 async function fetchPunchGap(userId) {
+  const cached = localStorage.getItem("punchGap");
+  if (cached && !navigator.onLine) {
+    window.punchGap = parseInt(cached);
+    renderPunchGapBadge();
+    return;
+  }
+
   try {
     const res = await fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard?user_id=${userId}`);
     const data = await res.json();
