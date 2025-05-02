@@ -14,15 +14,32 @@
 }
 
 .bonus-coin {
+  position: fixed;
+  top: 125px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5000;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: url('drump-images/coin.png') center center / 88% no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  animation: bounceCoin 2s ease forwards;
   will-change: transform, opacity;
 }
+
 
 .bonus-text {
   font-family: 'Negrita Pro', sans-serif;
   font-size: 18px;
-  font-weight: normal; /* ✅ not bold */
+  font-weight: normal;
   color: white;
   text-align: center;
-  line-height: 1;
+  margin: 0;
+  padding: 0;
+  line-height: 1; /* ✅ removes vertical skew */
 }
 
