@@ -47,17 +47,10 @@ function handlePunch() {
   const newPunches = rawPunches + bonus;
   window.punches = newPunches;
 
-  if (typeof window.punchGap === "number" && window.punchGap > 0) {
-    window.punchGap--;  // Simulate local progress
-    renderPunchGapBadge(); // Update visual
-  }
-
   const now = Date.now();
   lastPunchTime = now;
   updatePunchDisplay();
   localStorage.setItem(`score_${window.userId}`, window.punches);
-
-  maybeRefreshPunchGap();
 
   if (window.soundEnabled && punchSounds.length > 0) {
     const sound = Phaser.Math.RND.pick(punchSounds);
@@ -141,6 +134,16 @@ function handlePunch() {
   pendingPunches++;
   if (pendingPunches >= PUNCH_THRESHOLD || now - lastSubmitTime >= SUBMIT_INTERVAL) {
     submitPunchScore();
+  }
+
+  if (typeof window.punchGap === "number" && window.punchGap > 0) {
+    window.punchGap--;
+    renderPunchGapBadge(); // ✅ live feedback
+  }
+
+  // ✅ Refresh punch gap from server every 10 punches to prevent drift
+  if (window.punches % 10 === 0) {
+    maybeRefreshPunchGap(); // pull latest punchGap from backend
   }
 }
 
