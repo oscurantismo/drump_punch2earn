@@ -42,6 +42,8 @@ function preload() {
   this.load.image("Drump_2-02", "drump-images/Drump_2-02.png");
   this.load.image("Drump_3-03", "drump-images/Drump_3-03.png");
 
+  this.load.image("bonusCoin", "drump-images/coin.png");
+
   this.load.image("background", "drump-images/background.png");
   this.load.image("punch", "drump-images/punch.png");
   this.load.audio("laugh", "laugh1.mp3");
