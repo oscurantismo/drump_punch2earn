@@ -3,10 +3,6 @@ import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 function updatePunchDisplay() {
   const count = window.punches || 0;
-  const nextBlock = Math.ceil(count / 500) * 500;
-  const progressText = document.getElementById("punch-progress");
-  if (progressText) progressText.textContent = `${count.toLocaleString()} / ${nextBlock.toLocaleString()} punches`;
-
   const punchTextEl = document.getElementById("punch-text");
   const fillEl = document.getElementById("punch-fill");
   const countEl = document.getElementById("punch-progress");
@@ -17,6 +13,28 @@ function updatePunchDisplay() {
   if (badgeTextEl) {
     badgeTextEl.innerHTML = `Punches<br><span style="font-size:17px; font-weight:900">${window.punches}</span>`;
   }
+
+  // ✅ Adjusted for 500-punch milestone cycle
+  const cycleProgress = count % 500;
+  let milestone = 0;
+
+  if (cycleProgress < 100) milestone = 100;
+  else if (cycleProgress < 200) milestone = 200;
+  else if (cycleProgress < 300) milestone = 300;
+  else if (cycleProgress < 400) milestone = 400;
+  else milestone = 500;
+
+  const percent = (cycleProgress / milestone) * 100;
+  if (fillEl) fillEl.style.width = `${percent}%`;
+
+  if (countEl) countEl.textContent = `${cycleProgress} / ${milestone}`;
+  if (hintEl) {
+    const remaining = milestone - cycleProgress;
+    hintEl.textContent = `${remaining} punches until bonus`;
+    hintEl.style.transform = `translateX(-50%) scale(${percent < 5 ? 1.2 : 1})`;
+    hintEl.style.opacity = percent < 5 ? "0.6" : "1";
+  }
+}
 
 
   const nextMilestone = Math.ceil(count / 100) * 100;
