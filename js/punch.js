@@ -140,23 +140,41 @@ function handlePunch() {
 
 function showBonusCoin(floatingText = "+25") {
   const scene = game.scene.scenes[0];
-  const coin = scene.add.text(drump.x, drump.y - drump.displayHeight / 2 - 20, floatingText, {
-    fontFamily: "'Negrita Pro', sans-serif",
-    fontSize: "22px",
-    backgroundColor: "#FFCC68",
-    color: "#000",
-    padding: { x: 14, y: 6 },
-    align: "center",
-    stroke: "#000",
-    strokeThickness: 2,
-    borderRadius: 999
-  }).setOrigin(0.5).setDepth(10001);
 
+  const coin = scene.add.text(
+    drump.x,
+    drump.y + drump.displayHeight / 2 + 80, // 👈 BELOW the punchbar
+    floatingText,
+    {
+      fontFamily: "'Negrita Pro', sans-serif",
+      fontSize: "24px",
+      backgroundColor: "#D10000", // vivid red from screenshot
+      color: "#fff",
+      padding: { x: 22, y: 14 },
+      align: "center",
+      stroke: "#000",
+      strokeThickness: 4,
+      fixedWidth: 84,
+      fixedHeight: 84,
+    }
+  )
+    .setOrigin(0.5)
+    .setDepth(10001)
+    .setAlpha(0.95)
+    .setScrollFactor(0);
+
+  coin.setStyle({
+    backgroundColor: "#D10000",
+    borderRadius: "50%"
+  });
+
+  // 🪄 Circle styling (Phaser lacks borderRadius, so we mimic a circle with padding)
+  coin.setScale(1);
   scene.tweens.add({
     targets: coin,
-    y: coin.y - 80,
+    y: coin.y - 160,       // 👈 long upward float
     alpha: 0,
-    duration: 1200,
+    duration: 2200,        // 👈 longer duration for better visibility
     ease: "Cubic.easeOut",
     onComplete: () => coin.destroy()
   });
