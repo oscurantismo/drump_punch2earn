@@ -1,4 +1,4 @@
-import { renderPunchBadge, renderPunchGapBadge } from "./punchbar.js";
+import { renderPunchBadge, renderPunchGapBadge, fetchPunchGap } from "./punchbar.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 let gapTimeout;
