@@ -28,19 +28,6 @@ async function fetchPunchGap(userId) {
   renderPunchBadge(); // ✅ make sure badge updates visually too
 }
 
-
-function getBonusAmount(punchCount) {
-  const withinCycle = punchCount % 500;
-  switch (withinCycle) {
-    case 100: return 25;
-    case 200: return 30;
-    case 300: return 35;
-    case 400: return 40;
-    case 0: return punchCount > 0 ? 50 : 0;
-    default: return 0;
-  }
-}
-
 function renderPunchBadge() {
   if (window.activeTab !== "game") return;
   if (document.getElementById("punch-badge")) return;
