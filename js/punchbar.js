@@ -17,36 +17,25 @@ function maybeRefreshPunchGap() {
 let badgeTextEl;
 
 async function fetchPunchGap(userId) {
-  const cached = localStorage.getItem("punchGap");
-  if (cached && !navigator.onLine) {
-    window.punchGap = parseInt(cached);
-    renderPunchGapBadge();
-    return;
-  }
-
   try {
     const res = await fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard?user_id=${userId}`);
     const data = await res.json();
 
     if (data && typeof data.punches_to_next_rank === "number") {
-      window.punchGap = data.punches_to_next_rank;
-    } else {
-      window.punchGap = 0;
-    }
+      const newGap = data.punches_to_next_rank;
 
-    if (data && typeof data.rank === "number") {
-      window.userRank = data.rank; // ✅ assign rank here
+      // ✅ Only update if it's a smaller value or first time
+      if (typeof window.punchGap !== "number" || newGap < window.punchGap) {
+        window.punchGap = newGap;
+        localStorage.setItem("punchGap", newGap);
+        renderPunchGapBadge();
+      }
     }
-
   } catch (err) {
     console.error("❌ Failed to fetch punch gap:", err);
-    window.punchGap = 0;
-    window.userRank = "-";
   }
-
-  renderPunchGapBadge();
-  renderPunchBadge(); // ✅ make sure badge updates visually too
 }
+
 
 function renderPunchBadge() {
   if (window.activeTab !== "game") return;
