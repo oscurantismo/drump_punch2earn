@@ -147,26 +147,27 @@ function handlePunch() {
   }
 }
 
-function showBonusCoin(text = "+50") {
+function showBonusCoin(text = "+25") {
   const coin = document.createElement("div");
   coin.className = "bonus-coin";
   coin.innerHTML = `<span class="bonus-text">${text}</span>`;
 
   Object.assign(coin.style, {
     position: "fixed",
-    top: "180px", // ✅ lower than +1 (which is ~125px)
+    top: "180px", // ✅ below punchbar, above Drump
     left: "50%",
     transform: "translateX(-50%)",
     zIndex: "5000",
-    width: "84px",
-    height: "84px",
+    width: "76px",
+    height: "76px",
     borderRadius: "50%",
-    background: `url('drump-images/coin.png') center center / 90% no-repeat`,
+    background: "#FFCC68", // ✅ same as badge background
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     pointerEvents: "none",
     animation: "bounceCoin 2.5s ease-out forwards",
+    boxShadow: "2px 2px 0 #000",
     willChange: "transform, opacity"
   });
 
@@ -176,7 +177,7 @@ function showBonusCoin(text = "+50") {
     coin.style.transition = "opacity 0.8s ease, transform 1.2s ease";
     coin.style.opacity = "0";
     coin.style.transform = "translateX(-50%) translateY(-100px)";
-  }, 1800); // 🕒 display time before floating
+  }, 1800);
 
   setTimeout(() => coin.remove(), 3200);
 }
