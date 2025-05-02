@@ -138,6 +138,31 @@ function showGameUI(scene) {
 
   drawDrump(scene, "Drump_1-01");
 
+  const debugBtn = document.createElement("button");
+  debugBtn.textContent = "Trigger Bonus Coin";
+  Object.assign(debugBtn.style, {
+    position: "fixed",
+    top: "240px",
+    left: "12px",
+    zIndex: 5000,
+    background: "#D10000",
+    color: "#fff",
+    fontSize: "14px",
+    borderRadius: "8px",
+    border: "2px solid #000",
+    padding: "6px 10px",
+    fontFamily: "'Negrita Pro', sans-serif",
+    cursor: "pointer"
+  });
+
+  debugBtn.onclick = () => {
+    import("./punch.js").then(mod => {
+      mod.showBonusCoin("+50"); // or "+25", "+35", etc.
+    });
+  };
+
+  document.body.appendChild(debugBtn);
+
 }
 
 function drawDrump(scene, textureKey) {
