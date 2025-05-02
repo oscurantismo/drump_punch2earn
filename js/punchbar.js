@@ -22,27 +22,30 @@ async function fetchPunchGap(userId) {
     const data = await res.json();
 
     if (data) {
-      // ✅ Update punch gap always
+      // ✅ Update punchGap ONLY if it decreases or was undefined
       if (typeof data.punches_to_next_rank === "number") {
-        window.punchGap = data.punches_to_next_rank;
-        localStorage.setItem("punchGap", data.punches_to_next_rank);
-        renderPunchGapBadge();
+        const newGap = data.punches_to_next_rank;
+
+        if (typeof window.punchGap !== "number" || newGap < window.punchGap) {
+          window.punchGap = newGap;
+          localStorage.setItem("punchGap", newGap);
+          renderPunchGapBadge();
+        }
       }
 
-      // ✅ Update rank badge
+      // ✅ Always update rank
       if (typeof data.rank === "number") {
         window.userRank = data.rank;
 
         const icon = document.getElementById("rank-badge-circle");
-        if (icon) {
-          icon.textContent = data.rank;
-        }
+        if (icon) icon.textContent = data.rank;
       }
     }
   } catch (err) {
     console.error("❌ Failed to fetch punch gap or rank:", err);
   }
 }
+
 
 function renderPunchBadge() {
   if (window.activeTab !== "game") return;
