@@ -147,42 +147,56 @@ function handlePunch() {
   }
 }
 
-function showBonusCoin(text = "+25") {
-  const coin = document.createElement("div");
-  coin.className = "bonus-coin";
-  coin.textContent = text;
+function showBonusCoin(bonusText = "+25") {
+  const scene = game.scene.scenes[0];
 
-  Object.assign(coin.style, {
-    position: "fixed",
-    top: "125px", // just below punchbar
-    left: "50%",
-    transform: "translateX(-50%)",
-    zIndex: 1003,
-    background: "#D10000 url('drump-images/coin.png') center center / cover no-repeat",
-    color: "#fff",
+  const centerX = scene.scale.width / 2;
+  const centerY = 235; // 🧭 Position below punchbar, above Drump
+
+  const coinImg = scene.add.image(centerX, centerY, "bonusCoin")
+    .setOrigin(0.5)
+    .setDepth(10002)
+    .setScale(0.68) // ✅ Smaller visual size
+    .setAlpha(1);
+
+  const coinLabel = scene.add.text(centerX, centerY, bonusText, {
     fontFamily: "'Negrita Pro', sans-serif",
     fontSize: "18px",
-    fontWeight: "bold",
-    borderRadius: "50%",
-    width: "84px",
-    height: "84px",
-    lineHeight: "84px",
-    textAlign: "center",
-    boxShadow: "2px 2px 0 #000",
-    opacity: 1,
-    transition: "all 0.8s ease-out"
+    color: "#fff",
+    stroke: "#000",
+    strokeThickness: 4,
+    align: "center"
+  })
+    .setOrigin(0.5)
+    .setDepth(10003);
+
+  // === First pause before animation (let human notice)
+  scene.time.delayedCall(1000, () => {
+    // === Small bounce down
+    scene.tweens.add({
+      targets: [coinImg, coinLabel],
+      y: centerY - 10,
+      ease: "Back.easeOut",
+      duration: 400,
+      onComplete: () => {
+        // === Float up and fade out
+        scene.tweens.add({
+          targets: [coinImg, coinLabel],
+          y: centerY - 130,
+          alpha: 0,
+          duration: 1100,
+          delay: 300,
+          ease: "Cubic.easeIn",
+          onComplete: () => {
+            coinImg.destroy();
+            coinLabel.destroy();
+          }
+        });
+      }
+    });
   });
-
-  document.body.appendChild(coin);
-
-  // Animate up and fade out
-  requestAnimationFrame(() => {
-    coin.style.top = "60px";
-    coin.style.opacity = "0";
-  });
-
-  setTimeout(() => coin.remove(), 1200);
 }
+
 
 function showPunchZapEffect() {
   const scene = game.scene.scenes[0];
