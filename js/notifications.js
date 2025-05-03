@@ -17,7 +17,6 @@ function showNotificationPopup() {
     alignItems: "center",
     justifyContent: "center",
     fontFamily: FONT.body,
-    width: "90vw"
   });
 
   const popup = document.createElement("div");
@@ -30,6 +29,7 @@ function showNotificationPopup() {
     width: "90%",
     maxWidth: "360px",
     fontFamily: FONT.heading,
+    fontSize: "18px",
     boxShadow: "2px 2px 0 #000",
     textAlign: "center",
     position: "relative"
@@ -104,7 +104,7 @@ function showNotificationPopup() {
           .then(res => res.json())
           .then(() => {
             const message = subscribed
-              ? `We're sorry to see you go.<br>Let us know how we can improve by messaging us: <a href="https://t.me/drumpgame" target="_blank" style="color:${COLORS.primary}; text-decoration: underline;">Our Telegram group</a>`
+              ? `We're sorry to see you go.<br><br>Let us know how we can improve by messaging us: <a href="https://t.me/drumpgame" target="_blank" style="color:${COLORS.primary}; text-decoration: underline; align-text: left;">Our Telegram group</a>`
               : "Thank you for subscribing!";
 
             showNotificationSuccess(message);
@@ -140,6 +140,7 @@ function showNotificationSuccess(msg) {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
+    width: "60vw",
     background: "#FFEDAC",
     color: "#000000",
     padding: "18px 24px",
@@ -159,7 +160,7 @@ function showNotificationSuccess(msg) {
   Object.assign(x.style, {
     marginTop: "10px",
     background: COLORS.primary,
-    color: COLORS.white,
+    color: "#FFFFFF",
     border: "1px solid #000000",
     padding: "6px 12px",
     borderRadius: "8px",
