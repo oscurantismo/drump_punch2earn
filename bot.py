@@ -50,7 +50,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("🕹 Play Drump | Punch2Earn", web_app=WebAppInfo(url=WEB_APP_URL))],
         [InlineKeyboardButton("📊 Check Leaderboard", callback_data="leaderboard")],
-        [InlineKeyboardButton("ℹ️ Info", callback_data="info")]
+        [InlineKeyboardButton("📢 Join our official news channel", url="https://t.me/drumpofficial")],
+        [InlineKeyboardButton("🤙 Join our Telegram group", url="https://t.me/drumpgame")],
+        [InlineKeyboardButton("ℹ️ Learn more", callback_data="info")]
     ])
 
     await update.message.reply_text(
@@ -114,34 +116,9 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     elif query.data == "info":
         await query.message.reply_text(
-            "ℹ️ Drump | Punch2Earn is a Telegram Mini App where you throw shoes at Drump and climb the leaderboard.\n\n"
+            "ℹ️ Drump | Punch2Earn is a Telegram Mini App where you punch Drump to climb the leaderboard.\n\n"
             "🏗 Upcoming: Airdrops, upgrades, and seasonal events."
         )
-
-    elif query.data == "profile":
-        await profile(update, context)
-
-# === /profile ===
-async def profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.effective_user
-    logger.info(f"📄 /profile requested by {user.username} ({user.id})")
-    
-    try:
-        res = requests.get(f"https://drumpleaderboard-production.up.railway.app/profile?user_id={user.id}")
-        if res.status_code != 200:
-            raise Exception(res.json().get("error", "Unknown error"))
-        data = res.json()
-
-        msg = (
-            f"📄 <b>{data.get('username', 'Anonymous')}'s Profile</b>\n\n"
-            f"🥇 <b>Punches:</b> {data.get('punches', 0)}\n"
-            f"🔗 <b>Referral Link:</b> <a href='https://t.me/Drump_punch_bot?start=referral_{user.id}'>Invite Friends</a>"
-        )
-        await update.message.reply_text(msg, parse_mode="HTML", disable_web_page_preview=True)
-
-    except Exception as e:
-        logger.error(f"❌ Failed to fetch profile: {e}")
-        await update.message.reply_text("❌ Failed to load your profile. Please try again later.")
 
 # === Error Logger ===
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
@@ -158,8 +135,7 @@ if __name__ == "__main__":
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("profile", profile))
-    app.add_handler(CallbackQueryHandler(button_callback, pattern="^(leaderboard|info|profile)$"))
+    app.add_handler(CallbackQueryHandler(button_callback, pattern="^(leaderboard|info)$"))
     app.add_error_handler(error_handler)
 
     print("🚀 Drump | Punch2Earn Mini App bot is running...")
