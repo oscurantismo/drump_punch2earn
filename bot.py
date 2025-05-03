@@ -99,13 +99,31 @@ async def send_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id:
 
     for i, entry in enumerate(top_10):
         medal = medals[i] if i < 3 else f"{i+1}."
-        name = entry['username']
-        score = entry['score']
+
+        # Determine display name using priority: first_name > last_name > username
+        display_name = (
+            entry.get("first_name") or
+            entry.get("last_name") or
+            entry.get("username") or
+            "Anonymous"
+        )
+
+        is_user = str(entry.get("user_id")) == str(user_id)
+        name = f"<b>{display_name}</b>" if is_user else display_name
+        score = entry.get("score", 0)
+
         msg += f"{medal} {name} — {score} punches\n"
 
     if user_entry and user_rank > 10:
         msg += "\n🔻 <b>Your Rank</b>\n"
-        msg += f"👉 {user_rank}. <b>{user_entry['username']}</b> — {user_entry['score']} punches\n"
+
+        user_name = (
+            user_entry.get("first_name") or
+            user_entry.get("last_name") or
+            user_entry.get("username") or
+            "Anonymous"
+        )
+        msg += f"👉 {user_rank}. <b>{user_name}</b> — {user_entry['score']} punches\n"
 
         top_10_score = top_10[-1]['score']
         if user_entry['score'] < top_10_score:
@@ -115,6 +133,7 @@ async def send_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id:
     msg += "\n🔍 <i>See more in Drump | Punch2Earn</i>"
 
     await context.bot.send_message(chat_id, msg, parse_mode="HTML")
+
 
 # === Button callbacks ===
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
