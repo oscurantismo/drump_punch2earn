@@ -1,24 +1,22 @@
-import { COLORS, FONT } from "./styles.js";
+import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 const API_BASE = "https://drumpleaderboard-production.up.railway.app";
 
 function showNotificationPopup() {
-  if (document.getElementById("notification-overlay")) return;
+  const existing = document.getElementById("notification-overlay");
+  if (existing) return;
 
   const overlay = document.createElement("div");
   overlay.id = "notification-overlay";
-  overlay.classList.add("modal-active");
   Object.assign(overlay.style, {
     position: "fixed",
-    top: "0",
-    left: "0",
-    right: "0",
-    bottom: "0",
-    backgroundColor: "rgba(0,0,0,0.6)",
+    top: "0", left: "0", right: "0", bottom: "0",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    zIndex: ZINDEX.modal,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 3000,
+    fontFamily: FONT.body
   });
 
   const popup = document.createElement("div");
@@ -30,10 +28,10 @@ function showNotificationPopup() {
     padding: "20px",
     width: "90%",
     maxWidth: "360px",
-    fontFamily: FONT.heading,
+    fontFamily: "'Negrita Pro', sans-serif",
     boxShadow: "2px 2px 0 #000",
     textAlign: "center",
-    position: "relative",
+    position: "relative"
   });
 
   const close = document.createElement("div");
@@ -43,23 +41,17 @@ function showNotificationPopup() {
     top: "10px",
     right: "14px",
     fontSize: "18px",
-    cursor: "pointer",
+    cursor: "pointer"
   });
   close.onclick = () => overlay.remove();
 
   const title = document.createElement("h3");
   title.textContent = "🔔 Notifications";
-  Object.assign(title.style, {
-    marginBottom: "12px",
-    fontSize: "20px",
-  });
+  title.style.marginBottom = "12px";
 
   const desc = document.createElement("p");
-  Object.assign(desc.style, {
-    fontSize: "14px",
-    lineHeight: "1.5",
-    marginBottom: "16px",
-  });
+  desc.style.fontSize = "14px";
+  desc.style.lineHeight = "1.5";
   desc.innerHTML = `
     Get notified about:<br>
     🪹 New reward drops<br>
@@ -70,7 +62,7 @@ function showNotificationPopup() {
   const button = document.createElement("button");
   button.textContent = "Loading...";
   Object.assign(button.style, {
-    marginTop: "12px",
+    marginTop: "18px",
     padding: "10px 18px",
     fontSize: "15px",
     fontWeight: "bold",
@@ -79,39 +71,38 @@ function showNotificationPopup() {
     background: COLORS.primary,
     color: COLORS.offWhite,
     cursor: "pointer",
-    boxShadow: "1.5px 1.5px 0 #000",
+    boxShadow: "1.5px 1.5px 0 #000"
   });
 
   const userId = window.userId;
+  const username = window.username || "unknown";
+
   fetch(`${API_BASE}/notifications/status?user_id=${userId}`)
     .then(res => res.json())
     .then(data => {
       let subscribed = data.subscribed;
-      updateButtonText();
+      button.textContent = subscribed ? "🛑 Stop Notifications" : "✅ Enable Notifications";
 
       button.onclick = () => {
         const endpoint = `${API_BASE}${subscribed ? "/notifications/unsubscribe" : "/notifications/subscribe"}`;
         fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: userId }),
+          body: JSON.stringify({ user_id: userId, username })
         })
           .then(res => res.json())
           .then(() => {
-            subscribed = !subscribed;
-            updateButtonText();
             showNotificationSuccess(
               subscribed
-                ? "✅ You’re now subscribed to notifications!"
-                : "🔕 You have unsubscribed from notifications."
+                ? "🔕 You have unsubscribed from notifications."
+                : "✅ You’re now subscribed to notifications!"
             );
+
+            subscribed = !subscribed;
+            button.textContent = subscribed ? "🛑 Stop Notifications" : "✅ Enable Notifications";
           })
           .catch(err => alert("❌ Failed to update notification status: " + err));
       };
-
-      function updateButtonText() {
-        button.textContent = subscribed ? "🛑 Stop Notifications" : "✅ Enable Notifications";
-      }
     })
     .catch(() => {
       button.textContent = "❌ Failed to load status";
@@ -120,11 +111,11 @@ function showNotificationPopup() {
 
   popup.append(close, title, desc, button);
   overlay.appendChild(popup);
-  document.body.appendChild(overlay);
-
-  overlay.onclick = (e) => {
+  overlay.onclick = e => {
     if (e.target === overlay) overlay.remove();
   };
+
+  document.body.appendChild(overlay);
 }
 
 function showNotificationSuccess(msg) {
@@ -135,18 +126,18 @@ function showNotificationSuccess(msg) {
   popup.id = "notif-confirm-popup";
   Object.assign(popup.style, {
     position: "fixed",
-    top: "20%",
+    top: "50%",
     left: "50%",
-    transform: "translateX(-50%)",
+    transform: "translate(-50%, -50%)",
     background: COLORS.offWhite,
     color: COLORS.primary,
     padding: "18px 24px",
     borderRadius: "14px",
     border: `2px solid ${COLORS.primary}`,
-    boxShadow: "1px 2px 0 0 #000",
+    boxShadow: "0 0 8px rgba(0,0,0,0.3)",
     fontFamily: FONT.body,
-    zIndex: 9999,
-    textAlign: "center",
+    zIndex: ZINDEX.modal + 10,
+    textAlign: "center"
   });
 
   const text = document.createElement("p");
@@ -161,14 +152,10 @@ function showNotificationSuccess(msg) {
     border: "none",
     padding: "6px 12px",
     borderRadius: "8px",
-    cursor: "pointer",
-    fontFamily: FONT.body,
+    cursor: "pointer"
   });
 
-  x.onclick = () => {
-    popup.remove();
-  };
-
+  x.onclick = () => popup.remove();
   popup.appendChild(text);
   popup.appendChild(x);
   document.body.appendChild(popup);
