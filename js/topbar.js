@@ -1,5 +1,5 @@
 import { renderProfilePage } from "./profile.js";
-import { showInfoPage, createNotificationPopup } from "./popups.js";
+import { showInfoPage } from "./popups.js";
 import { showNotificationPopup } from "./notifications.js"
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 
@@ -106,7 +106,7 @@ function renderTopBar() {
 
   // Bell 
   icons.appendChild(makeIcon("drump-images/bell.svg", "Bell", () => {
-    createNotificationPopup();
+    showNotificationPopup();
   }));
 
   // Info
