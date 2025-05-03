@@ -66,14 +66,14 @@ function showNotificationPopup() {
   });
 
   const userId = window.userId;
-  fetch(`${API_BASE}/notifications/status?user_id=${userId}`)
+  fetch(`${API_BASE}/status?user_id=${userId}`)
     .then(res => res.json())
     .then(data => {
       const subscribed = data.subscribed;
       button.textContent = subscribed ? "🔝 Stop Notifications" : "✅ Enable Notifications";
 
       button.onclick = () => {
-        const endpoint = subscribed ? "/notifications/unsubscribe" : "/notifications/subscribe";
+        const endpoint = subscribed ? "/unsubscribe" : "/subscribe";
         fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
