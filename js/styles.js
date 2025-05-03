@@ -10,7 +10,7 @@ export const COLORS = {
 
 export const FONT = {
     heading: "'Negrita Pro', sans-serif",
-    body: "'Commissioner', sans-serif",
+    body: "'Reem Kufi Fun', sans-serif",
 };
 
 export const BORDER = {
