@@ -30,7 +30,6 @@ function showReferralPopup() {
         overflow: "hidden"
     });
 
-    // === Black Heading Bar ===
     const heading = document.createElement("div");
     heading.innerText = "INVITE & EARN";
     Object.assign(heading.style, {
@@ -45,7 +44,6 @@ function showReferralPopup() {
         letterSpacing: "1px"
     });
 
-    // === Close (X) Button ===
     const closeBtn = document.createElement("div");
     closeBtn.innerText = "✕";
     Object.assign(closeBtn.style, {
@@ -62,7 +60,6 @@ function showReferralPopup() {
         popup.remove();
     };
 
-    // === Bonus description
     const description = document.createElement("div");
     description.innerHTML = `
       <div style="font-size:16px;margin:16px 12px 4px;line-height:1.5;color:#000;">
@@ -73,7 +70,6 @@ function showReferralPopup() {
       </div>
     `;
 
-    // === Referral Link Field
     const linkField = document.createElement("input");
     linkField.type = "text";
     linkField.readOnly = true;
@@ -94,7 +90,6 @@ function showReferralPopup() {
         maxWidth: "260px"
     });
 
-    // === Copy and Share buttons manually created
     const btnGroup = document.createElement("div");
     Object.assign(btnGroup.style, {
         display: "flex",
@@ -105,7 +100,6 @@ function showReferralPopup() {
 
     const copyBtn = document.createElement("button");
     copyBtn.innerText = "COPY";
-    copyBtn.className = "copy-btn";
     Object.assign(copyBtn.style, {
        background: "#2a3493",
         color: "#fff",
@@ -126,13 +120,12 @@ function showReferralPopup() {
             copyBtn.innerText = "✅ Copied";
             setTimeout(() => {
                 copyBtn.innerText = "COPY";
-            }, 3000); // ✅ keep it visible for 3s
+            }, 3000);
         });
     };
 
     const shareBtn = document.createElement("button");
     shareBtn.innerText = "SHARE";
-    shareBtn.className = "share-btn";
     Object.assign(shareBtn.style, {
         background: "#d60000",
         color: "#fff",
@@ -172,7 +165,6 @@ function showReferralPopup() {
     btnGroup.appendChild(copyBtn);
     btnGroup.appendChild(shareBtn);
 
-    // === Assemble everything
     card.appendChild(heading);
     card.appendChild(closeBtn);
     card.appendChild(description);
@@ -196,88 +188,6 @@ function faqItem(question, answer) {
     `;
 }
 
-function showNotificationPopup() {
-  const modal = document.createElement("div");
-  Object.assign(modal.style, {
-    position: "fixed",
-    top: "0", left: "0", right: "0", bottom: "0",
-    background: "rgba(0,0,0,0.6)",
-    zIndex: 3000,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  });
-
-  const box = document.createElement("div");
-  Object.assign(box.style, {
-    background: "#FFF2C5",
-    border: "2px solid #000",
-    borderRadius: "12px",
-    padding: "24px",
-    maxWidth: "300px",
-    textAlign: "center",
-    fontFamily: "'Commissioner', sans-serif",
-    boxShadow: "2px 2px 0 #000",
-  });
-
-  const title = document.createElement("h3");
-  title.textContent = "🔔 Enable Notifications?";
-  title.style.marginBottom = "12px";
-
-  const desc = document.createElement("p");
-  desc.innerHTML = "Would you like to receive daily updates about rewards, tasks, and your leaderboard rank?";
-  desc.style.fontSize = "14px";
-  desc.style.marginBottom = "20px";
-
-  const btnYes = document.createElement("button");
-  btnYes.textContent = "Yes, notify me";
-  Object.assign(btnYes.style, {
-    margin: "6px",
-    padding: "10px 14px",
-    background: "#2a3493",
-    color: "#fff",
-    border: "2px solid #000",
-    borderRadius: "8px",
-    fontWeight: "bold",
-    cursor: "pointer",
-  });
-
-  const btnNo = document.createElement("button");
-  btnNo.textContent = "No thanks";
-  Object.assign(btnNo.style, {
-    margin: "6px",
-    padding: "10px 14px",
-    background: "#fff",
-    color: "#000",
-    border: "2px solid #000",
-    borderRadius: "8px",
-    fontWeight: "bold",
-    cursor: "pointer",
-  });
-
-  btnYes.onclick = () => {
-    fetch(`https://drumpleaderboard-production.up.railway.app/subscribe`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: window.userId, subscribe: true })
-    }).catch(console.error);
-    document.body.removeChild(modal);
-  };
-
-  btnNo.onclick = () => {
-    fetch(`https://drumpleaderboard-production.up.railway.app/subscribe`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: window.userId, subscribe: false })
-    }).catch(console.error);
-    document.body.removeChild(modal);
-  };
-
-  box.append(title, desc, btnYes, btnNo);
-  modal.appendChild(box);
-  document.body.appendChild(modal);
-}
-
 function showInfoPage() {
     const existing = document.getElementById("info-container");
     if (existing) existing.remove();
@@ -290,7 +200,7 @@ function showInfoPage() {
         left: "0",
         right: "0",
         bottom: "0",
-        background: "url('./drump-images/background.png') center center / cover no-repeat", // ✅ background.png
+        background: "url('./drump-images/background.png') center center / cover no-repeat",
         fontFamily: FONT.body,
         zIndex: ZINDEX.modal,
         display: "flex",
@@ -307,7 +217,7 @@ function showInfoPage() {
         maxWidth: "360px",
         maxHeight: "90vh",
         overflowY: "auto",
-        boxShadow: "1px 2px 0 0 #000", // ✅ correct box shadow
+        boxShadow: "1px 2px 0 0 #000",
         position: "relative",
         fontFamily: FONT.body,
         color: COLORS.primary
@@ -392,15 +302,12 @@ function showInfoPage() {
     overlay.appendChild(info);
     document.body.appendChild(overlay);
 
-    // Close on background click
     overlay.onclick = (e) => {
         if (e.target === overlay) overlay.remove();
     };
 
-    // Close button
     document.getElementById("close-info").onclick = () => overlay.remove();
 
-    // FAQ toggle logic
     const questions = info.querySelectorAll(".faq-question");
     questions.forEach(q => {
         q.onclick = () => {
@@ -410,163 +317,4 @@ function showInfoPage() {
     });
 }
 
-export function createNotificationPopup() {
-  const existing = document.getElementById("notification-popup");
-  if (existing) return;
-
-  const overlay = document.createElement("div");
-  overlay.id = "notification-popup";
-  Object.assign(overlay.style, {
-    position: "fixed",
-    top: "0", left: "0", right: "0", bottom: "0",
-    background: "rgba(0, 0, 0, 0.5)",
-    zIndex: "9999",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    fontFamily: FONT.body,
-  });
-
-  const box = document.createElement("div");
-  Object.assign(box.style, {
-    background: COLORS.badgeBg,
-    border: `3px solid ${COLORS.primary}`,
-    borderRadius: "16px",
-    padding: "24px",
-    maxWidth: "85%",
-    boxShadow: "1px 2px 0px 0px #000",
-    position: "relative",
-  });
-
-  const xBtn = document.createElement("div");
-  xBtn.innerText = "✖";
-  Object.assign(xBtn.style, {
-    position: "absolute",
-    top: "8px",
-    right: "12px",
-    cursor: "pointer",
-    fontSize: "18px",
-    color: COLORS.deepRed,
-  });
-  xBtn.onclick = () => overlay.remove();
-
-  const title = document.createElement("h3");
-  title.innerText = "🔔 Notifications";
-  title.style.marginTop = "0";
-
-  const desc = document.createElement("p");
-  desc.innerHTML = `
-    Stay updated with:<br/>
-    • New tasks and rewards<br/>
-    • Leaderboard bonuses<br/>
-    • Limited-time events and gifts
-  `;
-
-  const button = document.createElement("button");
-  Object.assign(button.style, {
-    background: COLORS.primary,
-    color: COLORS.offWhite,
-    border: "none",
-    borderRadius: "12px",
-    padding: "10px 16px",
-    marginTop: "12px",
-    fontFamily: FONT.body,
-    fontSize: "16px",
-    boxShadow: "1px 2px 0px 0px #000",
-  });
-
-  const subscribed = localStorage.getItem("notifications") === "1";
-
-  if (subscribed) {
-    desc.innerHTML = `
-      You're already subscribed!<br/>
-      Want to stop receiving updates?
-    `;
-    button.innerText = "Unsubscribe";
-    button.onclick = () => {
-      localStorage.removeItem("notifications");
-      fetch("https://drumpleaderboard-production.up.railway.app/unsubscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: window.userId,
-          action: "unsubscribe"
-        })
-      }).catch(console.error);
-      overlay.remove();
-      showNotificationSuccess("You've unsubscribed from notifications.");
-    };
-  } else {
-    button.innerText = "Subscribe";
-    button.onclick = () => {
-      localStorage.setItem("notifications", "1");
-      fetch("https://drumpleaderboard-production.up.railway.app/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: window.userId,
-          action: "subscribe"
-        })
-      }).catch(console.error);
-      overlay.remove();
-      showNotificationSuccess("You're now subscribed to notifications!");
-    };
-  }
-
-  box.appendChild(xBtn);
-  box.appendChild(title);
-  box.appendChild(desc);
-  box.appendChild(button);
-  overlay.appendChild(box);
-  document.body.appendChild(overlay);
-}
-
-function showNotificationSuccess(msg) {
-  const existing = document.getElementById("notif-confirm-popup");
-  if (existing) existing.remove();
-
-  const popup = document.createElement("div");
-  popup.id = "notif-confirm-popup";
-  Object.assign(popup.style, {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    background: COLORS.offWhite,
-    color: COLORS.primary,
-    padding: "18px 24px",
-    borderRadius: "14px",
-    border: `2px solid ${COLORS.primary}`,
-    boxShadow: "0 0 8px rgba(0,0,0,0.3)",
-    fontFamily: FONT.body,
-    zIndex: "10000",
-    textAlign: "center"
-  });
-
-  const text = document.createElement("p");
-  text.innerText = msg;
-
-  const x = document.createElement("button");
-  x.innerText = "Close";
-  Object.assign(x.style, {
-    marginTop: "10px",
-    background: COLORS.primary,
-    color: COLORS.offWhite,
-    border: "none",
-    padding: "6px 12px",
-    borderRadius: "8px",
-    cursor: "pointer"
-  });
-
-  x.onclick = () => {
-    popup.remove();
-    document.getElementById("notification-popup")?.remove();
-  };
-
-  popup.appendChild(text);
-  popup.appendChild(x);
-  document.body.appendChild(popup);
-}
-
-
-export { showInfoPage, showReferralPopup, faqItem, showNotificationPopup };
+export { showInfoPage, showReferralPopup, faqItem };
