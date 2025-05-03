@@ -106,13 +106,12 @@ function showNotificationPopup() {
             const message = subscribed
               ? `We're sorry to see you go.<br>Let us know how we can improve by messaging us: <a href="https://t.me/drumpgame" target="_blank" style="color:${COLORS.primary}; text-decoration: underline;">Our Telegram group</a>`
               : "Thank you for subscribing!";
-            showNotificationSuccess(message);
-          });
 
+            showNotificationSuccess(message);
 
             subscribed = !subscribed;
             button.textContent = subscribed ? "Stop Notifications" : "Enable Notifications";
-          })
+            })
           .catch(err => alert("Sorry, no information. Try again later: " + err));
       };
     })
