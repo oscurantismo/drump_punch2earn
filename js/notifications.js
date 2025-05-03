@@ -63,7 +63,7 @@ function showNotificationPopup() {
     boxShadow: "1.5px 1.5px 0 #000",
   });
 
-  const userId = localStorage.getItem("user_id");
+  const userId = window.userId;
   fetch(`/notifications/status?user_id=${userId}`)
     .then(res => res.json())
     .then(data => {
