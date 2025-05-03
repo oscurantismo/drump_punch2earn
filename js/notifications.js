@@ -66,19 +66,19 @@ function showNotificationPopup() {
   });
 
   const userId = window.userId;
-  fetch(`${API_BASE}/status?user_id=${userId}`)
+  fetch(`${API_BASE}/notifications/status?user_id=${userId}`)
     .then(res => res.json())
     .then(data => {
       const subscribed = data.subscribed;
-      button.textContent = subscribed ? "🔝 Stop Notifications" : "✅ Enable Notifications";
+      button.textContent = subscribed ? "🛑 Stop Notifications" : "✅ Enable Notifications";
 
-      const endpoint = `${API_BASE}${subscribed ? "/notifications/unsubscribe" : "/notifications/subscribe"}`;
-      fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId }),
-      });
-
+      button.onclick = () => {
+        const endpoint = `${API_BASE}${subscribed ? "/notifications/unsubscribe" : "/notifications/subscribe"}`;
+        fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId }),
+        })
           .then(res => res.json())
           .then(() => {
             popup.remove();
