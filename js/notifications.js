@@ -17,7 +17,7 @@ function showNotificationPopup() {
     alignItems: "center",
     justifyContent: "center",
     fontFamily: FONT.body,
-    width: "90vw";
+    width: "90vw"
   });
 
   const popup = document.createElement("div");
