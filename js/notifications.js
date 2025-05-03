@@ -130,17 +130,25 @@ function showNotificationPopup() {
 }
 
 function showNotificationSuccess(msg) {
-  const existing = document.getElementById("notif-confirm-popup");
-  if (existing) existing.remove();
+  const existing = document.getElementById("notif-confirm-overlay");
+  if (existing) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = "notif-confirm-overlay";
+  Object.assign(overlay.style, {
+    position: "fixed",
+    top: "0", left: "0", right: "0", bottom: "0",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    zIndex: ZINDEX.modal + 9,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: FONT.body
+  });
 
   const popup = document.createElement("div");
   popup.id = "notif-confirm-popup";
   Object.assign(popup.style, {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "60vw",
     background: "#FFEDAC",
     color: "#000000",
     padding: "18px 24px",
@@ -149,18 +157,20 @@ function showNotificationSuccess(msg) {
     boxShadow: "2px 2px 0 #000",
     fontFamily: FONT.body,
     zIndex: ZINDEX.modal + 10,
-    textAlign: "center"
+    textAlign: "center",
+    width: "80%",
+    maxWidth: "340px"
   });
 
   const text = document.createElement("p");
-  text.innerHTML = msg; // not innerText
+  text.innerHTML = msg;
 
   const x = document.createElement("button");
   x.innerText = "Close";
   Object.assign(x.style, {
     marginTop: "10px",
-    background: COLORS.primary,
-    color: "#FFFFFF",
+    background: "#FFE99B",
+    color: "#000000",
     border: "1px solid #000000",
     padding: "6px 12px",
     borderRadius: "8px",
@@ -169,10 +179,19 @@ function showNotificationSuccess(msg) {
     boxShadow: "2px 2px 0 #000"
   });
 
-  x.onclick = () => popup.remove();
+  x.onclick = () => overlay.remove();
+
   popup.appendChild(text);
   popup.appendChild(x);
-  document.body.appendChild(popup);
+  overlay.appendChild(popup);
+
+  // Close if clicked outside the popup
+  overlay.onclick = e => {
+    if (e.target === overlay) overlay.remove();
+  };
+
+  document.body.appendChild(overlay);
 }
+
 
 export { showNotificationPopup };
