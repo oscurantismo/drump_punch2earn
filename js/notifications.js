@@ -64,7 +64,7 @@ function showNotificationPopup() {
   });
 
   const userId = window.userId;
-  fetch(`/notifications/status?user_id=${userId}`)
+  fetch(`https://drumpleaderboard-production.up.railway.app/notifications/status?user_id=${userId}`)
     .then(res => res.json())
     .then(data => {
       const subscribed = data.subscribed;
