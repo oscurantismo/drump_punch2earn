@@ -1,5 +1,7 @@
 import { COLORS, FONT } from "./styles.js";
 
+const API_BASE = "https://drumpleaderboard-production.up.railway.app";
+
 function showNotificationPopup() {
   const existing = document.getElementById("notification-popup");
   if (existing) return;
@@ -64,7 +66,7 @@ function showNotificationPopup() {
   });
 
   const userId = window.userId;
-  fetch(`https://drumpleaderboard-production.up.railway.app/notifications/status?user_id=${userId}`)
+  fetch(`${API_BASE}/notifications/status?user_id=${userId}`)
     .then(res => res.json())
     .then(data => {
       const subscribed = data.subscribed;
