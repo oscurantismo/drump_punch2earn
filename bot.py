@@ -63,14 +63,25 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # === Live leaderboard ===
 async def send_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id: str):
     try:
+        logger.info(f"📡 Fetching leaderboard for user_id={user_id}")
         res = requests.get("https://drumpleaderboard-production.up.railway.app/leaderboard")
-        scores = res.json()
-    except Exception as e:
-        await context.bot.send_message(chat_id, "❌ Failed to load leaderboard. Try again later.")
-        return
+        res.raise_for_status()
+        data = res.json()
+        logger.debug(f"📦 Raw response: {data}")
 
-    if not scores:
-        await context.bot.send_message(chat_id, "No scores yet.")
+        scores = data.get("leaderboard", []) if isinstance(data, dict) else data
+        if not isinstance(scores, list):
+            raise ValueError("Leaderboard data is not a list")
+
+        logger.info(f"✅ Received {len(scores)} leaderboard entries")
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"❌ Request error while fetching leaderboard: {e}")
+        await context.bot.send_message(chat_id, "❌ Could not reach the leaderboard server. Please try again later.")
+        return
+    except ValueError as e:
+        logger.error(f"❌ Invalid leaderboard format: {e}")
+        await context.bot.send_message(chat_id, "❌ Leaderboard data format is incorrect.")
         return
 
     medals = ["🥇", "🥈", "🥉"]
