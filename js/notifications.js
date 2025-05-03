@@ -16,13 +16,14 @@ function showNotificationPopup() {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontFamily: FONT.body
+    fontFamily: FONT.body,
+    width: "90vw";
   });
 
   const popup = document.createElement("div");
   popup.id = "notification-popup";
   Object.assign(popup.style, {
-    background: "#FFF2C5",
+    background: "#FFEDAC",
     border: "2px solid #000",
     borderRadius: "16px",
     padding: "20px",
@@ -46,18 +47,27 @@ function showNotificationPopup() {
   close.onclick = () => overlay.remove();
 
   const title = document.createElement("h3");
-  title.textContent = "🔔 Notifications";
+  title.textContent = "Notifications";
   title.style.marginBottom = "12px";
+  title.style.fontSize = "16px";
 
-  const desc = document.createElement("p");
-  desc.style.fontSize = "14px";
-  desc.style.lineHeight = "1.5";
+  const desc = document.createElement("div");
+  Object.assign(desc.style, {
+    fontSize: "14px",
+    lineHeight: "1.5",
+    textAlign: "left",
+    fontFamily: FONT.body,
+    marginBottom: "10px"
+  });
   desc.innerHTML = `
-    Get notified about:<br>
-    🪹 New reward drops<br>
-    ⏳ Unfinished tasks<br>
-    📉 If your leaderboard rank drops
+    <p style="margin-bottom: 6px;">Get notified about:</p>
+    <ul style="padding-left: 18px; margin: 0;">
+      <li>New reward drops</li>
+      <li>Unfinished tasks</li>
+      <li>If your leaderboard rank drops</li>
+    </ul>
   `;
+
 
   const button = document.createElement("button");
   button.textContent = "Loading...";
@@ -65,13 +75,14 @@ function showNotificationPopup() {
     marginTop: "18px",
     padding: "10px 18px",
     fontSize: "15px",
-    fontWeight: "bold",
+    fontWeight: "normal",
     borderRadius: "8px",
-    border: "2px solid #000",
+    border: "1px solid #000",
     background: COLORS.primary,
     color: COLORS.offWhite,
     cursor: "pointer",
-    boxShadow: "1.5px 1.5px 0 #000"
+    boxShadow: "1px 2px 0 #000",
+    fontFamily: FONT.heading
   });
 
   const userId = window.userId;
@@ -81,31 +92,32 @@ function showNotificationPopup() {
     .then(res => res.json())
     .then(data => {
       let subscribed = data.subscribed;
-      button.textContent = subscribed ? "🛑 Stop Notifications" : "✅ Enable Notifications";
+      button.textContent = subscribed ? "Stop Notifications" : "Enable Notifications";
 
       button.onclick = () => {
         const endpoint = `${API_BASE}${subscribed ? "/notifications/unsubscribe" : "/notifications/subscribe"}`;
         fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: userId, username })
+          body: JSON.stringify({ user_id: userId, username: window.username || "Anonymous" })
         })
           .then(res => res.json())
           .then(() => {
-            showNotificationSuccess(
-              subscribed
-                ? "🔕 You have unsubscribed from notifications."
-                : "✅ You’re now subscribed to notifications!"
-            );
+            const message = subscribed
+              ? `We're sorry to see you go.<br>Let us know how we can improve by messaging us: <a href="https://t.me/drumpgame" target="_blank" style="color:${COLORS.primary}; text-decoration: underline;">Our Telegram group</a>`
+              : "Thank you for subscribing!";
+            showNotificationSuccess(message);
+          });
+
 
             subscribed = !subscribed;
-            button.textContent = subscribed ? "🛑 Stop Notifications" : "✅ Enable Notifications";
+            button.textContent = subscribed ? "Stop Notifications" : "Enable Notifications";
           })
-          .catch(err => alert("❌ Failed to update notification status: " + err));
+          .catch(err => alert("Sorry, no information. Try again later: " + err));
       };
     })
     .catch(() => {
-      button.textContent = "❌ Failed to load status";
+      button.textContent = "Sorry, no information. Try again later";
       button.disabled = true;
     });
 
@@ -129,30 +141,32 @@ function showNotificationSuccess(msg) {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    background: COLORS.offWhite,
-    color: COLORS.primary,
+    background: "#FFEDAC",
+    color: "#000000",
     padding: "18px 24px",
     borderRadius: "14px",
-    border: `2px solid ${COLORS.primary}`,
-    boxShadow: "1px 2px 0 #000",
+    border: "2px solid #000000",
+    boxShadow: "2px 2px 0 #000",
     fontFamily: FONT.body,
     zIndex: ZINDEX.modal + 10,
     textAlign: "center"
   });
 
   const text = document.createElement("p");
-  text.innerText = msg;
+  text.innerHTML = msg; // not innerText
 
   const x = document.createElement("button");
   x.innerText = "Close";
   Object.assign(x.style, {
     marginTop: "10px",
     background: COLORS.primary,
-    color: COLORS.offWhite,
-    border: "none",
+    color: COLORS.white,
+    border: "1px solid #000000",
     padding: "6px 12px",
     borderRadius: "8px",
-    cursor: "pointer"
+    cursor: "pointer",
+    fontFamily: FONT.heading,
+    boxShadow: "2px 2px 0 #000"
   });
 
   x.onclick = () => popup.remove();
