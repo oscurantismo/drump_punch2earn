@@ -1,5 +1,5 @@
 import { renderProfilePage } from "./profile.js";
-import { showInfoPage, showNotificationPopup } from "./popups.js";
+import { showInfoPage, showNotificationPopup, createNotificationPopup } from "./popups.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 
 function renderTopBar() {
@@ -103,8 +103,10 @@ function renderTopBar() {
     return icon;
   };
 
-  // Bell (placeholder)
-  icons.appendChild(makeIcon("drump-images/bell.svg", "Bell", () => showNotificationPopup?.()));
+  // Bell 
+  icons.appendChild(makeIcon("drump-images/bell.svg", "Bell", () => {
+    createNotificationPopup();
+  }));
 
   // Info
   icons.appendChild(makeIcon("drump-images/info.svg", "Info", () => showInfoPage?.()));
