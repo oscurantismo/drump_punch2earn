@@ -196,6 +196,88 @@ function faqItem(question, answer) {
     `;
 }
 
+function showNotificationPopup() {
+  const modal = document.createElement("div");
+  Object.assign(modal.style, {
+    position: "fixed",
+    top: "0", left: "0", right: "0", bottom: "0",
+    background: "rgba(0,0,0,0.6)",
+    zIndex: 3000,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  });
+
+  const box = document.createElement("div");
+  Object.assign(box.style, {
+    background: "#FFF2C5",
+    border: "2px solid #000",
+    borderRadius: "12px",
+    padding: "24px",
+    maxWidth: "300px",
+    textAlign: "center",
+    fontFamily: "'Commissioner', sans-serif",
+    boxShadow: "2px 2px 0 #000",
+  });
+
+  const title = document.createElement("h3");
+  title.textContent = "🔔 Enable Notifications?";
+  title.style.marginBottom = "12px";
+
+  const desc = document.createElement("p");
+  desc.innerHTML = "Would you like to receive daily updates about rewards, tasks, and your leaderboard rank?";
+  desc.style.fontSize = "14px";
+  desc.style.marginBottom = "20px";
+
+  const btnYes = document.createElement("button");
+  btnYes.textContent = "Yes, notify me";
+  Object.assign(btnYes.style, {
+    margin: "6px",
+    padding: "10px 14px",
+    background: "#2a3493",
+    color: "#fff",
+    border: "2px solid #000",
+    borderRadius: "8px",
+    fontWeight: "bold",
+    cursor: "pointer",
+  });
+
+  const btnNo = document.createElement("button");
+  btnNo.textContent = "No thanks";
+  Object.assign(btnNo.style, {
+    margin: "6px",
+    padding: "10px 14px",
+    background: "#fff",
+    color: "#000",
+    border: "2px solid #000",
+    borderRadius: "8px",
+    fontWeight: "bold",
+    cursor: "pointer",
+  });
+
+  btnYes.onclick = () => {
+    fetch(`https://drumpleaderboard-production.up.railway.app/subscribe`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: window.userId, subscribe: true })
+    }).catch(console.error);
+    document.body.removeChild(modal);
+  };
+
+  btnNo.onclick = () => {
+    fetch(`https://drumpleaderboard-production.up.railway.app/subscribe`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: window.userId, subscribe: false })
+    }).catch(console.error);
+    document.body.removeChild(modal);
+  };
+
+  box.append(title, desc, btnYes, btnNo);
+  modal.appendChild(box);
+  document.body.appendChild(modal);
+}
+
 function showInfoPage() {
     const existing = document.getElementById("info-container");
     if (existing) existing.remove();
@@ -328,4 +410,4 @@ function showInfoPage() {
     });
 }
 
-export { showInfoPage, showReferralPopup, faqItem };
+export { showInfoPage, showReferralPopup, faqItem, showNotificationPopup };
