@@ -36,7 +36,11 @@ function getBonusAmount(punchCount) {
 
 
 function handlePunch() {
-  if (document.querySelector(".modal-active")) return;
+  // Block punches if a modal is open
+  if (document.querySelector("#notification-overlay, #referral-popup, #notif-confirm-popup, #info-container")) {
+    return;
+  }
+
   if (!drump || window.activeTab !== "game" || window.isPopupOpen?.()) return;
   if (isAnimatingPunch) return; // 🔥 Failsafe: Ignore if already animating punch!
 
