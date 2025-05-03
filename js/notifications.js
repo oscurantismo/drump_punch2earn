@@ -111,7 +111,7 @@ function showNotificationPopup() {
 
             subscribed = !subscribed;
             button.textContent = subscribed ? "Stop Notifications" : "Enable Notifications";
-            })
+          })
           .catch(err => alert("Sorry, no information. Try again later: " + err));
       };
     })
