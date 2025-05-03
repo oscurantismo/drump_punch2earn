@@ -410,4 +410,163 @@ function showInfoPage() {
     });
 }
 
+export function createNotificationPopup() {
+  const existing = document.getElementById("notification-popup");
+  if (existing) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = "notification-popup";
+  Object.assign(overlay.style, {
+    position: "fixed",
+    top: "0", left: "0", right: "0", bottom: "0",
+    background: "rgba(0, 0, 0, 0.5)",
+    zIndex: "9999",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: FONT.body,
+  });
+
+  const box = document.createElement("div");
+  Object.assign(box.style, {
+    background: COLORS.badgeBg,
+    border: `3px solid ${COLORS.primary}`,
+    borderRadius: "16px",
+    padding: "24px",
+    maxWidth: "85%",
+    boxShadow: "1px 2px 0px 0px #000",
+    position: "relative",
+  });
+
+  const xBtn = document.createElement("div");
+  xBtn.innerText = "✖";
+  Object.assign(xBtn.style, {
+    position: "absolute",
+    top: "8px",
+    right: "12px",
+    cursor: "pointer",
+    fontSize: "18px",
+    color: COLORS.deepRed,
+  });
+  xBtn.onclick = () => overlay.remove();
+
+  const title = document.createElement("h3");
+  title.innerText = "🔔 Notifications";
+  title.style.marginTop = "0";
+
+  const desc = document.createElement("p");
+  desc.innerHTML = `
+    Stay updated with:<br/>
+    • New tasks and rewards<br/>
+    • Leaderboard bonuses<br/>
+    • Limited-time events and gifts
+  `;
+
+  const button = document.createElement("button");
+  Object.assign(button.style, {
+    background: COLORS.primary,
+    color: COLORS.offWhite,
+    border: "none",
+    borderRadius: "12px",
+    padding: "10px 16px",
+    marginTop: "12px",
+    fontFamily: FONT.body,
+    fontSize: "16px",
+    boxShadow: "1px 2px 0px 0px #000",
+  });
+
+  const subscribed = localStorage.getItem("notifications") === "1";
+
+  if (subscribed) {
+    desc.innerHTML = `
+      You're already subscribed!<br/>
+      Want to stop receiving updates?
+    `;
+    button.innerText = "Unsubscribe";
+    button.onclick = () => {
+      localStorage.removeItem("notifications");
+      fetch("https://drumpleaderboard-production.up.railway.app/unsubscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: window.userId,
+          action: "unsubscribe"
+        })
+      }).catch(console.error);
+      overlay.remove();
+      showNotificationSuccess("You've unsubscribed from notifications.");
+    };
+  } else {
+    button.innerText = "Subscribe";
+    button.onclick = () => {
+      localStorage.setItem("notifications", "1");
+      fetch("https://drumpleaderboard-production.up.railway.app/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: window.userId,
+          action: "subscribe"
+        })
+      }).catch(console.error);
+      overlay.remove();
+      showNotificationSuccess("You're now subscribed to notifications!");
+    };
+  }
+
+  box.appendChild(xBtn);
+  box.appendChild(title);
+  box.appendChild(desc);
+  box.appendChild(button);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+function showNotificationSuccess(msg) {
+  const existing = document.getElementById("notif-confirm-popup");
+  if (existing) existing.remove();
+
+  const popup = document.createElement("div");
+  popup.id = "notif-confirm-popup";
+  Object.assign(popup.style, {
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    background: COLORS.offWhite,
+    color: COLORS.primary,
+    padding: "18px 24px",
+    borderRadius: "14px",
+    border: `2px solid ${COLORS.primary}`,
+    boxShadow: "0 0 8px rgba(0,0,0,0.3)",
+    fontFamily: FONT.body,
+    zIndex: "10000",
+    textAlign: "center"
+  });
+
+  const text = document.createElement("p");
+  text.innerText = msg;
+
+  const x = document.createElement("button");
+  x.innerText = "Close";
+  Object.assign(x.style, {
+    marginTop: "10px",
+    background: COLORS.primary,
+    color: COLORS.offWhite,
+    border: "none",
+    padding: "6px 12px",
+    borderRadius: "8px",
+    cursor: "pointer"
+  });
+
+  x.onclick = () => {
+    popup.remove();
+    document.getElementById("notification-popup")?.remove();
+  };
+
+  popup.appendChild(text);
+  popup.appendChild(x);
+  document.body.appendChild(popup);
+}
+
+
 export { showInfoPage, showReferralPopup, faqItem, showNotificationPopup };
