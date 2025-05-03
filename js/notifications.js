@@ -28,7 +28,7 @@ function showNotificationPopup() {
     padding: "20px",
     width: "90%",
     maxWidth: "360px",
-    fontFamily: "'Negrita Pro', sans-serif",
+    fontFamily: FONT.heading,
     boxShadow: "2px 2px 0 #000",
     textAlign: "center",
     position: "relative"
@@ -88,7 +88,7 @@ function showNotificationPopup() {
         fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: userId, username: window.storedUsername || "Anonymous" })
+          body: JSON.stringify({ user_id: userId, username })
         })
           .then(res => res.json())
           .then(() => {
@@ -134,7 +134,7 @@ function showNotificationSuccess(msg) {
     padding: "18px 24px",
     borderRadius: "14px",
     border: `2px solid ${COLORS.primary}`,
-    boxShadow: "0 0 8px rgba(0,0,0,0.3)",
+    boxShadow: "1px 2px 0 #000",
     fontFamily: FONT.body,
     zIndex: ZINDEX.modal + 10,
     textAlign: "center"
