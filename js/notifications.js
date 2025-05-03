@@ -88,7 +88,7 @@ function showNotificationPopup() {
         fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: userId, username })
+          body: JSON.stringify({ user_id: userId, username: window.storedUsername || "Anonymous" })
         })
           .then(res => res.json())
           .then(() => {
