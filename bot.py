@@ -64,7 +64,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def send_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id: str):
     try:
         logger.info(f"📡 Fetching leaderboard for user_id={user_id}")
-        res = requests.get("https://drumpleaderboard-production.up.railway.app/leaderboard")
+        res = requests.get("https://drumpleaderboard-production.up.railway.app/leaderboard-list")
         res.raise_for_status()
         data = res.json()
         logger.debug(f"📦 Raw response: {data}")
