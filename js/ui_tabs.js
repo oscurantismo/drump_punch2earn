@@ -91,27 +91,41 @@ function showTab(tab, scene = null) {
         content.appendChild(iframe);
       })
       .catch(() => {
-        content.innerHTML = `
-          <div style="height:100%;display:flex;align-items:center;justify-content:center;
-                      padding:0 16px;box-sizing:border-box;">
-            <div style="width:100%;max-width:420px;background:${COLORS.badgeBg};
-                        border:2px solid ${COLORS.primary};
-                        border-radius:${ZINDEX.radius || '14px'};
-                        padding:24px;text-align:center;
-                        font-family:${FONT.body};color:${COLORS.primary};
-                        box-shadow: 2px 2px 0 #000;">
-              <h2 style="margin:0 0 6px;font-family:${FONT.heading};font-size:20px;">
-                🚧 Leaderboard Under Maintenance
-              </h2>
-              <p style="margin:0;font-size:15px;">
-                We’re improving your experience.<br>Please check back soon!
-              </p>
-            </div>
+        Object.assign(content.style, {
+          background: "url('./drump-images/background.png') center center / cover no-repeat"
+        });
+
+        const fallback = document.createElement("div");
+        Object.assign(fallback.style, {
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "0 16px",
+          boxSizing: "border-box"
+        });
+
+        fallback.innerHTML = `
+          <div style="width:100%;max-width:420px;background:${COLORS.badgeBg};
+                      border:2px solid ${COLORS.primary};
+                      border-radius:${ZINDEX.radius || '14px'};
+                      padding:24px;text-align:center;
+                      font-family:${FONT.body};color:${COLORS.primary};
+                      box-shadow: 2px 2px 0 #000;">
+            <h2 style="margin:0 0 6px;font-family:${FONT.heading};font-size:20px;">
+              🚧 Leaderboard Under Maintenance
+            </h2>
+            <p style="margin:0;font-size:15px;">
+              We’re improving your experience.<br>Please check back soon!
+            </p>
           </div>`;
+
+        content.appendChild(fallback);
       })
       .finally(() => {
         document.body.appendChild(content);
       });
+  }
 
 
   // === EARN TAB ===
