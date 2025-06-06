@@ -158,10 +158,6 @@ function renderProfilePage() {
 
     const claimedRewardsContainer = document.createElement("div");
     claimedRewardsContainer.id = "claimed-rewards-section";
-    claimedRewardsContainer.style.marginTop = "24px";
-
-    const claimedRewardsContainer = document.createElement("div");
-    claimedRewardsContainer.id = "claimed-rewards-section";
     claimedRewardsContainer.className = "referral-section";
 
     const title = document.createElement("div");
