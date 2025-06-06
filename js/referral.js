@@ -78,7 +78,7 @@ function renderReferralHistory(data) {
   Object.assign(table.style, {
     width: "100%",
     borderCollapse: "collapse",
-    fontFamily: FONT.body,
+    fontFamily: FONT.heading,
     fontSize: "14px",
     boxShadow: "1px 2px 0 0 #000"
   });
@@ -116,7 +116,6 @@ function renderReferralHistory(data) {
             border-radius: 999px;
             padding: 4px 10px;
             font-size: 12px;
-            font-weight: bold;
             box-shadow: 1px 2px 0 0 #000;
             text-align: center;
             width: fit-content;
@@ -147,7 +146,7 @@ function renderReferralHistory(data) {
         padding: "12px 24px",
         borderRadius: "10px",
         border: "2px solid #000",
-        fontFamily: FONT.body,
+        fontFamily: FONT.heading,
         fontSize: "15px",
         cursor: "pointer",
         margin: "30px auto 40px",
