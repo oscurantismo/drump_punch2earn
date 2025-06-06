@@ -42,7 +42,7 @@ function renderProfilePage() {
         Object.assign(avatar.style, {
             backgroundSize: "cover",
             backgroundPosition: "center",
-            border: "2px solid #000",
+            border: "2px solid #293391",
         });
     } else {
         avatar.textContent = getUserInitials(window.storedUsername);
@@ -87,7 +87,7 @@ function renderProfilePage() {
         fontSize: "16px",
         marginBottom: "4px",
         color: "#000",
-        fontFamily: FONT.body,
+        fontFamily: FONT.heading,
     });
     rewardBox.appendChild(bonusLine);
 
@@ -95,10 +95,10 @@ function renderProfilePage() {
     note.textContent = "(FRIEND MUST PUNCH 20X)";
     Object.assign(note.style, {
         fontSize: "15px",
-        textTransform: "uppercase",
         color: "#000",
         display: "block",
-        marginBottom: "16px"
+        marginBottom: "16px",
+        fontFamily: FONT.heading,
     });
     rewardBox.appendChild(note);
 
@@ -160,62 +160,43 @@ function renderProfilePage() {
     claimedRewardsContainer.id = "claimed-rewards-section";
     claimedRewardsContainer.style.marginTop = "24px";
 
-    claimedRewardsContainer.innerHTML = `
-      <b style="font-family: ${FONT.heading}; font-size:18px; color:${COLORS.primary}; display:block; margin-bottom:12px;">
-        CLAIMED REWARDS:
-      </b>
-      <div class="table-container" style="overflow-x: auto;">
-        <table style="width:100%; border-collapse:collapse; font-size:14px; font-family:${FONT.body}; box-shadow: 1px 2px 0 0 #000;">
-          <thead>
-            <tr style="background:${COLORS.badgeBg};">
-              <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Task</th>
-              <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Reward</th>
-              <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Status</th>
-            </tr>
-          </thead>
-          <tbody id="claimed-rewards-list">
-            <tr>
-              <td colspan="3" style="padding:12px; text-align:center; color:#777;">No Claimed Rewards Yet.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    const claimedRewardsContainer = document.createElement("div");
+    claimedRewardsContainer.id = "claimed-rewards-section";
+    claimedRewardsContainer.className = "referral-section";
+
+    const title = document.createElement("div");
+    title.className = "referral-section-title";
+    title.innerText = "CLAIMED REWARDS:";
+    claimedRewardsContainer.appendChild(title);
+
+    const tableContainer = document.createElement("div");
+    tableContainer.className = "table-container";
+
+    const table = document.createElement("table");
+    table.className = "referral-table";
+
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Reward</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="claimed-rewards-list">
+        <tr>
+          <td colspan="3" style="padding:12px; text-align:center; color:#777;">No Claimed Rewards Yet.</td>
+        </tr>
+      </tbody>
     `;
+
+    tableContainer.appendChild(table);
+    claimedRewardsContainer.appendChild(tableContainer);
     container.appendChild(claimedRewardsContainer);
+
 
     // === Referral History (will be appended dynamically)
     fetchReferralHistory();
-
-    // === Close Profile Button
-    const closeBtn = document.createElement("button");
-    closeBtn.innerText = "Close Profile";
-    Object.assign(closeBtn.style, {
-        background: "#d60000",
-        color: "#fff",
-        padding: "12px 24px",
-        borderRadius: "10px",
-        border: "2px solid #000",
-        fontFamily: FONT.body,
-        fontSize: "15px",
-        cursor: "pointer",
-        margin: "30px auto 40px",
-        display: "block",
-        boxShadow: "1px 2px 0 0 #000",
-        width: "100%",
-        maxWidth: "280px",
-        textTransform: "uppercase"
-    });
-
-    closeBtn.onclick = async () => {
-        const profileEl = document.getElementById("profile-container");
-        if (profileEl) profileEl.remove();
-        const returnTo = window.lastActiveTab || "game";
-        window.activeTab = returnTo;
-        const { showTab } = await import("./ui_tabs.js");
-        showTab(returnTo);
-    };
-
-    container.appendChild(closeBtn);
 
     const wrap = document.createElement("div");
     wrap.id = "page-content";
