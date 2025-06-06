@@ -38,14 +38,14 @@
   height: 68px;
   border-radius: 50%;
   font-size: 20px;
-  background: #f8f9fe;
-  color: #000;
+  background: #293391;
+  color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   margin-bottom: 10px;
-  border: 2px solid #000;
+  border: 2px solid #293391;
   transform: scale(0.95);
   animation: popIn 0.25s ease-out forwards;
 }
@@ -60,8 +60,9 @@
   font-size: 16px;
   padding: 4px 14px;
   border-radius: 20px;
-  background: #f8f9fe;
-  border: 2px solid #000;
+  color: #FFFFFF;
+  background: #293391;
+  border: 2px solid #293391;
   margin-bottom: 12px;
   box-shadow: var(--box-shadow);
   transition: all 0.3s ease;
@@ -96,7 +97,7 @@
 
 /* === REFERRAL BOX CONTAINER === */
 .referral-box {
-  background: #fff9d6;
+  background: #FFEDAC;
   border: 2px solid #000;
   border-radius: 12px;
   padding: 24px 18px;
@@ -105,6 +106,7 @@
   margin-bottom: 20px;
   box-shadow: var(--box-shadow);
   word-break: break-word;
+  font: var(--font-body);
 }
 
 .referral-box > div:first-child {
