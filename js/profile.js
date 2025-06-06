@@ -3,7 +3,6 @@ import { renderTopBar } from "./topbar.js";
 import { renderTabs } from "./ui_tabs.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 
-
 function renderProfilePage() {
     const existing = document.getElementById("profile-container");
     if (existing) existing.remove();
@@ -24,20 +23,17 @@ function renderProfilePage() {
         top: "0", left: "0", right: "0", bottom: "0",
         background: "url('./drump-images/background.png') center center / cover no-repeat",
         overflowY: "auto",
-        padding: "90px 16px 160px",
+        padding: "90px 16px 140px",
         boxSizing: "border-box",
         fontFamily: FONT.body,
         fontWeight: "normal",
-        zIndex: 900,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center"
+        zIndex: 900
     });
 
-    // === Avatar + Name ===
     const section = document.createElement("div");
     section.className = "profile-section";
 
+    // === Avatar + Name ===
     const avatar = document.createElement("div");
     avatar.className = "profile-initials";
     const photoUrl = Telegram.WebApp?.initDataUnsafe?.user?.photo_url;
@@ -57,9 +53,10 @@ function renderProfilePage() {
     name.className = "profile-name";
     name.textContent = window.storedUsername || "Anonymous";
     section.appendChild(name);
+
     container.appendChild(section);
 
-    // === Referral Box ===
+    // === Referral Box with Black Heading ===
     const rewardBox = document.createElement("div");
     rewardBox.className = "referral-box";
     Object.assign(rewardBox.style, { position: "relative", paddingTop: "50px" });
@@ -111,6 +108,7 @@ function renderProfilePage() {
     referralInput.className = "referral-link";
     referralInput.value = `https://t.me/Drump_punch_bot?start=referral_${window.userId}`;
     rewardBox.appendChild(referralInput);
+
     container.appendChild(rewardBox);
 
     // === Copy + Share Buttons ===
@@ -124,7 +122,9 @@ function renderProfilePage() {
         e.stopPropagation();
         navigator.clipboard.writeText(referralInput.value);
         copyBtn.innerText = "✅ Copied";
-        setTimeout(() => { copyBtn.innerText = "COPY"; }, 3000);
+        setTimeout(() => {
+            copyBtn.innerText = "COPY";
+        }, 3000);
     };
 
     const shareBtn = document.createElement("button");
@@ -156,10 +156,10 @@ function renderProfilePage() {
     actionRow.appendChild(shareBtn);
     container.appendChild(actionRow);
 
-    // === Claimed Rewards Section
     const claimedRewardsContainer = document.createElement("div");
     claimedRewardsContainer.id = "claimed-rewards-section";
     claimedRewardsContainer.style.marginTop = "24px";
+
     claimedRewardsContainer.innerHTML = `
       <b style="font-family: ${FONT.heading}; font-size:18px; color:${COLORS.primary}; display:block; margin-bottom:12px;">
         CLAIMED REWARDS:
@@ -179,13 +179,14 @@ function renderProfilePage() {
             </tr>
           </tbody>
         </table>
-      </div>`;
+      </div>
+    `;
     container.appendChild(claimedRewardsContainer);
 
-    // === Referral History Will Be Appended Here
+    // === Referral History (will be appended dynamically)
     fetchReferralHistory();
 
-    // === Close Button (Always last)
+    // === Close Profile Button
     const closeBtn = document.createElement("button");
     closeBtn.innerText = "Close Profile";
     Object.assign(closeBtn.style, {
@@ -213,6 +214,7 @@ function renderProfilePage() {
         const { showTab } = await import("./ui_tabs.js");
         showTab(returnTo);
     };
+
     container.appendChild(closeBtn);
 
     const wrap = document.createElement("div");
@@ -236,7 +238,7 @@ function getUserInitials(name = "") {
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
 }
-    
+
 function fetchProfileData() {
   if (!window.userId) return;
   fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
