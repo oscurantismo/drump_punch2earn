@@ -31,9 +31,9 @@
   color: #000000;
   font-family: 'Negrita Pro', sans-serif;
   font-size: 13px;
-  border: none;
+  border: var(--default-border);
   border-radius: var(--btn-radius);
-  padding: 10px 14px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -62,6 +62,7 @@
   font-size: 12px;
   font-family: var(--font-body);
   border-radius: 12px;
+  border: var(--default-border);
   padding: 2px 6px;
   min-width: 20px;
   text-align: center;
@@ -74,7 +75,7 @@
 
 /* Active tab — slightly lighter */
 #tab-container button.active-tab {
-  background: #FFF2C5;
+  background: #FFBE00;
 }
 
 /* Icon inside button */
