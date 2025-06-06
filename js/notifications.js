@@ -16,7 +16,7 @@ function showNotificationPopup() {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontFamily: FONT.body,
+    fontFamily: FONT.heading,
   });
 
   const popup = document.createElement("div");
@@ -25,8 +25,10 @@ function showNotificationPopup() {
     background: "#FFEDAC",
     border: "2px solid #000",
     borderRadius: "16px",
-    padding: "20px",
-    width: "90%",
+    paddingLeft: "20px",
+    paddingRight: "20px",
+    paddingBottom: "20px",
+    width: "90vw",
     maxWidth: "360px",
     fontFamily: FONT.heading,
     fontSize: "18px",
@@ -49,14 +51,14 @@ function showNotificationPopup() {
   const title = document.createElement("h3");
   title.textContent = "Notifications";
   title.style.marginBottom = "12px";
-  title.style.fontSize = "16px";
+  title.style.fontSize = "24px";
 
   const desc = document.createElement("div");
   Object.assign(desc.style, {
-    fontSize: "14px",
+    fontSize: "18px",
     lineHeight: "1.5",
     textAlign: "left",
-    fontFamily: FONT.body,
+    fontFamily: FONT.heading,
     marginBottom: "10px"
   });
   desc.innerHTML = `
