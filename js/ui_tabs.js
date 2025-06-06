@@ -73,7 +73,6 @@ function showTab(tab, scene = null) {
 
     document.body.appendChild(content);
 
-  // === LEADERBOARD TAB ===
   } else if (tab === "leaderboard") {
     fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`)
       .then(res => {
@@ -119,26 +118,20 @@ function showTab(tab, scene = null) {
               We’re improving your experience.<br>Please check back soon!
             </p>
           </div>`;
-
         content.appendChild(fallback);
       })
       .finally(() => {
         document.body.appendChild(content);
       });
-    }
 
-
-  // === EARN TAB ===
   } else if (tab === "earn") {
     document.body.appendChild(content);
     renderEarnTab();
 
-  // === PROFILE TAB ===
   } else if (tab === "profile") {
     document.body.appendChild(content);
     renderProfilePage();
 
-  // === INFO TAB ===
   } else if (tab === "info" && typeof renderInfoPage === "function") {
     document.body.appendChild(content);
     renderInfoPage();
