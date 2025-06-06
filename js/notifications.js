@@ -28,7 +28,7 @@ function showNotificationPopup() {
     paddingLeft: "20px",
     paddingRight: "20px",
     paddingBottom: "20px",
-    width: "90vw",
+    width: "80vw",
     maxWidth: "360px",
     fontFamily: FONT.heading,
     fontSize: "18px",
