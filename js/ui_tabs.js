@@ -93,7 +93,7 @@ function showTab(tab, scene = null) {
       .catch(() => {
         content.innerHTML = `
           <div style="height:100%;display:flex;align-items:center;justify-content:center;
-                      padding:0 16px;box-sizing:border-box;background:${COLORS.offWhite};">
+                      padding:0 16px;box-sizing:border-box;">
             <div style="width:100%;max-width:420px;background:${COLORS.badgeBg};
                         border:2px solid ${COLORS.primary};
                         border-radius:${ZINDEX.radius || '14px'};
