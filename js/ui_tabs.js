@@ -125,7 +125,7 @@ function showTab(tab, scene = null) {
       .finally(() => {
         document.body.appendChild(content);
       });
-  }
+    }
 
 
   // === EARN TAB ===
