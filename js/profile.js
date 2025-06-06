@@ -25,7 +25,7 @@ function renderProfilePage() {
         overflowY: "auto",
         padding: "90px 16px 140px",
         boxSizing: "border-box",
-        fontFamily: FONT.body,
+        fontFamily: FONT.heading,
         fontWeight: "normal",
         zIndex: 900
     });
@@ -156,56 +156,38 @@ function renderProfilePage() {
     actionRow.appendChild(shareBtn);
     container.appendChild(actionRow);
 
-    const claimedRewardsContainer = document.createElement("div");
-    claimedRewardsContainer.style.marginTop = "24px";
+    const claimedRewardsSection = document.createElement("div");
+    claimedRewardsSection.className = "referral-section"; // ✅ same wrapper as referral history
 
-    const header = document.createElement("b");
-    header.textContent = "CLAIMED REWARDS:";
-    Object.assign(header.style, {
-      display: "block",
-      fontFamily: FONT.heading,
-      fontSize: "18px",
-      marginBottom: "12px",
-      color: COLORS.primary
-    });
-    claimedRewardsContainer.appendChild(header);
+    const title = document.createElement("div");
+    title.className = "referral-section-title"; // ✅ same class
+    title.innerText = "CLAIMED REWARDS:";
+    claimedRewardsSection.appendChild(title);
 
-    const tableWrap = document.createElement("div");
-    tableWrap.className = "table-container";
-    tableWrap.style.overflowX = "auto";
+    const tableContainer = document.createElement("div");
+    tableContainer.className = "table-container";
 
     const table = document.createElement("table");
-    Object.assign(table.style, {
-      width: "100%",
-      borderCollapse: "collapse",
-      fontFamily: FONT.heading,
-      fontSize: "14px",
-      boxShadow: "1px 2px 0 0 #000"
-    });
+    table.className = "referral-table"; // ✅ identical table class
 
-    const thead = document.createElement("thead");
-    thead.innerHTML = `
-      <tr style="background:${COLORS.beige};">
-        <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Task</th>
-        <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Reward</th>
-        <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Status</th>
-      </tr>
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Reward</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="claimed-rewards-list">
+        <tr>
+          <td colspan="3" style="padding:12px; text-align:center; color:#777;">No Claimed Rewards Yet.</td>
+        </tr>
+      </tbody>
     `;
-    table.appendChild(thead);
 
-    const tbody = document.createElement("tbody");
-    tbody.id = "claimed-rewards-list";
-
-    const emptyRow = document.createElement("tr");
-    emptyRow.innerHTML = `
-      <td colspan="3" style="padding:12px; text-align:center; color:#777;">No Claimed Rewards Yet.</td>
-    `;
-    tbody.appendChild(emptyRow);
-
-    table.appendChild(tbody);
-    tableWrap.appendChild(table);
-    claimedRewardsContainer.appendChild(tableWrap);
-    container.appendChild(claimedRewardsContainer);
+    tableContainer.appendChild(table);
+    claimedRewardsSection.appendChild(tableContainer);
+    container.appendChild(claimedRewardsSection);
 
     // === Referral History (will be appended dynamically)
     fetchReferralHistory();
