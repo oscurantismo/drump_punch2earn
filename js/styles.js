@@ -5,7 +5,8 @@ export const COLORS = {
     textLight: "#f8f9fe",     // Tab/button text and general off-white
     badgeBg: "#FFCC68",       // Badge background
     offWhite: "#f8f9fe",      // Backgrounds
-    deepRed: "#8e0004",       // Highlight, warnings, or accents
+    deepRed: "#8e0004",
+    beige: "#FFEDAC", // Highlight, warnings, or accents
 };
 
 export const FONT = {
