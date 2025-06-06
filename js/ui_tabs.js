@@ -1,10 +1,10 @@
 import { renderProfilePage } from "./profile.js";
 import { showGameUI } from "./game.js";
+import { createLeaderboardPopup } from "./popups.js";
 import { renderEarnTab, getIncompleteTaskCount } from "./earn_tab.js";
-import { COLORS, ZINDEX } from "./styles.js";
+import { COLORS, ZINDEX, FONT } from "./styles.js";
 import { renderTopBar } from "./topbar.js";
-import { renderPunchBar, renderPunchBadge, fetchPunchGap } from "./punchbar.js";
-import { createReferralButton } from "./buttons.js";
+import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
 
 function showTab(tab, scene = null) {
   window.activeTab = tab;
@@ -13,18 +13,9 @@ function showTab(tab, scene = null) {
     scene = window.game?.scene?.scenes?.[0];
   }
 
-  // ✅ REMOVE previous page content
   document.getElementById("page-content")?.remove();
-
-  // ✅ Remove punch bar-related elements
   document.getElementById("punch-bar")?.remove();
   document.getElementById("punch-badge")?.remove();
-  document.getElementById("rank-badge-circle")?.remove();
-  document.getElementById("punch-gap-badge")?.remove();
-
-  // ✅ Remove referral and rewards buttons
-  document.getElementById("referral-button")?.remove();
-  document.getElementById("rewards-button")?.remove();
 
   const content = document.createElement("div");
   content.id = "page-content";
@@ -41,7 +32,6 @@ function showTab(tab, scene = null) {
   renderTopBar();
   renderTabs(tab);
 
-  // === Update tab highlight and badge
   const updateTabHighlight = () => {
     document.querySelectorAll("#tab-container button").forEach(btn => {
       const isActive = btn.dataset.tab === tab;
@@ -64,30 +54,21 @@ function showTab(tab, scene = null) {
 
   setTimeout(updateTabHighlight, 50);
 
-  // === Show referral and rewards buttons (except profile)
-  if (tab !== "profile" && window.userId) {
-    createReferralButton(window.userId);
-  }
-
-  // === GAME TAB ===
   if (tab === "game") {
     renderPunchBar();
     renderPunchBadge();
 
     const activeScene =
-      scene || window.game?.scene?.scenes?.[0] || null;
+      scene ||
+      window.game?.scene?.scenes?.[0] ||
+      null;
 
     if (activeScene) {
       showGameUI(activeScene);
     }
 
-    if (window.userId) {
-      fetchPunchGap(window.userId);
-    }
-
     document.body.appendChild(content);
 
-  // === LEADERBOARD TAB ===
   } else if (tab === "leaderboard") {
     const iframe = document.createElement("iframe");
     iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`;
@@ -102,12 +83,16 @@ function showTab(tab, scene = null) {
     iframe.onerror = () => {
       content.innerHTML = `
         <div style="height:100%;display:flex;align-items:center;justify-content:center;
-                    padding:0 16px;box-sizing:border-box;background:#f8f9fe;">
-          <div style="width:100%;max-width:420px;background:#fff;border:2px solid #2a3493;
-                      border-radius:10px;padding:24px;text-align:center;
-                      font-family:'Segoe UI',sans-serif;color:#2a3493;">
-            <h2 style="margin:0 0 6px;">🚧 Leaderboard under maintenance</h2>
-            <p style="margin:0;">Please check back soon – we’re improving your experience.</p>
+                    padding:0 16px;box-sizing:border-box;background:${COLORS.offWhite};">
+          <div style="width:100%;max-width:420px;background:${COLORS.badgeBg};
+                      border:${ZINDEX.border || '2px solid #000'};
+                      border-radius:${ZINDEX.radius || '12px'};
+                      padding:24px;text-align:center;
+                      font-family:${FONT.body};
+                      color:${COLORS.primary};
+                      box-shadow: 2px 2px 0 #000;">
+            <h2 style="margin:0 0 6px; font-family:${FONT.heading}; font-size:22px;">🚧 Leaderboard Under Maintenance</h2>
+            <p style="margin:0; font-size:15px;">We’re improving your experience. Check back soon!</p>
           </div>
         </div>`;
     };
@@ -119,17 +104,14 @@ function showTab(tab, scene = null) {
     document.body.appendChild(content);
     createLeaderboardPopup();
 
-  // === EARN TAB ===
   } else if (tab === "earn") {
     document.body.appendChild(content);
     renderEarnTab();
 
-  // === PROFILE TAB ===
   } else if (tab === "profile") {
     document.body.appendChild(content);
     renderProfilePage();
 
-  // === INFO TAB ===
   } else if (tab === "info" && typeof renderInfoPage === "function") {
     document.body.appendChild(content);
     renderInfoPage();
