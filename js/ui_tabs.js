@@ -3,7 +3,8 @@ import { showGameUI } from "./game.js";
 import { renderEarnTab, getIncompleteTaskCount } from "./earn_tab.js";
 import { COLORS, ZINDEX, FONT } from "./styles.js";
 import { renderTopBar } from "./topbar.js";
-import { renderPunchBar, renderPunchBadge } from "./punchbar.js";
+import { renderPunchBar, renderPunchBadge, fetchPunchGap } from "./punchbar.js";
+import { createReferralButton } from "./buttons.js";
 
 function showTab(tab, scene = null) {
   window.activeTab = tab;
@@ -15,6 +16,10 @@ function showTab(tab, scene = null) {
   document.getElementById("page-content")?.remove();
   document.getElementById("punch-bar")?.remove();
   document.getElementById("punch-badge")?.remove();
+  document.getElementById("rank-badge-circle")?.remove();
+  document.getElementById("punch-gap-badge")?.remove();
+  document.getElementById("referral-button")?.remove();
+  document.getElementById("rewards-button")?.remove();
 
   const content = document.createElement("div");
   content.id = "page-content";
@@ -53,64 +58,74 @@ function showTab(tab, scene = null) {
 
   setTimeout(updateTabHighlight, 50);
 
+  if (tab !== "profile" && window.userId) {
+    createReferralButton(window.userId);
+  }
+
+  // === GAME TAB ===
   if (tab === "game") {
     renderPunchBar();
     renderPunchBadge();
 
-    const activeScene =
-      scene ||
-      window.game?.scene?.scenes?.[0] ||
-      null;
-
-    if (activeScene) {
-      showGameUI(activeScene);
-    }
+    const activeScene = scene || window.game?.scene?.scenes?.[0] || null;
+    if (activeScene) showGameUI(activeScene);
+    if (window.userId) fetchPunchGap(window.userId);
 
     document.body.appendChild(content);
 
+  // === LEADERBOARD TAB ===
   } else if (tab === "leaderboard") {
-    const iframe = document.createElement("iframe");
-    iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`;
-    Object.assign(iframe.style, {
-      width: "100%",
-      height: "100%",
-      border: "none",
-      display: "block",
-      background: "transparent",
-    });
-
-    iframe.onerror = () => {
+    // 🌐 Try to fetch first to ensure backend is reachable
+    fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`, {
+      method: "HEAD",
+      mode: "no-cors"
+    })
+    .then(() => {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`;
+      Object.assign(iframe.style, {
+        width: "100%",
+        height: "100%",
+        border: "none",
+        display: "block",
+        background: "transparent"
+      });
+      content.appendChild(iframe);
+    })
+    .catch(() => {
       content.innerHTML = `
         <div style="height:100%;display:flex;align-items:center;justify-content:center;
                     padding:0 16px;box-sizing:border-box;background:${COLORS.offWhite};">
           <div style="width:100%;max-width:420px;background:${COLORS.badgeBg};
-                      border:${ZINDEX.border || '2px solid #000'};
-                      border-radius:${ZINDEX.radius || '12px'};
+                      border:2px solid ${COLORS.primary};
+                      border-radius:${ZINDEX.radius || '14px'};
                       padding:24px;text-align:center;
-                      font-family:${FONT.body};
-                      color:${COLORS.primary};
+                      font-family:${FONT.body};color:${COLORS.primary};
                       box-shadow: 2px 2px 0 #000;">
-            <h2 style="margin:0 0 6px; font-family:${FONT.heading}; font-size:22px;">🚧 Leaderboard Under Maintenance</h2>
-            <p style="margin:0; font-size:15px;">We’re improving your experience. Check back soon!</p>
+            <h2 style="margin:0 0 6px;font-family:${FONT.heading};font-size:20px;">
+              🚧 Leaderboard Under Maintenance
+            </h2>
+            <p style="margin:0;font-size:15px;">
+              We’re improving your experience.<br>Check back shortly!
+            </p>
           </div>
         </div>`;
-    };
+    })
+    .finally(() => {
+      document.body.appendChild(content);
+    });
 
-    const timeout = setTimeout(() => iframe.onerror(), 5000);
-    iframe.onload = () => clearTimeout(timeout);
-
-    content.appendChild(iframe);
-    document.body.appendChild(content);
-    createLeaderboardPopup();
-
+  // === EARN TAB ===
   } else if (tab === "earn") {
     document.body.appendChild(content);
     renderEarnTab();
 
+  // === PROFILE TAB ===
   } else if (tab === "profile") {
     document.body.appendChild(content);
     renderProfilePage();
 
+  // === INFO TAB ===
   } else if (tab === "info" && typeof renderInfoPage === "function") {
     document.body.appendChild(content);
     renderInfoPage();
