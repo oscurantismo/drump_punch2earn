@@ -3,7 +3,7 @@ import { renderTopBar } from "./topbar.js";
 import { renderTabs } from "./ui_tabs.js";
 import { COLORS, FONT, ZINDEX } from "./styles.js";
 
-function renderProfilePage() {
+
 function renderProfilePage() {
     const existing = document.getElementById("profile-container");
     if (existing) existing.remove();
