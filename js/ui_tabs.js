@@ -74,46 +74,45 @@ function showTab(tab, scene = null) {
     document.body.appendChild(content);
 
   // === LEADERBOARD TAB ===
-  } else if (tab === "leaderboard") {
-    // 🌐 Try to fetch first to ensure backend is reachable
-    fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`, {
-      method: "HEAD",
-      mode: "no-cors"
-    })
-    .then(() => {
-      const iframe = document.createElement("iframe");
-      iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`;
-      Object.assign(iframe.style, {
-        width: "100%",
-        height: "100%",
-        border: "none",
-        display: "block",
-        background: "transparent"
+    } else if (tab === "leaderboard") {
+    fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`;
+        Object.assign(iframe.style, {
+          width: "100%",
+          height: "100%",
+          border: "none",
+          display: "block",
+          background: "transparent"
+        });
+        content.appendChild(iframe);
+      })
+      .catch(() => {
+        content.innerHTML = `
+          <div style="height:100%;display:flex;align-items:center;justify-content:center;
+                      padding:0 16px;box-sizing:border-box;background:${COLORS.offWhite};">
+            <div style="width:100%;max-width:420px;background:${COLORS.badgeBg};
+                        border:2px solid ${COLORS.primary};
+                        border-radius:${ZINDEX.radius || '14px'};
+                        padding:24px;text-align:center;
+                        font-family:${FONT.body};color:${COLORS.primary};
+                        box-shadow: 2px 2px 0 #000;">
+              <h2 style="margin:0 0 6px;font-family:${FONT.heading};font-size:20px;">
+                🚧 Leaderboard Under Maintenance
+              </h2>
+              <p style="margin:0;font-size:15px;">
+                We’re improving your experience.<br>Please check back soon!
+              </p>
+            </div>
+          </div>`;
+      })
+      .finally(() => {
+        document.body.appendChild(content);
       });
-      content.appendChild(iframe);
-    })
-    .catch(() => {
-      content.innerHTML = `
-        <div style="height:100%;display:flex;align-items:center;justify-content:center;
-                    padding:0 16px;box-sizing:border-box;background:${COLORS.offWhite};">
-          <div style="width:100%;max-width:420px;background:${COLORS.badgeBg};
-                      border:2px solid ${COLORS.primary};
-                      border-radius:${ZINDEX.radius || '14px'};
-                      padding:24px;text-align:center;
-                      font-family:${FONT.body};color:${COLORS.primary};
-                      box-shadow: 2px 2px 0 #000;">
-            <h2 style="margin:0 0 6px;font-family:${FONT.heading};font-size:20px;">
-              🚧 Leaderboard Under Maintenance
-            </h2>
-            <p style="margin:0;font-size:15px;">
-              We’re improving your experience.<br>Check back shortly!
-            </p>
-          </div>
-        </div>`;
-    })
-    .finally(() => {
-      document.body.appendChild(content);
-    });
+
 
   // === EARN TAB ===
   } else if (tab === "earn") {
