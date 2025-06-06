@@ -106,7 +106,7 @@
   margin-bottom: 20px;
   box-shadow: var(--box-shadow);
   word-break: break-word;
-  font: var(--font-body);
+  font-family: var(--font-body);
 }
 
 .referral-box > div:first-child {
