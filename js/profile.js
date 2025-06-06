@@ -157,39 +157,55 @@ function renderProfilePage() {
     container.appendChild(actionRow);
 
     const claimedRewardsContainer = document.createElement("div");
-    claimedRewardsContainer.id = "claimed-rewards-section";
-    claimedRewardsContainer.className = "referral-section";
+    claimedRewardsContainer.style.marginTop = "24px";
 
-    const title = document.createElement("div");
-    title.className = "referral-section-title";
-    title.innerText = "CLAIMED REWARDS:";
-    claimedRewardsContainer.appendChild(title);
+    const header = document.createElement("b");
+    header.textContent = "CLAIMED REWARDS:";
+    Object.assign(header.style, {
+      display: "block",
+      fontFamily: FONT.heading,
+      fontSize: "18px",
+      marginBottom: "12px",
+      color: COLORS.primary
+    });
+    claimedRewardsContainer.appendChild(header);
 
-    const tableContainer = document.createElement("div");
-    tableContainer.className = "table-container";
+    const tableWrap = document.createElement("div");
+    tableWrap.className = "table-container";
+    tableWrap.style.overflowX = "auto";
 
     const table = document.createElement("table");
-    table.className = "referral-table";
+    Object.assign(table.style, {
+      width: "100%",
+      borderCollapse: "collapse",
+      fontFamily: FONT.heading,
+      fontSize: "14px",
+      boxShadow: "1px 2px 0 0 #000"
+    });
 
-    table.innerHTML = `
-      <thead>
-        <tr>
-          <th>Task</th>
-          <th>Reward</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="claimed-rewards-list">
-        <tr>
-          <td colspan="3" style="padding:12px; text-align:center; color:#777;">No Claimed Rewards Yet.</td>
-        </tr>
-      </tbody>
+    const thead = document.createElement("thead");
+    thead.innerHTML = `
+      <tr style="background:${COLORS.beige};">
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Task</th>
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Reward</th>
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Status</th>
+      </tr>
     `;
+    table.appendChild(thead);
 
-    tableContainer.appendChild(table);
-    claimedRewardsContainer.appendChild(tableContainer);
+    const tbody = document.createElement("tbody");
+    tbody.id = "claimed-rewards-list";
+
+    const emptyRow = document.createElement("tr");
+    emptyRow.innerHTML = `
+      <td colspan="3" style="padding:12px; text-align:center; color:#777;">No Claimed Rewards Yet.</td>
+    `;
+    tbody.appendChild(emptyRow);
+
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    claimedRewardsContainer.appendChild(tableWrap);
     container.appendChild(claimedRewardsContainer);
-
 
     // === Referral History (will be appended dynamically)
     fetchReferralHistory();
