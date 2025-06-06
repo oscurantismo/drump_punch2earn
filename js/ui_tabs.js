@@ -74,7 +74,7 @@ function showTab(tab, scene = null) {
     document.body.appendChild(content);
 
   // === LEADERBOARD TAB ===
-    } else if (tab === "leaderboard") {
+  } else if (tab === "leaderboard") {
     fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`)
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
