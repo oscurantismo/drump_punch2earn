@@ -137,7 +137,39 @@ function renderReferralHistory(data) {
   const profile = document.getElementById("profile-container");
   if (profile) {
     profile.appendChild(container);
+
+    // === Close Profile Button ===
+    const closeBtn = document.createElement("button");
+    closeBtn.innerText = "Close Profile";
+    Object.assign(closeBtn.style, {
+        background: "#d60000",
+        color: "#fff",
+        padding: "12px 24px",
+        borderRadius: "10px",
+        border: "2px solid #000",
+        fontFamily: FONT.body,
+        fontSize: "15px",
+        cursor: "pointer",
+        margin: "30px auto 40px",
+        display: "block",
+        boxShadow: "1px 2px 0 0 #000",
+        width: "100%",
+        maxWidth: "280px",
+        textTransform: "uppercase"
+    });
+
+    closeBtn.onclick = async () => {
+        const profileEl = document.getElementById("profile-container");
+        if (profileEl) profileEl.remove();
+        const returnTo = window.lastActiveTab || "game";
+        window.activeTab = returnTo;
+        const { showTab } = await import("./ui_tabs.js");
+        showTab(returnTo);
+    };
+
+    profile.appendChild(closeBtn);
   }
+
 }
 
 export { checkAndSendReferral, fetchReferralHistory, renderReferralHistory };
