@@ -157,25 +157,39 @@ function renderProfilePage() {
     container.appendChild(actionRow);
 
     const claimedRewardsSection = document.createElement("div");
-    claimedRewardsSection.className = "referral-section"; // ✅ same wrapper as referral history
+    claimedRewardsSection.className = "referral-history"; // ✅ styled white box
+    claimedRewardsSection.style.marginTop = "24px";
 
-    const title = document.createElement("div");
-    title.className = "referral-section-title"; // ✅ same class
-    title.innerText = "CLAIMED REWARDS:";
-    claimedRewardsSection.appendChild(title);
+    const header = document.createElement("b");
+    header.textContent = "CLAIMED REWARDS:";
+    Object.assign(header.style, {
+      display: "block",
+      fontFamily: FONT.heading,
+      fontSize: "18px",
+      marginBottom: "12px",
+      color: COLORS.primary
+    });
+    claimedRewardsSection.appendChild(header);
 
-    const tableContainer = document.createElement("div");
-    tableContainer.className = "table-container";
+    const tableWrap = document.createElement("div");
+    tableWrap.className = "table-container";
+    tableWrap.style.overflowX = "auto";
 
     const table = document.createElement("table");
-    table.className = "referral-table"; // ✅ identical table class
+    Object.assign(table.style, {
+      width: "100%",
+      borderCollapse: "collapse",
+      fontFamily: FONT.heading,
+      fontSize: "14px",
+      boxShadow: "1px 2px 0 0 #000"
+    });
 
     table.innerHTML = `
       <thead>
-        <tr>
-          <th>Task</th>
-          <th>Reward</th>
-          <th>Status</th>
+        <tr style="background:${COLORS.badgeBg};">
+          <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Task</th>
+          <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Reward</th>
+          <th style="text-align:left; padding:8px; border-bottom:2px solid #000;">Status</th>
         </tr>
       </thead>
       <tbody id="claimed-rewards-list">
@@ -185,9 +199,10 @@ function renderProfilePage() {
       </tbody>
     `;
 
-    tableContainer.appendChild(table);
-    claimedRewardsSection.appendChild(tableContainer);
+    tableWrap.appendChild(table);
+    claimedRewardsSection.appendChild(tableWrap);
     container.appendChild(claimedRewardsSection);
+
 
     // === Referral History (will be appended dynamically)
     fetchReferralHistory();
