@@ -91,7 +91,7 @@ function showTab(tab, scene = null) {
       })
       .catch(() => {
         Object.assign(content.style, {
-          background: "url('./drump-images/background.png') center center / cover no-repeat"
+          background: "transparent"
         });
 
         const fallback = document.createElement("div");
