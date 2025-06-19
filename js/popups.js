@@ -142,7 +142,7 @@ function showReferralPopup() {
 
     shareBtn.onclick = (e) => {
         e.stopPropagation();
-        const msg = `🥊 Join me on Drump | Punch2Earn!\n\nUse my referral: ${linkField.value}`;
+        const msg = `🥊 Join me on Drump | Tap2Earn!\n\nUse my referral: ${linkField.value}`;
         Telegram.WebApp.showPopup({
             title: "Share referral link",
             message: "Choose where to share:",
@@ -225,7 +225,7 @@ function showInfoPage() {
 
     info.innerHTML = `
         <h2 style="color:${COLORS.primary}; font-size:22px; font-family:${FONT.heading}; text-align:center; margin-bottom:16px;">
-            🥊 Drump | Punch2Earn
+            🥊 Drump | Tap2Earn
         </h2>
         <p style="font-size:14px; line-height:1.5; text-align:center; margin-bottom:16px;">
             Punch Drump. Score punches. Simple as that. From like-minded cryptonerds tired of unpredictability.
