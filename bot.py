@@ -50,9 +50,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("🕹 Play Drump | Punch2Earn", web_app=WebAppInfo(url=WEB_APP_URL))],
         [InlineKeyboardButton("📊 Check Leaderboard", callback_data="leaderboard")],
-        [InlineKeyboardButton("📢 Join our official news channel", url="https://t.me/drumpofficial")],
-        [InlineKeyboardButton("🤙 Join our Telegram group", url="https://t.me/drumpgame")],
-        [InlineKeyboardButton("ℹ️ Learn more", callback_data="info")]
+        [InlineKeyboardButton("🤙 Join our Telegram group", url="https://t.me/drumpgame")]
     ])
 
     await update.message.reply_text(
