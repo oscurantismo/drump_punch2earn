@@ -11,7 +11,7 @@ const DAILY_TASKS = [
 
 const SOCIAL_TASKS = [
   { id: "follow_x", title: "Follow us on X", reward: 40, url: "https://x.com/DrumpGame" },
-  { id: "like_pinned", title: "Like our pinned tweet", reward: 25, url: "https://x.com/DrumpGame/status/1934994893966897587?t=1nbc-JfwsHTKlexj2rtbFQ&s=19" },
+  { id: "like_pinned_v2", title: "Like our pinned tweet", reward: 25, url: "https://x.com/DrumpGame/status/1934994893966897587?t=1nbc-JfwsHTKlexj2rtbFQ&s=19" },
   { id: "retweet_pinned", title: "Re‑post pinned tweet", reward: 35, url: "https://twitter.com/DrumpGame/status/1910371569005736401" },
   { id: "quote_tweet", title: "Quote‑tweet with #Punch2Earn", reward: 60, url: "https://twitter.com/intent/tweet?text=%23Punch2Earn%20I%20just%20joined%20DrumpGame!" },
   { id: "join_channel", title: "Join our Telegram channel", reward: 25, url: "https://t.me/drumpgame" },
