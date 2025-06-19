@@ -48,13 +48,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Show main options menu
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🕹 Play Drump | Punch2Earn", web_app=WebAppInfo(url=WEB_APP_URL))],
+        [InlineKeyboardButton("🕹 Play Drump | Tap2Earn", web_app=WebAppInfo(url=WEB_APP_URL))],
         [InlineKeyboardButton("📊 Check Leaderboard", callback_data="leaderboard")],
         [InlineKeyboardButton("🤙 Join our Telegram group", url="https://t.me/drumpgame")]
     ])
 
     await update.message.reply_text(
-        text="Welcome to Drump | Punch2Earn! Choose an option below:",
+        text="Welcome to Drump | Tap2Earn! Choose an option below:",
         reply_markup=keyboard
     )
 
@@ -83,7 +83,7 @@ async def send_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id:
         return
 
     medals = ["🥇", "🥈", "🥉"]
-    msg = "🏆 <b>Drump | Punch2Earn Leaderboard</b>\n\n"
+    msg = "🏆 <b>Drump | Tap2Earn Leaderboard</b>\n\n"
 
     top_10 = scores[:10]
     user_entry = None
@@ -128,7 +128,7 @@ async def send_leaderboard(chat_id, context: ContextTypes.DEFAULT_TYPE, user_id:
             diff = top_10_score - user_entry['score'] + 1
             msg += f"⚡️ <i>You need just {diff} more punch{'es' if diff != 1 else ''} to break into the top 10!</i>\n"
 
-    msg += "\n🔍 <i>See more in Drump | Punch2Earn</i>"
+    msg += "\n🔍 <i>See more in Drump | Tap2Earn</i>"
 
     await context.bot.send_message(chat_id, msg, parse_mode="HTML")
 
@@ -144,7 +144,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     elif query.data == "info":
         await query.message.reply_text(
-            "ℹ️ Drump | Punch2Earn is a Telegram Mini App where you punch Drump to climb the leaderboard.\n\n"
+            "ℹ️ Drump | Tap2Earn is a Telegram Mini App where you punch Drump to climb the leaderboard.\n\n"
             "🏗 Upcoming: Airdrops, upgrades, and seasonal events."
         )
 
