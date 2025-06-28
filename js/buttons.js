@@ -44,7 +44,7 @@ function createReferralButton() {
     // === Badge
     const badge = document.createElement("div");
     badge.id = "referral-badge";
-    badge.innerText = "+1000";
+    badge.innerText = "+10000";
     Object.assign(badge.style, {
         position: "absolute",
         top: "-10px", // ✅ Moved higher
