@@ -82,7 +82,7 @@ function renderProfilePage() {
     rewardBox.appendChild(heading);
 
     const bonusLine = document.createElement("div");
-    bonusLine.innerHTML = `+1000 <img src="drump-images/punch.svg" alt="punch" style="height:16px;vertical-align:-2px;"> per successful referral`;
+    bonusLine.innerHTML = `+10000 <img src="drump-images/punch.svg" alt="punch" style="height:16px;vertical-align:-2px;"> per successful referral`;
     Object.assign(bonusLine.style, {
         fontSize: "16px",
         marginBottom: "4px",
@@ -132,7 +132,7 @@ function renderProfilePage() {
     shareBtn.innerText = "SHARE";
     shareBtn.onclick = (e) => {
         e.stopPropagation();
-        const msg = `🥊 Join me on Drump | Punch2Earn!\n\nUse my referral: ${referralInput.value}`;
+        const msg = `🥊 Join me on Drump | Tap2Earn!\n\nUse my referral: ${referralInput.value}`;
         Telegram.WebApp.showPopup({
             title: "Share your invite",
             message: "Choose where to share:",
