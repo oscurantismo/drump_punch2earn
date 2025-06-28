@@ -64,6 +64,15 @@ function createReferralButton() {
     });
 
     btn.appendChild(badge);
+
+    // === Final check to ensure +10000 is enforced
+    setTimeout(() => {
+        const existingBadge = document.getElementById("referral-badge");
+        if (existingBadge && existingBadge.innerText !== "+10000") {
+            console.warn("⚠️ Referral badge text was overridden to:", existingBadge.innerText, "— resetting to +10000");
+            existingBadge.innerText = "+10000";
+        }
+    }, 50);
 }
 
 export { createReferralButton };
