@@ -63,7 +63,7 @@ function showReferralPopup() {
     const description = document.createElement("div");
     description.innerHTML = `
       <div style="font-size:16px;margin:16px 12px 4px;line-height:1.5;color:#000;">
-        +1000 <img src="drump-images/punch.svg" alt="punch" style="height:16px;vertical-align:-2px;"> for you and your friend per successful referral
+        +10000 <img src="drump-images/punch.svg" alt="punch" style="height:16px;vertical-align:-2px;"> for you and your friend per successful referral
       </div>
       <div style="font-size:15px;margin-bottom:16px;line-height:1.2;color:#000;">
         (Friend must punch 20+ to receive the reward)
@@ -238,7 +238,7 @@ function showInfoPage() {
 
         <h3 style="margin-top:24px; color:${COLORS.primary}; font-family:${FONT.heading};">🎁 Referral Bonus</h3>
         <ul style="font-size:14px; padding-left:20px; line-height:1.6; margin-bottom:12px;">
-            <li>Get +1000 punches when your referred friend scores 20+ punches.</li>
+            <li>Get +10000 punches when your referred friend scores 20+ punches.</li>
             <li>Both sides receive 1000 punches.</li>
             <li>Referral must be a new player to be valid.</li>
             <li>Check your referral history in the Profile tab.</li>
