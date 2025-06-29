@@ -74,7 +74,7 @@ function showTab(tab, scene = null) {
     document.body.appendChild(content);
 
   } else if (tab === "leaderboard") {
-    fetch(`/leaderboard-status`)
+    fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard-status`)
       .then(res => res.json())
       .then(data => {
         if (!data.enabled) {
