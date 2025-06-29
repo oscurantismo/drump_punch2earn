@@ -74,51 +74,57 @@ function showTab(tab, scene = null) {
     document.body.appendChild(content);
 
   } else if (tab === "leaderboard") {
-    fetch(`https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`)
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    fetch(`/leaderboard-status`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.enabled) {
+          Object.assign(content.style, {
+            background: "transparent"
+          });
 
-        const iframe = document.createElement("iframe");
-        iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`;
-        Object.assign(iframe.style, {
-          width: "100%",
-          height: "100%",
-          border: "none",
-          display: "block",
-          background: "transparent"
-        });
-        content.appendChild(iframe);
+          const fallback = document.createElement("div");
+          Object.assign(fallback.style, {
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 16px",
+            boxSizing: "border-box"
+          });
+
+          fallback.innerHTML = `
+            <div style="width:100%;max-width:420px;background:${COLORS.badgeBg};
+                        border:2px solid ${COLORS.primary};
+                        border-radius:${ZINDEX.radius || '14px'};
+                        padding:24px;text-align:center;
+                        font-family:${FONT.body};color:${COLORS.primary};
+                        box-shadow: 2px 2px 0 #000;">
+              <h2 style="margin:0 0 6px;font-family:${FONT.heading};font-size:20px;">
+                🚧 Leaderboard Under Maintenance
+              </h2>
+              <p style="margin:0;font-size:15px;">
+                We’re improving your experience.<br>Please check back soon!
+              </p>
+            </div>`;
+          content.appendChild(fallback);
+        } else {
+          const iframe = document.createElement("iframe");
+          iframe.src = `https://drumpleaderboard-production.up.railway.app/leaderboard-page?user_id=${window.userId}`;
+          Object.assign(iframe.style, {
+            width: "100%",
+            height: "100%",
+            border: "none",
+            display: "block",
+            background: "transparent"
+          });
+          content.appendChild(iframe);
+        }
       })
       .catch(() => {
-        Object.assign(content.style, {
-          background: "transparent"
-        });
-
-        const fallback = document.createElement("div");
-        Object.assign(fallback.style, {
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "0 16px",
-          boxSizing: "border-box"
-        });
-
-        fallback.innerHTML = `
-          <div style="width:100%;max-width:420px;background:${COLORS.badgeBg};
-                      border:2px solid ${COLORS.primary};
-                      border-radius:${ZINDEX.radius || '14px'};
-                      padding:24px;text-align:center;
-                      font-family:${FONT.body};color:${COLORS.primary};
-                      box-shadow: 2px 2px 0 #000;">
-            <h2 style="margin:0 0 6px;font-family:${FONT.heading};font-size:20px;">
-              🚧 Leaderboard Under Maintenance
-            </h2>
-            <p style="margin:0;font-size:15px;">
-              We’re improving your experience.<br>Please check back soon!
-            </p>
-          </div>`;
-        content.appendChild(fallback);
+        const errorText = document.createElement("div");
+        errorText.textContent = "❌ Unable to load leaderboard.";
+        errorText.style.padding = "16px";
+        content.appendChild(errorText);
       })
       .finally(() => {
         document.body.appendChild(content);
