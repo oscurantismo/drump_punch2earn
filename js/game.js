@@ -260,14 +260,6 @@ function registerUser() {
     .then(res => res.json())
     .then(res => console.log("User registration:", res))
     .catch(console.error);
-
-  fetch(`https://drumpleaderboard-production.up.railway.app/profile?user_id=${window.userId}`)
-    .then(res => res.json())
-    .then(profile => {
-      if (profile.already_claimed_referral) {
-        showPopupMessage("Oops, seems like you already claimed a referral bonus. Read more about referral rules in the \"Info\" tab.");
-      }
-    });
 }
 
 function showPopupMessage(message) {
