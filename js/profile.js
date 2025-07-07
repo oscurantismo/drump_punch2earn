@@ -56,6 +56,8 @@ function renderProfilePage() {
 
     container.appendChild(section);
 
+    /*
+
     // === Referral Box with Black Heading ===
     const rewardBox = document.createElement("div");
     rewardBox.className = "referral-box";
@@ -155,6 +157,8 @@ function renderProfilePage() {
     actionRow.appendChild(copyBtn);
     actionRow.appendChild(shareBtn);
     container.appendChild(actionRow);
+
+    */
 
     const claimedRewardsSection = document.createElement("div");
     claimedRewardsSection.className = "referral-history"; // ✅ styled white box
