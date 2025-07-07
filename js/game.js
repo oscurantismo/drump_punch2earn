@@ -114,7 +114,7 @@ async function create() {
 
   showTab("game", this);
   registerUser();
-  createReferralButton(window.userId);
+  // createReferralButton(window.userId);
 
   if (!localStorage.getItem("onboarding_complete")) {
     setTimeout(() => showOnboarding(), 300);
