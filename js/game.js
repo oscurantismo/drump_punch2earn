@@ -4,7 +4,7 @@ import { getIncompleteTaskCount } from "./earn_tab.js";
 import { showTab, renderTabs } from "./ui_tabs.js";
 import { renderTopBar } from "./topbar.js";
 import { renderPunchBar, fetchPunchGap } from "./punchbar.js";
-import { createReferralButton } from "./buttons.js";
+// import { createReferralButton } from "./buttons.js";
 import { showInfoPage } from "./popups.js";
 import { COLORS, FONT, BORDER, ZINDEX } from "./styles.js";
 
