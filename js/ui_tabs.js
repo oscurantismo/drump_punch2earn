@@ -4,7 +4,7 @@ import { renderEarnTab, getIncompleteTaskCount } from "./earn_tab.js";
 import { COLORS, ZINDEX, FONT } from "./styles.js";
 import { renderTopBar } from "./topbar.js";
 import { renderPunchBar, renderPunchBadge, fetchPunchGap } from "./punchbar.js";
-import { createReferralButton } from "./buttons.js";
+// import { createReferralButton } from "./buttons.js";
 
 function showTab(tab, scene = null) {
   window.activeTab = tab;
@@ -58,9 +58,13 @@ function showTab(tab, scene = null) {
 
   setTimeout(updateTabHighlight, 50);
 
+  /*
+
   if (tab !== "profile" && window.userId) {
     createReferralButton(window.userId);
   }
+
+  */
 
   // === GAME TAB ===
   if (tab === "game") {
